@@ -40,6 +40,9 @@ def sign_up():
     if request.method == 'POST':
         email = request.form.get('email')
         first_name = request.form.get('firstName')
+        gpa  = request.form.get('gpa')
+        extracurricular_activities = request.form.get('extracurricularActivities')
+        financial_status = request.form.get('financialStatus')
         password1 = request.form.get('password1')
         password2 = request.form.get('password2')
 
@@ -56,7 +59,7 @@ def sign_up():
             flash('Password must be at least 7 characters.', category='error')
         else:
             new_user = User(email=email, first_name=first_name, password=generate_password_hash(
-                password1, method='sha256'))
+                password1, method='pbkdf2:sha256'), gpa=gpa, extracurricular_activities=extracurricular_activities, financial_status = financial_status)
             db.session.add(new_user)
             db.session.commit()
             login_user(new_user, remember=True)

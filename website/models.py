@@ -15,4 +15,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(150), unique=True)
     password = db.Column(db.String(150))
     first_name = db.Column(db.String(150))
+    gpa = db.Column(db.Float(150))
+    extracurricular_activities = db.Column(db.String(300))
+    financial_status = db.Column(db.String(150))
     notes = db.relationship('Note')
