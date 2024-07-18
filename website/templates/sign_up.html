@@ -33,25 +33,61 @@ content %}
       placeholder="Enter GPA"
       min="0"
       max="5"
+      oninput="validateGPA(this)"
     />
-  </div>
+</div>
+
+<script>
+  function validateGPA(input) {
+    if (input.value > 5) {
+      input.value = 5;
+    } else if (input.value < 0) {
+      input.value = 0;
+    }
+  }
+</script>
+
   <div class="form-group">
     <label for="extracurricularActivities">Extracurricular Activities</label>
-    <textarea
-      class="form-control"
-      id="extracurricularActivities"
-      name="extracurricularActivities"
-      placeholder="List your extracurricular activities"
-    ></textarea>
-  </div>
+    <select class="form-control" id="extracurricularActivities" name="extracurricularActivities">
+        <option value="" disabled selected>Select an activity</option>
+        <option value="Sports">Sports</option>
+        <option value="Community Service">Community Service</option>
+        <option value="Academic Clubs">Academic Clubs</option>
+        <option value="Theater">Theater</option>
+        <option value="Academic">Academic</option>
+        <option value="Cultural Activities">Cultural Activities</option>
+        <option value="Internships">Internships</option>
+        <option value="Science and Technology Studies">Science and Technology Studies</option>
+        <option value="Arts and Creativity">Arts and Creativity</option>
+        <option value="Competitions">Competitions</option>
+        <option value="Leadership and Entrepreneurship">Leadership and Entrepreneurship</option>
+        <option value="Art Music">Art Music</option>
+        <option value="Sculpture">Sculpture</option>
+        <option value="Social Justice">Social Justice</option>
+        <option value="Art Club">Art Club</option>
+        <option value="Drama">Drama</option>
+        <option value="Interest Clubs">Interest Clubs</option>
+        <option value="Animation">Animation</option>
+        <option value="Basketball">Basketball</option>
+        <option value="Choir">Choir</option>
+        <option value="Cycling">Cycling</option>
+        <option value="English Club">English Club</option>
+        <option value="Graphic Design">Graphic Design</option>
+        <option value="Gymnastics">Gymnastics</option>
+    </select>
+</div>
+
   <div class="form-group">
     <label for="financialStatus">Financial Status</label>
-    <textarea
-      class="form-control"
-      id="financialStatus"
-      name="financialStatus"
-      placeholder="Describe your financial status"
-    ></textarea>
+      <select class="form-control" id="financialStatus" name="financialStatus">
+        <option value="" disabled selected>What is your Financial Status?</option>
+        <option value="Low Income">Low Income</option>
+        <option value="Lower Middle">Lower Middle</option>
+        <option value="Middle">Middle</option>
+        <option value="Upper Middle">Upper Middle</option>
+        <option value="Rich">Rich</option>
+    </select>
   </div>
   <div class="form-group">
     <label for="password1">Password</label>
