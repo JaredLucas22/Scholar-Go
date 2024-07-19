@@ -1,9 +1,8 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
-from .models import User
+from .models import User, Sponsorship_data
 from werkzeug.security import generate_password_hash, check_password_hash
-from . import db   ##means from __init__.py import db
+from . import db  
 from flask_login import login_user, login_required, logout_user, current_user
-
 
 auth = Blueprint('auth', __name__)
 
@@ -40,6 +39,7 @@ def sign_up():
     if request.method == 'POST':
         email = request.form.get('email')
         first_name = request.form.get('firstName')
+        course = request.form.get('course')
         gpa  = request.form.get('gpa')
         extracurricular_activities = request.form.get('extracurricularActivities')
         financial_status = request.form.get('financialStatus')
@@ -58,8 +58,14 @@ def sign_up():
         elif len(password1) < 7:
             flash('Password must be at least 7 characters.', category='error')
         else:
-            new_user = User(email=email, first_name=first_name, password=generate_password_hash(
-                password1, method='pbkdf2:sha256'), gpa=gpa, extracurricular_activities=extracurricular_activities, financial_status = financial_status)
+            new_user = User(
+                email=email,
+                first_name=first_name,
+                course = course,
+                password=generate_password_hash(password1, method='pbkdf2:sha256'),
+                gpa=gpa,
+                extracurricular_activities=extracurricular_activities,
+                financial_status = financial_status)
             db.session.add(new_user)
             db.session.commit()
             login_user(new_user, remember=True)
@@ -67,3 +73,30 @@ def sign_up():
             return redirect(url_for('views.home'))
 
     return render_template("sign_up.html", user=current_user)
+
+
+@auth.route('/sign-sponsor', methods=['GET', 'POST'])
+def sign_sponsor():
+    if request.method == 'POST':
+        sponsor_name = request.form.get('sponsor-name')
+        course = request.form.get('course')
+        weight_gpa = request.form.get('weightgpa')
+        weight_extracurricular_activities = request.form.get('weightextracurricularActivities')
+        weight_financial_status = request.form.get('weightfinancialStatus')
+        sponsor = Sponsorship_data.query.filter_by(sponsor_name=sponsor_name).first()
+        if sponsor:
+            flash('Sponsor already exists.', category='error')
+        else:
+            new_sponsor = Sponsorship_data(
+                sponsor_name=sponsor_name,
+                course = course,
+                weight_gpa=weight_gpa,
+                weight_extracurricular_activities=weight_extracurricular_activities,
+                weight_financial_status=weight_financial_status
+            )
+            db.session.add(new_sponsor)
+            db.session.commit()
+            flash('Sponsor account created!', category='success')
+            return redirect(url_for('auth.login'))
+
+    return render_template("sign_sponsor.html",  user=current_user)
