@@ -80,23 +80,29 @@ def sign_sponsor():
     if request.method == 'POST':
         sponsor_name = request.form.get('sponsor-name')
         course = request.form.get('course')
-        weight_gpa = request.form.get('weightgpa')
-        weight_extracurricular_activities = request.form.get('weightextracurricularActivities')
-        weight_financial_status = request.form.get('weightfinancialStatus')
-        sponsor = Sponsorship_data.query.filter_by(sponsor_name=sponsor_name).first()
-        if sponsor:
-            flash('Sponsor already exists.', category='error')
-        else:
-            new_sponsor = Sponsorship_data(
-                sponsor_name=sponsor_name,
-                course = course,
-                weight_gpa=weight_gpa,
-                weight_extracurricular_activities=weight_extracurricular_activities,
-                weight_financial_status=weight_financial_status
-            )
-            db.session.add(new_sponsor)
-            db.session.commit()
-            flash('Sponsor account created!', category='success')
-            return redirect(url_for('auth.login'))
+        weight_fos = float(request.form.get('weight_fos'))
+        weight_gpa = float(request.form.get('weightgpa'))
+        weight_extracurricular = float(request.form.get('weightextracurricularActivities'))
+        weight_financial = float(request.form.get('weightfinancialStatus'))
+        passing_requirement = float(request.form.get('passingrequirement'))
+
+        if weight_fos + weight_gpa + weight_extracurricular + weight_financial != 1:
+            flash('The total weight of FOS, GPA, extracurricular activities, and financial status must be equal to 1.')
+            return redirect(url_for('sponsor'))
+
+        new_sponsor = Sponsorship_data(
+            sponsor_name=sponsor_name,
+            course=course,
+            weight_fos=weight_fos,
+            weight_gpa=weight_gpa,
+            weight_extracurricular_activities=weight_extracurricular,
+            weight_financial_status=weight_financial,
+            passing_requirement=passing_requirement
+        )
+        db.session.add(new_sponsor)
+        db.session.commit()
+
+        flash('Sponsor added successfully!')
+        return redirect(url_for('auth.login'))
 
     return render_template("sign_sponsor.html",  user=current_user)

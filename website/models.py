@@ -24,7 +24,9 @@ class User(db.Model, UserMixin):
 class Sponsorship_data(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     sponsor_name = db.Column(db.String(150))   
-    course = db.Column(db.String(150))   
+    course = db.Column(db.String(150))
+    weight_fos = db.Column(db.Float(150))
     weight_gpa = db.Column(db.Float(150))
     weight_extracurricular_activities = db.Column(db.String(300))
     weight_financial_status = db.Column(db.String(150))
+    passing_requirement = db.Column(db.Float(150))

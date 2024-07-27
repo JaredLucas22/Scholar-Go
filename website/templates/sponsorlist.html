@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Sponsor{% endblock %}
+{% block content %}
+<h3>Compatible Sponsorships</h3>
+
+{% if sponsors %}
+    <ul>
+        {% for item in sponsors %} 
+            <li>{{ item.sponsor.sponsor_name }} - Passing Requirement: {{ item.sponsor.passing_requirement }} - Your Score: {{ item.score }}</li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No compatible sponsorships found.</p>
+{% endif %}
+
+{% endblock %}
