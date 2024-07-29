@@ -5,7 +5,7 @@ from . import db
 import json
 import sys
 sys.path.append('..')
-from scoring import calculate_compatibility_score
+from scoring import calculate_compatibility_score, match_students_to_sponsorships
 
 views = Blueprint('views', __name__)
 
@@ -22,6 +22,7 @@ def recommendation():
         if calculate_compatibility_score(current_user, sponsor) >= sponsor.passing_requirement
     ]
     return render_template('sponsorlist.html', user=current_user, sponsors=compatible_sponsors)
+
 @views.route('/', methods=['GET', 'POST'])
 @login_required
 def home():
@@ -37,6 +38,7 @@ def home():
             flash('Note added!', category='success')
 
     return render_template("home.html", user=current_user)
+
 @views.route('/delete-note', methods=['POST'])
 def delete_note():  
     note = json.loads(request.data) 
