@@ -4,7 +4,7 @@
 <form method="POST" onsubmit="return validateWeights()">
     <h3 align="center">Sign your Sponsor</h3>
     <div class="form-group">
-        <label for="sponsorname">Sponsor Name</label>
+        <label for="sponsor-name">Sponsor Name</label>
         <input
             type="text"
             class="form-control"
@@ -16,7 +16,8 @@
     <div class="form-group">
         <label for="weight_fos">Field of Study (FOS) Weight</label>
         <input
-            type="float"
+            type="number"
+            step="0.01"
             class="form-control"
             id="weight_fos"
             name="weight_fos"
@@ -29,7 +30,8 @@
     <div class="form-group">
         <label for="weightgpa">GPA Weight</label>
         <input
-            type="float"
+            type="number"
+            step="0.01"
             class="form-control"
             id="weightgpa"
             name="weightgpa"
@@ -40,9 +42,10 @@
         />
     </div>
     <div class="form-group">
-        <label for="extracurricularActivities">Extracurricular Activities Weight</label>
+        <label for="weightextracurricularActivities">Extracurricular Activities Weight</label>
         <input
-            type="float"
+            type="number"
+            step="0.01"
             class="form-control"
             id="weightextracurricularActivities"
             name="weightextracurricularActivities"
@@ -52,10 +55,42 @@
             oninput="validateWeight(this)"
         />
     </div>
+
     <div class="form-group">
-        <label for="financialStatus">Financial Status Weight</label>
+        <label for="extracurricularActivities">Extracurricular Activities</label>
+        <select class="form-control" id="extracurricularActivities" name="extracurricularActivities">
+            <option value="" disabled selected>Select an activity</option>
+            <option value="Sports">Sports</option>
+            <option value="Community Service">Community Service</option>
+            <option value="Academic Clubs">Academic Clubs</option>
+            <option value="Theater">Theater</option>
+            <option value="Academic">Academic</option>
+            <option value="Cultural Activities">Cultural Activities</option>
+            <option value="Internships">Internships</option>
+            <option value="Science and Technology Studies">Science and Technology Studies</option>
+            <option value="Arts and Creativity">Arts and Creativity</option>
+            <option value="Competitions">Competitions</option>
+            <option value="Leadership and Entrepreneurship">Leadership and Entrepreneurship</option>
+            <option value="Art Music">Art Music</option>
+            <option value="Sculpture">Sculpture</option>
+            <option value="Social Justice">Social Justice</option>
+            <option value="Art Club">Art Club</option>
+            <option value="Drama">Drama</option>
+            <option value="Interest Clubs">Interest Clubs</option>
+            <option value="Animation">Animation</option>
+            <option value="Basketball">Basketball</option>
+            <option value="Choir">Choir</option>
+            <option value="Cycling">Cycling</option>
+            <option value="English Club">English Club</option>
+            <option value="Graphic Design">Graphic Design</option>
+            <option value="Gymnastics">Gymnastics</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="weightfinancialStatus">Financial Status Weight</label>
         <input
-            type="float"
+            type="number"
+            step="0.01"
             class="form-control"
             id="weightfinancialStatus"
             name="weightfinancialStatus"
@@ -124,7 +159,8 @@
     <div class="form-group">
         <label for="passingrequirement">Passing Requirement</label>
         <input
-            type="float"
+            type="number"
+            step="0.01"
             class="form-control"
             id="passingrequirement"
             name="passingrequirement"
@@ -134,7 +170,29 @@
             oninput="validateRequirement(this)"
         />
     </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <div class="form-group">
+        <label for="description">Description</label>
+        <textarea
+            class="form-control"
+            id="description"
+            name="description"
+            rows="5"
+            placeholder="Enter a description of the scholarship"
+        ></textarea>
+    </div>
+
+
+<div class="form-group">
+    <label for="fulldescription">Full Description</label>
+    <textarea
+        class="form-control"
+        id="fulldescription"
+        name="fulldescription"
+        rows="5"
+        placeholder="Enter the full description of the scholarship"
+    ></textarea>
+</div>
+<button type="submit" class="btn btn-primary">Submit</button>
 </form>
 
 <script>

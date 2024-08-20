@@ -80,16 +80,17 @@ def sign_sponsor():
     if request.method == 'POST':
         sponsor_name = request.form.get('sponsor-name')
         course = request.form.get('course')
+        extracurricular_activity = request.form.get('extracurricularActivities')
         weight_fos = float(request.form.get('weight_fos'))
         weight_gpa = float(request.form.get('weightgpa'))
         weight_extracurricular = float(request.form.get('weightextracurricularActivities'))
         weight_financial = float(request.form.get('weightfinancialStatus'))
         passing_requirement = float(request.form.get('passingrequirement'))
+        description = request.form.get('description')
+        full_description = request.form.get('fulldescription')
 
-        if weight_fos + weight_gpa + weight_extracurricular + weight_financial != 1:
-            flash('The total weight of FOS, GPA, extracurricular activities, and financial status must be equal to 1.')
-            return redirect(url_for('sponsor'))
-
+       
+        # Create a new Sponsorship_data entry with verified set to False
         new_sponsor = Sponsorship_data(
             sponsor_name=sponsor_name,
             course=course,
@@ -97,12 +98,18 @@ def sign_sponsor():
             weight_gpa=weight_gpa,
             weight_extracurricular_activities=weight_extracurricular,
             weight_financial_status=weight_financial,
-            passing_requirement=passing_requirement
+            passing_requirement=passing_requirement,
+            description=description,
+            full_description=full_description,
+            extracurricular_activty =extracurricular_activity,
+            verified=False  
         )
+
+        # Add and commit to the database
         db.session.add(new_sponsor)
         db.session.commit()
 
         flash('Sponsor added successfully!')
         return redirect(url_for('auth.login'))
 
-    return render_template("sign_sponsor.html",  user=current_user)
+    return render_template("sign_sponsor.html", user=current_user)

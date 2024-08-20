@@ -7,12 +7,26 @@
     <div class="row">
         {% if sponsors %}
             {% for item in sponsors %}
-            <div class="col-md-4">
+            <div class="col-12"> <!-- Full-width column -->
                 <div class="card mb-4">
-                    <div class="card-body">
+                    <div class="card-body position-relative">
                         <h5 class="card-title">{{ item.sponsor.sponsor_name }}</h5>
                         <p class="card-text">Passing Requirement: <b>{{ item.sponsor.passing_requirement }}</b></p>
                         <p class="card-text">Student Score: <b>{{ item.score }}</b></p>
+                        <p class="card-text"><b>Description: </b> {{ item.sponsor.description | safe }}</p>
+                        
+                        <!-- Collapsible full description (collapsed by default) -->
+                        <div class="collapse mt-3" id="collapseDescription{{ loop.index }}">
+                            <div class="card card-body">
+                                {{ item.sponsor.full_description | safe }}
+                            </div>
+                        </div>
+
+                        <!-- Button to toggle full description, positioned at the bottom right -->
+                        <button class="btn btn-primary position-absolute" style="bottom: 10px; right: 10px;" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDescription{{ loop.index }}" aria-expanded="false" aria-controls="collapseDescription{{ loop.index }}">
+                            <i class="fa fa-arrow-down"></i>
+                        </button>
+                        
                     </div>
                 </div>
             </div>
