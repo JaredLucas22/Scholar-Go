@@ -4,42 +4,151 @@
 
 {% block content %}
 <!-- Container for login page -->
+<style>
+  .login-form-container {
+    background-color: #f8f9fa; /* Greyish background color */
+    border-radius: 8px; /* Rounded corners */
+    padding: 20px; /* Space inside the container */
+    margin-top: 80px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    width: 100%; /* Full width of the parent column */
+    max-width: 400px; /* Max width for better responsiveness */
+  }
+
+  .form-group {
+    margin-bottom: 10px; /* Space below form elements */
+  }
+
+  .form-control {
+    border: 1px solid #c8c8c8; /* Black border */
+    padding: 20px; /* 20px padding */
+    font-size: 13px; /* Font size of 13px */
+    border-radius: 4px; /* Rounded corners for inputs */
+  }
+
+  .btn-block {
+    display: block; /* Ensures the button is a block element */
+    width: 100%; /* Full width of the parent container */
+    margin-top: 10px; /* Space above the button */
+    background-color: #012cb8;
+    font-weight: bold;
+    font-size: 13px;
+    padding: 10px;
+    border: none;
+  }
+
+  .btn-short {
+    display: block; /* Ensures the button is a block element */
+    width: auto; /* Auto width for a shorter button */
+    margin: 30px auto 0; /* Center the button and add space above it */
+    font-size: 13px;
+    padding: 10px;
+    font-weight: bold;
+    background-color: #017cff;
+    border: none;
+  }
+
+  .forgot-password {
+    display: block; /* Ensures the link is a block element */
+    text-align: center; /* Center the text */
+    margin-top: 10px; /* Space above the link */
+    font-size: 0.875rem; /* Slightly smaller font size */
+    margin-bottom: 30px; /* Space below the link */
+  }
+
+  .form-actions {
+    text-align: center; /* Center the content inside the container */
+  }
+
+  .form-actions > * {
+    margin-top: 10px; /* Space between each button/link */
+  }
+
+  .register-container {
+    text-align: center; /* Center the text */
+    margin-top: 10px; /* Space above the container */
+    font-size: 15px;
+    width: 100%; /* Ensure it takes full width of the parent column */
+  }
+
+  .register-container a {
+    color: #191919; /* Link color */
+    font-size: 15px;
+    font-weight: bold; /* Make link text bold */
+    text-decoration: underline; /* Underline the link */
+  }
+
+  /* Styles for the left side of the page */
+  .left-side-content h1 {
+    font-size: 3rem; /* Larger font size for main title */
+    margin: 0; /* Remove default margin */
+  }
+
+  .left-side-content h2 {
+    font-size: 1.5rem; /* Slightly smaller subtitle */
+    margin: 0; /* Remove default margin */
+    font-weight: bold;
+  }
+
+  .logo-img {
+  width: 50px; /* Adjust size as needed */
+  height: auto;
+}
+
+h1 {
+  font-size: 2.5rem; /* Adjust font size as needed */
+  margin: 0;
+}
+
+.ml-3 {
+  margin-left: 1rem; /* Adjust space between logo and text */
+}
+</style>
+
 <div class="container">
   <div class="row">
     <!-- Left side: Logo and description -->
-    <div class="col-md-6 d-flex flex-column justify-content-center align-items-center">
+    <div class="col-md-6 d-flex flex-column justify-content-center align-items-center left-side-content">
+      <img src="/Icon-removebg-preview.png" alt="Logo" class="logo-img">
       <h1>ScholarGO</h1>
       <h2>FIND SCHOLARSHIPS NEARBY</h2>
     </div>
     
-    <!-- Right side: Login form -->
-    <div class="col-md-6">
-      <form method="POST">
-        <h3 class="text-center">Login</h3>
-        <div class="form-group">
-          <label for="email">Email Address</label>
-          <input
-            type="email"
-            class="form-control"
-            id="email"
-            name="email"
-            placeholder="Enter email"
-          />
-        </div>
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input
-            type="password"
-            class="form-control"
-            id="password"
-            name="password"
-            placeholder="Enter password"
-          />
-        </div>
-        <br />
-        <button type="submit" class="btn btn-primary">Login</button>
-      </form>
+    <!-- Right side: Login form with greyish background -->
+    <div class="col-md-6 d-flex justify-content-center align-items-center flex-column">
+      <div class="login-form-container">
+        <form method="POST">
+          <div class="form-group">
+            <input
+              type="email"
+              class="form-control"
+              id="email"
+              name="email"
+              placeholder="Email or username"
+            />
+          </div>
+          <div class="form-group">
+            <input
+              type="password"
+              class="form-control"
+              id="password"
+              name="password"
+              placeholder="Password"
+            />
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">Log In</button>
+          <div class="form-actions">
+            <a href="/forgot-password" class="forgot-password">Forgot Password?</a>
+            <button type="button" class="btn btn-secondary btn-short">Create New Account</button>
+          </div>
+        </form>
+      </div>
+      <!-- Register link placed directly below the form container -->
+      <div class="register-container">
+        <p><a href="/register-provider">Register an account</a> as a scholarship provider.</p>
+      </div>
     </div>
   </div>
 </div>
+
 {% endblock %}

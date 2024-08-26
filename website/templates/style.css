@@ -1,4 +1,8 @@
-body {
-    background-color: black;
-    font-size: 100px;
-}
+.login-form-container {
+    background-color: #f8f9fa; /* Greyish background color */
+    border-radius: 8px; /* Rounded corners */
+    padding: 20px; /* Space inside the container */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    width: 100%; /* Full width of the parent column */
+    max-width: 400px; /* Max width for better responsiveness */
+  }
