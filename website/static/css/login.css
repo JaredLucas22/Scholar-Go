@@ -3,6 +3,12 @@ html, body {
     margin: 0;
     display: flex;
     flex-direction: column;
+    font-family: 'Montserrat', sans-serif;
+  }
+
+  .left-side-content img {
+    width: 10vw; /* adjust the width to 25% of the viewport width */
+    height: 11vw; /* adjust the height to 25% of the viewport width */
   }
 
   .login-form-container {
@@ -81,12 +87,14 @@ html, body {
   .left-side-content h1 {
     font-size: 3rem; 
     margin: 0; 
+    font-weight: bold;
+    color: #012cb8;
   }
 
   .left-side-content h2 {
-    font-size: 1.5rem; 
+    font-size: 1.03rem; 
     margin: 0; 
-    font-weight: bold;
+    color: #012cb8;
   }
 
   .logo-img {

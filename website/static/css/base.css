@@ -10,15 +10,12 @@ body {
 
 .custom-navbar-nav .nav-link {
     font-weight: bold;
-    padding: 0.5rem 1rem; 
-}
-
-.navbar-dark .navbar-nav .nav-link {
-  color: rgb(255, 106, 106);
+    padding: 5rem 1rem; 
+    color: #ffffff !important;
 }
 
 .custom-navbar-nav .nav-item {
-  margin-right: 30px; 
+  margin-right: 25px; 
   font-size: 15px;
 }
 
@@ -26,11 +23,14 @@ body {
 display: flex;
 justify-content: space-between;
 align-items: center;
-margin: 0px 10%;
 }
 
 .navbar-brand img {
-height: 40px; 
+height: 50px; 
+}
+
+a.navbar-brand {
+  margin-right: 0;
 }
 
 .navbar-text h1,
@@ -40,11 +40,12 @@ color: white;
 }
 
 .navbar-text h1 {
-font-size: 1.5rem; 
+font-size: 1.8rem; 
+font-weight: bold;
 }
 
 .navbar-text h2 {
-font-size: 1rem; 
+font-size: 0.63rem; 
 }
 
 @media (max-width: 991px) {
@@ -53,6 +54,3 @@ font-size: 1rem;
 }
 }
 
-.navbar-nav {
-  margin-left: auto; 
-}
