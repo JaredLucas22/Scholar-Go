@@ -1,10 +1,13 @@
 html, body {
   height: 100%;
   margin: 0;
-  display: flex;
-  flex-direction: column;
   font-family: 'Montserrat', sans-serif;
 }
+
+.content-wrapper {
+  margin-top: 10%;
+}
+
 
 .left-side-content img {
   width: 10vw; /* adjust the width to 25% of the viewport width */
@@ -139,6 +142,7 @@ footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap; /* Allows items to wrap if necessary */
 }
 
 .footer-left {
@@ -147,6 +151,9 @@ footer {
 
 .footer-right {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Center items vertically */
 }
 
 .navbar-text .scholargo-title {
@@ -186,17 +193,15 @@ footer {
   color: #c3c3c3; /* Color on hover */
 }
 
-.footer-social {
-  display: flex;
-  gap: 10px;
-  margin-top: 10px;
-  justify-content: center;
-}
-
 .footer-social a {
   color: #ffffff;
   font-size: 18px;
   transition: color 0.3s;
+  margin-right: 12px; /* Adds margin between each social media icon */
+}
+
+.footer-social a:last-child {
+  margin-right: 0; /* Removes the margin from the last icon */
 }
 
 .footer-social a:hover {
@@ -222,13 +227,63 @@ footer .contact-us {
   right: 20px;
 }
 
-
 .contact-us:hover {
   background-color: #aaaaaa;
   color: #ffffff;
 }
 
-/* Additional styles for the bottom line */
+.contact-us {
+  display: inline-block;
+  padding: 10px 30px;
+  font-size: 16px;
+  color: #fff;
+  text-decoration: none;
+  border: none;
+  background-color: #333; /* Button solid background color */
+  position: relative;
+  z-index: 1;
+  overflow: hidden; /* Prevents gradient from overflowing */
+}
+
+.contact-us:hover {
+  color: rgb(57, 57, 57);
+}
+
+.contact-us::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  right: -4px;
+  bottom: -4px;
+  background: linear-gradient(to right, #004aad, #cb6ce6); /* Gradient border effect */
+  border-radius: 20px;
+  z-index: -1;
+}
+
+.contact-us::after {
+  content: '';
+  position: absolute;
+  border-radius: 20px;
+  top: 2px;
+  left: 2px;
+  right: 2px;
+  bottom: 2px;
+  background-color: #ffffff; /* Matches the button background */
+  z-index: -1;
+}
+
+footer .contact-us {
+  border-radius: 20px;
+  border: 0px solid white;
+  padding: 8px 20px;
+  font-weight: bold;
+}
+
+.fa-solid, .fas {
+  margin-right: 5px;
+}
+
 .footer-bottom {
   display: flex;
   justify-content: space-between;
@@ -258,11 +313,6 @@ footer .contact-us {
   margin-right: 5px;
 }
 
-.footer-copyright {
-  font-size: 14px;
-  color: white;
-}
-
 .footer-social {
   display: flex;
   gap: 10px;
@@ -290,4 +340,57 @@ footer .contact-us {
   color: #aaaaaa;
 }
 
+
+
+.contact-us {
+  display: inline-block;
+  padding: 10px 30px;
+  font-size: 16px;
+  color: #fff;
+  text-decoration: none;
+  border: none;
+  background-color: #333; /* Button solid background color */
+  position: relative;
+  z-index: 1;
+  overflow: hidden; /* Prevents gradient from overflowing */
+}
+
+.contact-us:hover {
+  color: rgb(57, 57, 57);
+}
+
+.contact-us::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  right: -4px;
+  bottom: -4px;
+  background: linear-gradient(to right, #004aad, #cb6ce6); /* Gradient border effect */
+  border-radius: 20px;
+  z-index: -1;
+}
+
+.contact-us::after {
+  content: '';
+  position: absolute;
+  border-radius: 20px;
+  top: 2px;
+  left: 2px;
+  right: 2px;
+  bottom: 2px;
+  background-color: #ffffff; /* Matches the button background */
+  z-index: -1;
+}
+
+footer .contact-us {
+  border-radius: 20px;
+  border: 0px solid white;
+  padding: 8px 20px;
+  font-weight: bold;
+}
+
+.fa-solid, .fas {
+  margin-right: 5px;
+}
 
