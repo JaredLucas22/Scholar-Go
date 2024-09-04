@@ -1,56 +1,143 @@
 body {
-    font-family: 'Montserrat', sans-serif;
-    background-color: #f2f4f7;
+  font-family: 'Montserrat', sans-serif;
+  background-color: #f2f4f7;
+  margin: 0;
 }
 
 .navbar {
-    background: linear-gradient(90deg, #012cb8, #017cff) !important;
-    height: 60px;
-}
-
-.custom-navbar-nav .nav-link {
-    font-weight: bold;
-    padding: 5rem 1rem; 
-    color: #ffffff !important;
-}
-
-.custom-navbar-nav .nav-item {
-  margin-right: 25px; 
-  font-size: 15px;
+  background: linear-gradient(90deg, #012cb8, #017cff) !important;
+  padding: 0.5rem 1rem;
+  height: auto;
 }
 
 .navbar .container {
-display: flex;
-justify-content: space-between;
-align-items: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0;
 }
 
-.navbar-brand img {
-height: 50px; 
+.navbar-logo {
+  height: 50px;
+  max-width: 100%;
 }
 
-a.navbar-brand {
-  margin-right: 0;
+.custom-navbar-nav .nav-link {
+  font-weight: bold;
+  padding: 0.5rem 1rem;
+  color: #ffffff !important;
+}
+
+.custom-navbar-nav .nav-item {
+  margin-right: 15px;
+  font-size: 15px;
 }
 
 .navbar-text h1,
 .navbar-text h2 {
-margin: 0;
-color: white; 
+  margin: 0;
+  color: white;
 }
 
 .navbar-text h1 {
-font-size: 1.8rem; 
-font-weight: bold;
+  font-size: 1.5rem;
+  font-weight: bold;
 }
 
 .navbar-text h2 {
-font-size: 0.63rem; 
+  font-size: 0.7rem;
 }
 
+/* Initial button styles */
+.navbar-toggler {
+  background-color: transparent; /* Initial color */
+  border: none; /* Remove default border */
+  transition: background-color 0.2s ease; /* Smooth transition effect */
+}
+
+/* Darkens the button slightly when clicked or focused */
+.navbar-toggler:focus,
+.navbar-toggler:active {
+  outline: none;
+  box-shadow: none;
+}
+
+/* Add a class to darken the button when clicked */
+.navbar-toggler.clicked {
+  background-color: rgba(182, 30, 30, 0.2); /* Darken button when clicked */
+}
+
+/* Ensures the button returns to the initial color after interaction */
+.navbar-toggler:not(:focus):not(:active) {
+  background-color: transparent; /* Ensures button returns to transparent */
+}
+
+/* Keep the button dark while the menu is open */
+.navbar-collapse.show + .navbar-toggler {
+  background-color: rgba(0, 0, 0, 0.1); /* Darken button when menu is open */
+}
+
+
+
+
+/* For larger screens (always keep links to the right) */
+@media (min-width: 992px) {
+  .navbar .container {
+    justify-content: space-between;
+  }
+
+  .custom-navbar-nav {
+    margin-left: auto; /* Ensures the nav links stay on the right */
+  }
+}
+
+/* Ensure proper stacking and alignment on smaller screens */
 @media (max-width: 991px) {
-.navbar-text {
-  display: none;
-}
+  .navbar-logo {
+    height: 40px;
+  }
+
+  .navbar-text h1 {
+    font-size: 1.3rem;
+  }
+
+  .navbar-text h2 {
+    font-size: 0.6rem;
+  }
 }
 
+@media (max-width: 768px) {
+  .navbar {
+    padding: 0.3rem 1rem;
+  }
+
+  .navbar-logo {
+    height: 35px;
+  }
+
+  .navbar-text h1 {
+    font-size: 1.1rem;
+  }
+
+  .navbar-text h2 {
+    font-size: 0.5rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .navbar {
+    padding: 0.2rem 0.5rem;
+  }
+
+  .navbar-logo {
+    height: 30px;
+  }
+
+  .navbar-text h1 {
+    font-size: 1rem;
+  }
+
+  .navbar-text h2 {
+    font-size: 0.4rem;
+  }
+}

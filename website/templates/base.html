@@ -1,96 +1,120 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="/static/css/base.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/static/css/base.css" />
     <title>{% block title %}Home{% endblock %}</title>
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg navbar-dark" style="background: linear-gradient(90deg, #012cb8, #017cff);">
+    <nav
+      class="navbar navbar-expand-lg navbar-dark"
+      style="background: linear-gradient(90deg, #012cb8, #017cff);"
+    >
       <div class="container">
-        <a class="navbar-brand" href="/">
-          <img src="/static/images/logo.png" alt="Logo">
+        <a class="navbar-brand d-flex align-items-center" href="/">
+          <img src="/static/images/logo.png" alt="Logo" class="navbar-logo" />
+          <div class="navbar-text ml-2">
+            <h1 class="mb-0">ScholarGO</h1>
+            <h2 class="mb-0">FIND SCHOLARSHIPS NEARBY</h2>
+          </div>
         </a>
-        <div class="navbar-text d-none d-lg-block">
-          <h1>ScholarGO</h1>
-          <h2>FIND SCHOLARSHIPS NEARBY</h2>
-        </div>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar">
+        <!-- Toggler/collapsibe Button -->
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-toggle="collapse"
+          data-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
           <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbar">
-          <div class="navbar-nav ml-auto custom-navbar-nav ">
+
+        <!-- Navbar links -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ml-auto custom-navbar-nav">
             {% if user.is_authenticated %}
-            <a class="nav-item nav-link" id="home" href="/">Home</a>
-            <a class="nav-item nav-link" id="sponsorlist" href="/sponsorlist">Sponsor</a>
-            <a class="nav-item nav-link" id="logout" href="/logout">Logout</a>
+            <li class="nav-item">
+              <a class="nav-link" id="home" href="/">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="sponsorlist" href="/sponsorlist">Sponsor</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="logout" href="/logout">Logout</a>
+            </li>
             {% else %}
-            <a class="nav-item nav-link" id="login" href="/login">Log in</a>
-            <a class="nav-item nav-link" id="signUp" href="/sign-up">Sign Up</a>
-            <a class="nav-item nav-link" id="signSponsor" href="/sign-sponsor">Sign Sponsor</a>
+            <li class="nav-item">
+              <a class="nav-link" id="login" href="/login">Log in</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="signUp" href="/sign-up">Sign Up</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="signSponsor" href="/sign-sponsor">
+                Sign Sponsor
+              </a>
+            </li>
             {% endif %}
-          </div>
+          </ul>
         </div>
       </div>
-    </nav>    
+    </nav>
 
-    {% with messages = get_flashed_messages(with_categories=true) %} {% if
-    messages %} {% for category, message in messages %} {% if category ==
-    'error' %}
-    <div class="alert alert-danger alter-dismissable fade show" role="alert">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    {% if category == 'error' %}
+    <div class="alert alert-danger alert-dismissable fade show" role="alert">
       {{ message }}
       <button type="button" class="close" data-dismiss="alert">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
     {% else %}
-    <div class="alert alert-success alter-dismissable fade show" role="alert">
+    <div class="alert alert-success alert-dismissable fade show" role="alert">
       {{ message }}
       <button type="button" class="close" data-dismiss="alert">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
-    {% endif %} {% endfor %} {% endif %} {% endwith %}
+    {% endif %}
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
 
     <div class="container">{% block content %} {% endblock %}</div>
-    <script
-      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-      crossorigin="anonymous"
-    ></script>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- Correct JavaScript files order -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
 
-
-{% block javascript %}
+    {% block javascript %}
     <script type="text/javascript">
       function deleteNote(noteId) {
-  fetch("/delete-note", {
-    method: "POST",
-    body: JSON.stringify({ noteId: noteId }),
-  }).then((_res) => {
-    window.location.href = "/";
+        fetch("/delete-note", {
+          method: "POST",
+          body: JSON.stringify({ noteId: noteId }),
+        }).then((_res) => {
+          window.location.href = "/";
+        });
+      }
+
+      document.querySelector('.navbar-toggler').addEventListener('click', function() {
+    this.classList.toggle('clicked');
   });
-  }
-</script>
-{% endblock %}
+    </script>
+    {% endblock %}
   </body>
 </html>
