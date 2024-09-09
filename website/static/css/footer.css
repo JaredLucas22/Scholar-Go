@@ -1,5 +1,5 @@
 .footer {
-    background-color: #1a1a1a;
+    background-color: #272727;
     color: #ffffff;
     padding: 20px 0;
     font-family: Arial, sans-serif;
@@ -37,7 +37,7 @@
   }
   
   .footer-logo {
-    height: 40px; /* Adjusted size for smaller images */
+    height: 40px;
   }
   
   .navbar-text .scholargo-title {
@@ -265,9 +265,8 @@
     }
   }
   
-  /* Add media queries for responsiveness */
-  
-  /* Mobile devices (max-width: 768px) */
+
+  /* Media queries for responsiveness */
   @media only screen and (max-width: 768px) {
     .footer {
       padding: 10px 0;
@@ -303,7 +302,6 @@
     }
   }
   
-  /* Tablet devices (min-width: 769px and max-width: 1024px) */
   @media only screen and (min-width: 769px) and (max-width: 1024px) {
     .footer {
       padding: 20px 0;
@@ -337,7 +335,6 @@
     }
   }
   
-  /* Desktop devices (min-width: 1025px) */
   @media only screen and (min-width: 1025px) {
     .footer {
       padding: 30px 0;
@@ -371,7 +368,6 @@
     }
   }
   
-  
   .contact-us {
     display: inline-block;
     padding: 10px 30px;
@@ -379,10 +375,10 @@
     color: #fff;
     text-decoration: none;
     border: none;
-    background-color: #333; /* Button solid background color */
+    background-color: #333; 
     position: relative;
     z-index: 1;
-    overflow: hidden; /* Prevents gradient from overflowing */
+    overflow: hidden; 
   }
   
   .contact-us:hover {
@@ -396,7 +392,7 @@
     left: -4px;
     right: -4px;
     bottom: -4px;
-    background: linear-gradient(to right, #004aad, #cb6ce6); /* Gradient border effect */
+    background: linear-gradient(to right, #004aad, #cb6ce6); 
     border-radius: 20px;
     z-index: -1;
   }
@@ -409,7 +405,7 @@
     left: 2px;
     right: 2px;
     bottom: 2px;
-    background-color: #ffffff; /* Matches the button background */
+    background-color: #ffffff; 
     z-index: -1;
   }
   
@@ -424,12 +420,6 @@
     margin-right: 5px;
   }
   
-  
-  
-  /* Media Query */
-  /* Add media queries for responsiveness */
-  
-  /* Mobile devices (max-width: 768px) */
   @media only screen and (max-width: 768px) {
     .content-wrapper {
       margin-top: 20px;
@@ -479,7 +469,6 @@
     }
   }
   
-  /* Tablet devices (min-width: 769px and max-width: 1024px) */
   @media only screen and (min-width: 769px) and (max-width: 1024px) {
     .content-wrapper {
       margin-top: 30px;
@@ -528,7 +517,6 @@
     }
   }
   
-  /* Desktop devices (min-width: 1025px) */
   @media only screen and (min-width: 1025px) {
     .content-wrapper {
       margin-top: 40px;

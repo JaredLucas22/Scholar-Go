@@ -48,50 +48,40 @@ body {
   font-size: 0.7rem;
 }
 
-/* Initial button styles */
 .navbar-toggler {
-  background-color: transparent; /* Initial color */
-  border: none; /* Remove default border */
-  transition: background-color 0.2s ease; /* Smooth transition effect */
+  background-color: transparent; 
+  border: none; 
+  transition: background-color 0.2s ease; 
 }
 
-/* Darkens the button slightly when clicked or focused */
 .navbar-toggler:focus,
 .navbar-toggler:active {
   outline: none;
   box-shadow: none;
 }
 
-/* Add a class to darken the button when clicked */
 .navbar-toggler.clicked {
-  background-color: rgba(182, 30, 30, 0.2); /* Darken button when clicked */
+  background-color: rgba(182, 30, 30, 0.2); 
 }
 
-/* Ensures the button returns to the initial color after interaction */
 .navbar-toggler:not(:focus):not(:active) {
-  background-color: transparent; /* Ensures button returns to transparent */
+  background-color: transparent; 
 }
 
-/* Keep the button dark while the menu is open */
 .navbar-collapse.show + .navbar-toggler {
-  background-color: rgba(0, 0, 0, 0.1); /* Darken button when menu is open */
+  background-color: rgba(0, 0, 0, 0.1); 
 }
 
-
-
-
-/* For larger screens (always keep links to the right) */
 @media (min-width: 992px) {
   .navbar .container {
     justify-content: space-between;
   }
 
   .custom-navbar-nav {
-    margin-left: auto; /* Ensures the nav links stay on the right */
+    margin-left: auto; 
   }
 }
 
-/* Ensure proper stacking and alignment on smaller screens */
 @media (max-width: 991px) {
   .navbar-logo {
     height: 40px;
