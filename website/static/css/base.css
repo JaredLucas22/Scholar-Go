@@ -1,12 +1,19 @@
+html, body {
+  height: 100%;
+  margin: 0; /* Remove default margin */
+}
+
 body {
   font-family: 'Montserrat', sans-serif;
   background-color: #f2f4f7;
   margin: 0;
+  display: flex;
+  flex-direction: column
 }
 
 .navbar {
   background: linear-gradient(90deg, #012cb8, #017cff) !important;
-  padding: 0.5rem 1rem;
+  padding: 0.3rem 1rem;
   height: auto;
 }
 

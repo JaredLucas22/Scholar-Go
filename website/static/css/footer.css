@@ -1,26 +1,140 @@
-body {
-  height: 100vh;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
+/* Ensure body and HTML take full height */
+html, body {
+  height: 100%;
+  margin: 0; /* Remove default margin */
 }
 
+/* Main container or wrapper to ensure content and footer alignment */
+body {
+  display: flex;
+  flex-direction: column; /* Stack content vertically */
+  min-height: 100vh; /* Minimum height to cover the full viewport */
+}
+
+/* Main content area should take available space, pushing footer down */
+main {
+  flex: 1; /* Take up remaining space */
+}
+
+/* Footer styling */
 footer {
-  background-color: rgb(24, 24, 24);
-  color: white;
+  background-color: #0a1219;
+  color: #ffffff;
+  padding-top: 40px;
+  padding-bottom: 5px;
+  margin: 0;
   width: 100%;
-  margin-top: auto; /* add this to push the footer to the bottom of the page */
-  font-size: 11px;
+  box-sizing: border-box;
+}
+
+.container {
+  flex: 1;
+}
+
+/* Align footer contents */
+footer .container-fluid {
+  max-width: 60%; /* Set a max width to match the navigation bar */
+  margin: 0 auto; /* Center align the footer */
+  padding: 0; /* Remove padding if it's causing extra space */
+}
+
+/* Align the rows in the footer */
+footer .row {
+  display: flex; /* Use Flexbox for better column control */
+  flex-wrap: wrap; /* Ensure columns wrap if absolutely necessary */
+  gap: 20px; /* Control the space between columns */
+  margin: 0; /* Ensure no extra margin around rows */
+  padding: 0; /* Remove padding from rows if needed */
+  justify-content: space-between; /* Space between elements */
+  align-items: center; /* Center items vertically */
+}
+
+/* Align social media icons to the right */
+footer .d-flex.align-items-center {
+  justify-content: space-between; /* Space between elements */
+  align-items: center; /* Center items vertically */
+}
+
+footer .text-center.text-md-start {
+  text-align: center; /* Center align text */
+}
+
+footer .text-center.text-md-end {
+  text-align: right; /* Right align text and icons */
+}
+
+/* Adjust specific column and text spacing */
+footer .col-md-3 p,
+footer .col-md-4 p {
+  font-size: 0.875rem; /* Adjust as needed */
+}
+
+footer .col-md-7 .p-3 {
+  font-size: 0.75rem; /* Adjust as needed */
+  white-space: nowrap; /* Prevent line breaks */
+  overflow: hidden; /* Hide overflow text */
+  text-overflow: ellipsis; /* Add ellipsis for overflow text */
+}
+
+footer h6 {
+  font-weight: bold; /* Bold font for section titles */
+  margin-bottom: 10px; /* Reduced space below titles */
+  font-size: 14px; /* Reduced font size */
+}
+
+footer p {
+  margin-bottom: 5px; /* Reduce the margin below each paragraph */
 }
 
 footer a {
-  line-height: 1;
+  color: #ffffff; /* White color for links */
+  text-decoration: none; /* No underline on links */
+  font-size: 14px; /* Reduced font size */
+  display: block; /* Make each link a block element to control spacing */
+  margin-bottom: 3px; /* Reduce space below each link */
 }
 
-footer > .container > .container {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+footer a:hover {
+  color: #00bfff; /* Light blue color on hover */
+  text-decoration: underline; /* Underline on hover */
 }
 
+/* Social media icons */
+footer .btn-outline-light {
+  border-color: #ffffff; /* White border for icons */
+  color: #ffffff; /* White icon color */
+  font-size: 14px; /* Reduced icon size */
+  margin: 0 5px; /* Adjust horizontal margin for icons */
+}
+
+footer .row.d-flex.align-items-center {
+  display: flex; /* Ensure flexbox layout */
+  justify-content: space-between; /* Space between elements */
+  align-items: center; /* Center items vertically */
+}
+
+footer .col-md-7.col-lg-8,
+footer .col-md-5.col-lg-4 {
+  margin: 0; /* Remove extra margin */
+  padding: 0; /* Remove extra padding */
+}
+
+footer .col-md-3, .col-md-4, .col-md-7, .col-md-5 {
+  margin-bottom: 0; /* Remove bottom margin */
+}
+
+footer .btn-outline-light:hover {
+  background-color: #00bfff; /* Light blue background on hover */
+  border-color: #00bfff; /* Light blue border on hover */
+  color: #ffffff; /* White icon color */
+}
+
+footer .text-center.text-md-start {
+  text-align: center; /* Center align text */
+  margin-right: 0; /* Remove right margin */
+}
+
+footer .text-center.text-md-end {
+  text-align: right; /* Right align text and icons */
+  margin-left: 0; /* Remove left margin */
+}

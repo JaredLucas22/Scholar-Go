@@ -1,10 +1,13 @@
-
-
 html, body {
   height: 100%;
   margin: 0;
   font-family: 'Montserrat', sans-serif;
 }
+
+.left-side-content {
+  margin-top: 100px; /* Add top margin */
+}
+
 
 .left-side-content img {
   width: 20vw; 
@@ -73,11 +76,15 @@ html, body {
   background-color: hwb(0 100% 0%); 
   border-radius: 8px; 
   padding: 20px; 
-  margin-top: 80px;
+  margin-top: 150px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
   width: 100%; 
   max-width: 400px; 
   margin-bottom: 10px;
+}
+
+.container {
+  padding-bottom: 50px; /* Add padding to make sure footer does not overlap */
 }
 
 /* Media queries for smaller screens */
@@ -87,12 +94,20 @@ html, body {
     margin-top: 40px;
     max-width: 300px;
   }
+  
+  .left-side-content {
+    margin-top: 40px; /* Adjust top margin for tablets */
+  }
 }
 
 @media (max-width: 576px) {
   .login-form-container {
     margin-top: 20px;
     max-width: 250px;
+  }
+
+  .left-side-content {
+    margin-top: 30px; /* Adjust top margin for small phones */
   }
 }
 
@@ -101,12 +116,20 @@ html, body {
     margin-top: 10px;
     max-width: 200px;
   }
+
+  .left-side-content {
+    margin-top: 20px; /* Adjust top margin for extra small phones */
+  }
 }
 
 @media (max-width: 320px) {
   .login-form-container {
     margin-top: 5px;
     max-width: 150px;
+  }
+
+  .left-side-content {
+    margin-top: 10px; /* Adjust top margin for very small phones */
   }
 }
 
