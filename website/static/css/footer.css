@@ -1,140 +1,168 @@
 /* Ensure body and HTML take full height */
 html, body {
   height: 100%;
-  margin: 0; /* Remove default margin */
-}
-
-/* Main container or wrapper to ensure content and footer alignment */
-body {
+  margin: 0;
   display: flex;
-  flex-direction: column; /* Stack content vertically */
-  min-height: 100vh; /* Minimum height to cover the full viewport */
+  flex-direction: column;
 }
 
 /* Main content area should take available space, pushing footer down */
 main {
-  flex: 1; /* Take up remaining space */
+  flex: 1;
 }
 
 /* Footer styling */
 footer {
   background-color: #0a1219;
   color: #ffffff;
-  padding-top: 40px;
-  padding-bottom: 5px;
-  margin: 0;
+  padding-top: 2rem;
   width: 100%;
   box-sizing: border-box;
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  transition: padding 0.3s ease, height 0.3s ease;
 }
 
-.container {
-  flex: 1;
-}
-
-/* Align footer contents */
+/* Footer content container aligned to match navigation */
 footer .container-fluid {
-  max-width: 60%; /* Set a max width to match the navigation bar */
-  margin: 0 auto; /* Center align the footer */
-  padding: 0; /* Remove padding if it's causing extra space */
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
+  box-sizing: border-box;
 }
 
 /* Align the rows in the footer */
 footer .row {
-  display: flex; /* Use Flexbox for better column control */
-  flex-wrap: wrap; /* Ensure columns wrap if absolutely necessary */
-  gap: 20px; /* Control the space between columns */
-  margin: 0; /* Ensure no extra margin around rows */
-  padding: 0; /* Remove padding from rows if needed */
-  justify-content: space-between; /* Space between elements */
-  align-items: center; /* Center items vertically */
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+  justify-content: space-between;
 }
 
-/* Align social media icons to the right */
-footer .d-flex.align-items-center {
-  justify-content: space-between; /* Space between elements */
-  align-items: center; /* Center items vertically */
+/* Column styles for large screens */
+footer .col-lg-3 {
+  flex: 1;
+  min-width: 150px; /* Adjust this value if needed to ensure proper wrapping */
+  box-sizing: border-box;
 }
 
-footer .text-center.text-md-start {
-  text-align: center; /* Center align text */
+/* 4 columns layout for largest screens (>= 992px) */
+@media (min-width: 992px) {
+  footer .col-lg-3 {
+    flex: 0 0 25%; /* Four columns per row */
+  }
+  footer h6 {
+    font-size: 1rem; /* Base font size */
+  }
+  footer p, footer a {
+    font-size: 0.8rem; /* Base font size */
+  }
+  footer {
+    padding: 2rem 1rem; /* Base padding */
+  }
 }
 
-footer .text-center.text-md-end {
-  text-align: right; /* Right align text and icons */
+/* 2 columns layout for medium screens (>= 768px and < 992px) */
+@media (min-width: 768px) and (max-width: 991px) {
+  footer .col-lg-3 {
+    flex: 0 0 50%; /* Two columns per row */
+  }
+  footer h6 {
+    font-size: 0.9rem; /* Slightly smaller font size */
+  }
+  footer p, footer a {
+    font-size: 0.7rem; /* Slightly smaller font size */
+  }
+  footer {
+    padding: 1.5rem 0.5rem; /* Adjusted padding */
+  }
 }
 
-/* Adjust specific column and text spacing */
-footer .col-md-3 p,
-footer .col-md-4 p {
-  font-size: 0.875rem; /* Adjust as needed */
+/* 1 column layout for small screens (< 768px) */
+@media (max-width: 767px) {
+  footer .col-lg-3 {
+    flex: 0 0 100%; /* One column per row */
+  }
+  footer h6 {
+    font-size: 0.8rem; /* Smaller font size */
+  }
+  footer p, footer a {
+    font-size: 0.65rem; /* Smaller font size */
+  }
+  footer {
+    padding: 1rem 0.3rem; /* Further reduced padding */
+  }
 }
 
-footer .col-md-7 .p-3 {
-  font-size: 0.75rem; /* Adjust as needed */
-  white-space: nowrap; /* Prevent line breaks */
-  overflow: hidden; /* Hide overflow text */
-  text-overflow: ellipsis; /* Add ellipsis for overflow text */
+/* Remove unwanted margins for footer columns */
+footer .row > .col-lg-3:first-child {
+  padding-right: 8%; /* Adjust as needed */
 }
 
+/* Adjust margin of the second column in the footer row */
+footer .row > .col-lg-3:nth-child(2) {
+  padding-right: 0; /* Adjust as needed */
+}
+
+/* Footer section titles */
 footer h6 {
-  font-weight: bold; /* Bold font for section titles */
-  margin-bottom: 10px; /* Reduced space below titles */
-  font-size: 14px; /* Reduced font size */
+  font-weight: bold;
+  margin-bottom: 10px;
 }
 
+/* Footer paragraphs */
 footer p {
-  margin-bottom: 5px; /* Reduce the margin below each paragraph */
+  margin-bottom: 10px;
+  line-height: 1.8;
 }
 
 footer a {
-  color: #ffffff; /* White color for links */
-  text-decoration: none; /* No underline on links */
-  font-size: 14px; /* Reduced font size */
-  display: block; /* Make each link a block element to control spacing */
-  margin-bottom: 3px; /* Reduce space below each link */
+  color: #ffffff;
+  text-decoration: none;
+  display: block;
+  margin-bottom: 10px;
+  line-height: 1;
 }
 
 footer a:hover {
-  color: #00bfff; /* Light blue color on hover */
-  text-decoration: underline; /* Underline on hover */
+  color: #00bfff;
+  text-decoration: underline;
 }
 
 /* Social media icons */
 footer .btn-outline-light {
-  border-color: #ffffff; /* White border for icons */
-  color: #ffffff; /* White icon color */
-  font-size: 14px; /* Reduced icon size */
-  margin: 0 5px; /* Adjust horizontal margin for icons */
-}
-
-footer .row.d-flex.align-items-center {
-  display: flex; /* Ensure flexbox layout */
-  justify-content: space-between; /* Space between elements */
-  align-items: center; /* Center items vertically */
-}
-
-footer .col-md-7.col-lg-8,
-footer .col-md-5.col-lg-4 {
-  margin: 0; /* Remove extra margin */
-  padding: 0; /* Remove extra padding */
-}
-
-footer .col-md-3, .col-md-4, .col-md-7, .col-md-5 {
-  margin-bottom: 0; /* Remove bottom margin */
+  border-color: #ffffff;
+  color: #ffffff;
+  font-size: 1rem; /* Default font size */
+  margin: 0 5px;
 }
 
 footer .btn-outline-light:hover {
-  background-color: #00bfff; /* Light blue background on hover */
-  border-color: #00bfff; /* Light blue border on hover */
-  color: #ffffff; /* White icon color */
+  background-color: #00bfff;
+  border-color: #00bfff;
+  color: #ffffff;
 }
 
-footer .text-center.text-md-start {
-  text-align: center; /* Center align text */
-  margin-right: 0; /* Remove right margin */
+/* Adjust social media icons for different screen sizes */
+@media (max-width: 1199px) {
+  footer .btn-outline-light {
+    font-size: 0.9rem;
+    margin: 0 4px;
+  }
 }
 
-footer .text-center.text-md-end {
-  text-align: right; /* Right align text and icons */
-  margin-left: 0; /* Remove left margin */
+@media (max-width: 991px) {
+  footer .btn-outline-light {
+    font-size: 0.8rem;
+    margin: 0 3px;
+  }
+}
+
+@media (max-width: 767px) {
+  footer .btn-outline-light {
+    font-size: 0.7rem;
+    margin: 0 2px;
+  }
 }
