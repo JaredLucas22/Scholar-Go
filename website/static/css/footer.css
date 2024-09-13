@@ -15,7 +15,7 @@ main {
 footer {
   background-color: #0a1219;
   color: #ffffff;
-  padding-top: 2rem;
+  padding-top: 1rem;
   width: 100%;
   box-sizing: border-box;
   margin-top: auto;
@@ -25,11 +25,34 @@ footer {
 }
 
 /* Footer content container aligned to match navigation */
+/* Base styling for the container */
 footer .container-fluid {
-  max-width: 1200px;
+  max-width: 1200px; /* Default max-width for larger screens */
   margin: 0 auto;
   padding: 0 15px;
   box-sizing: border-box;
+}
+
+/* Adjust max-width for medium screens */
+@media (max-width: 1199px) {
+  footer .container-fluid {
+    max-width: 992px; /* Adjusted max-width for medium screens */
+  }
+}
+
+/* Adjust max-width for smaller screens */
+@media (max-width: 991px) {
+  footer .container-fluid {
+    max-width: 800px; /* Adjusted max-width for smaller screens */
+  }
+}
+
+/* Further adjust max-width for extra small screens */
+@media (max-width: 767px) {
+  footer .container-fluid {
+    max-width: 600px; /* Full width for extra small screens */
+    padding: 0 10px; /* Reduced padding for smaller screens */
+  }
 }
 
 /* Align the rows in the footer */
@@ -41,14 +64,14 @@ footer .row {
   justify-content: space-between;
 }
 
-/* Column styles for large screens */
+/* Column styles for all screens */
 footer .col-lg-3 {
   flex: 1;
-  min-width: 150px; /* Adjust this value if needed to ensure proper wrapping */
+  min-width: 150px; /* Ensure proper wrapping */
   box-sizing: border-box;
 }
 
-/* 4 columns layout for largest screens (>= 992px) */
+/* 4 columns layout for screens ≥ 992px */
 @media (min-width: 992px) {
   footer .col-lg-3 {
     flex: 0 0 25%; /* Four columns per row */
@@ -60,14 +83,14 @@ footer .col-lg-3 {
     font-size: 0.8rem; /* Base font size */
   }
   footer {
-    padding: 2rem 1rem; /* Base padding */
+    padding-top: 1.5rem; /* Base padding */
   }
 }
 
-/* 2 columns layout for medium screens (>= 768px and < 992px) */
+/* 4 columns layout for screens between 768px and 991px */
 @media (min-width: 768px) and (max-width: 991px) {
   footer .col-lg-3 {
-    flex: 0 0 50%; /* Two columns per row */
+    flex: 0 0 25%; /* Four columns per row */
   }
   footer h6 {
     font-size: 0.9rem; /* Slightly smaller font size */
@@ -76,11 +99,11 @@ footer .col-lg-3 {
     font-size: 0.7rem; /* Slightly smaller font size */
   }
   footer {
-    padding: 1.5rem 0.5rem; /* Adjusted padding */
+    padding-top: 1.5rem; /* Base padding */
   }
 }
 
-/* 1 column layout for small screens (< 768px) */
+/* 1 column layout for screens < 768px */
 @media (max-width: 767px) {
   footer .col-lg-3 {
     flex: 0 0 100%; /* One column per row */
@@ -92,7 +115,7 @@ footer .col-lg-3 {
     font-size: 0.65rem; /* Smaller font size */
   }
   footer {
-    padding: 1rem 0.3rem; /* Further reduced padding */
+    padding-top: 1.5rem; /* Base padding */
   }
 }
 
@@ -106,16 +129,37 @@ footer .row > .col-lg-3:nth-child(2) {
   padding-right: 0; /* Adjust as needed */
 }
 
+footer .row > .col-lg-3:nth-child(4) p {
+  margin-bottom: 3px; /* Adjust margin-bottom as needed */
+}
+
+.mb-4, .my-4 {
+  margin-bottom: 0.9rem !important;
+}
+
+.mr-3, .mx-3 {
+  margin-right: 0.3rem !important;
+}
+
+.text-right {
+  margin-right: 40px;
+}
+
+.text-left a {
+  margin-top: 20%; /* Adjust this value as needed */
+  display: inline-block; /* Ensure the margin-top applies properly */
+}
+
 /* Footer section titles */
 footer h6 {
   font-weight: bold;
-  margin-bottom: 10px;
+  margin-top: 12px;
 }
 
 /* Footer paragraphs */
 footer p {
-  margin-bottom: 10px;
-  line-height: 1.8;
+  margin-bottom: 12px;
+  line-height: 1.5;
 }
 
 footer a {
@@ -123,12 +167,8 @@ footer a {
   text-decoration: none;
   display: block;
   margin-bottom: 10px;
-  line-height: 1;
-}
-
-footer a:hover {
-  color: #00bfff;
-  text-decoration: underline;
+  line-height: 0.7;
+  transition: background-color 0.3s ease;
 }
 
 /* Social media icons */
@@ -140,8 +180,8 @@ footer .btn-outline-light {
 }
 
 footer .btn-outline-light:hover {
-  background-color: #00bfff;
-  border-color: #00bfff;
+  background-color: #ffffff37;
+  border-color: #ffffff;
   color: #ffffff;
 }
 
@@ -155,14 +195,14 @@ footer .btn-outline-light:hover {
 
 @media (max-width: 991px) {
   footer .btn-outline-light {
-    font-size: 0.8rem;
-    margin: 0 3px;
+    font-size: 0.7rem;
+    margin: 0 2px;
   }
 }
 
 @media (max-width: 767px) {
   footer .btn-outline-light {
-    font-size: 0.7rem;
-    margin: 0 2px;
+    font-size: 0.5rem;
+    margin: 0 1px;
   }
 }

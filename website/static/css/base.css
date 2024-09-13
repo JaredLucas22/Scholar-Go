@@ -13,8 +13,29 @@ body {
 
 .navbar {
   background: linear-gradient(90deg, #012cb8, #017cff) !important;
-  padding: 0.3rem 1rem;
+  padding: 0 1rem;
   height: auto;
+}
+
+/* Adjust padding for medium screens */
+@media (max-width: 1199px) {
+  .navbar {
+    padding: 0 1.5rem; /* Increased padding for medium screens */
+  }
+}
+
+/* Adjust padding for small screens */
+@media (max-width: 991px) {
+  .navbar {
+    padding: 0 2rem; /* Further increased padding for smaller screens */
+  }
+}
+
+/* Adjust padding for extra small screens */
+@media (max-width: 767px) {
+  .navbar {
+    padding: 0rem 2.5rem; /* Further increased padding for extra small screens */
+  }
 }
 
 .navbar .container {
@@ -128,6 +149,7 @@ body {
 
   .navbar-logo {
     height: 30px;
+    padding-left: 20%;
   }
 
   .navbar-text h1 {
