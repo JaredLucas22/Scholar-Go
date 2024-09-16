@@ -1,116 +1,81 @@
-{% extends "base.html" %} {% block title %}Sign Up{% endblock %} {% block
-content %}
-<form method="POST">
-  <h3 align="center">Sign Up</h3>
-  <div class="form-group">
-    <label for="email">Email Address</label>
-    <input
-      type="email"
-      class="form-control"
-      id="email"
-      name="email"
-      placeholder="Enter email"
-    />
-  </div>
-  <div class="form-group">
-    <label for="firstName">First Name</label>
-    <input
-      type="text"
-      class="form-control"
-      id="firstName"
-      name="firstName"
-      placeholder="Enter first name"
-    />
-  </div>
-  <div class="form-group">
-    <label for="course">Course</label>
-    <select class="form-control" id="course" name="course">
-      <option value="" disabled selected>Select your course</option>
-        <optgroup label="Business and Management">
-            <option value="business_admin">Bachelor of Science in Business Administration</option>
-            <option value="accountancy">Bachelor of Science in Accountancy</option>
-            <option value="management_engineering">Bachelor of Science in Management Engineering</option>
-            <option value="marketing_management">Bachelor of Science in Marketing Management</option>
-        </optgroup>
-    
-        <optgroup label="Engineering and Technology">
-            <option value="civil_engineering">Bachelor of Science in Civil Engineering</option>
-            <option value="computer_engineering">Bachelor of Science in Computer Engineering</option>
-            <option value="electronics_engineering">Bachelor of Science in Electronics Engineering</option>
-            <option value="information_technology">Bachelor of Science in Information Technology</option>
-            <option value="mechanical_engineering">Bachelor of Science in Mechanical Engineering</option>
-        </optgroup>
-    
-        <optgroup label="Health Sciences">
-            <option value="nursing">Bachelor of Science in Nursing</option>
-            <option value="pharmacy">Bachelor of Science in Pharmacy</option>
-            <option value="physical_therapy">Bachelor of Science in Physical Therapy</option>
-            <option value="medical_technology">Bachelor of Science in Medical Technology</option>
-        </optgroup>
-    
-        <optgroup label="Arts and Humanities">
-            <option value="communication">Bachelor of Arts in Communication</option>
-            <option value="fine_arts">Bachelor of Fine Arts</option>
-            <option value="psychology">Bachelor of Arts in Psychology</option>
-            <option value="english">Bachelor of Arts in English</option>
-        </optgroup>
-    
-        <optgroup label="Social Sciences">
-            <option value="criminology">Bachelor of Science in Criminology</option>
-            <option value="social_work">Bachelor of Science in Social Work</option>
-            <option value="sociology">Bachelor of Science in Sociology</option>
-        </optgroup>
-    
-        <optgroup label="Education">
-            <option value="elementary_education">Bachelor of Elementary Education</option>
-            <option value="secondary_education">Bachelor of Secondary Education</option>
-        </optgroup>
-    
-        <optgroup label="Natural Sciences">
-            <option value="biology">Bachelor of Science in Biology</option>
-            <option value="environmental_science">Bachelor of Science in Environmental Science</option>
-            <option value="chemistry">Bachelor of Science in Chemistry</option>
-        </optgroup>
-    
-        <optgroup label="Hospitality and Tourism">
-            <option value="hotel_restaurant_management">Bachelor of Science in Hotel and Restaurant Management</option>
-            <option value="tourism_management">Bachelor of Science in Tourism Management</option>
-        </optgroup>
-    
-        <optgroup label="Law and Governance">
-            <option value="laws">Bachelor of Laws</option>
-            <option value="public_administration">Bachelor of Public Administration</option>
-        </optgroup>
-    
-        <optgroup label="Architecture">
-            <option value="architecture">Bachelor of Science in Architecture</option>
-        </optgroup>
-    </select>
+{% extends "base.html" %}
 
-    <script>
-      document.getElementById('courses').addEventListener('change', function() {
-          if (this.selectedIndex !== 0) {
-              this.options[0].style.display = 'none';
-          } else {
-              this.options[0].style.display = 'block';
-          }
-      });
-  </script>
-    
-</div>
-  <div class="form-group">
-    <label for="gpa">GPA</label>
-    <input
-      type="number"
-      step="0.01"
-      class="form-control"
-      id="gpa"
-      name="gpa"
-      placeholder="Enter GPA"
-      min="0"
-      max="5"
-      oninput="validateGPA(this)"
-    />
+{% block title %}Sign Up{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link rel="stylesheet" href="/static/css/login.css">
+
+<div class="content-wrapper">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6 d-flex flex-column justify-content-center align-items-center left-side-content">
+        <img src="/static/images/logo.png" alt="Logo">
+        <h1>ScholarGO</h1>
+        <h2>FIND SCHOLARSHIPS NEARBY</h2>
+      </div>
+      <div class="col-md-6 d-flex justify-content-center align-items-center flex-column">
+        <div class="login-form-container">
+          <form id="signupForm" method="POST">
+            <!-- Step 1 -->
+            <div id="step1" class="form-step">
+              <h3 class="text-center">Sign Up</h3>
+              <!-- Form Fields for Step 1 -->
+              <div class="form-group">
+                <input type="email" class="form-control" id="email" name="email" placeholder="Email address"/>
+              </div>
+              <div class="form-group">
+                <input type="text" class="form-control" id="firstName" name="firstName" placeholder="First name" />
+              </div>
+              <div class="form-group">
+                <select class="form-control select-custom" id="course" name="course">
+                  <option value="" disabled selected>Select your course</option>
+                  <!-- Your options here -->
+                </select>
+              </div>
+              <div class="form-group">
+                <input type="number" step="0.01" class="form-control" id="gpa" name="gpa" placeholder="Enter GPA" min="0" max="5" />
+              </div>
+              <button type="button" class="btn btn-primary btn-block" id="nextButton">Next</button>
+            </div>
+      
+            <!-- Step 2 -->
+            <div id="step2" class="form-step" style="display: none;">
+              <h3 class="text-center">Sign Up</h3>
+              <!-- Form Fields for Step 2 -->
+              <div class="form-group">
+                <select class="form-control select-custom" id="extracurricularActivities" name="extracurricularActivities">
+                  <option value="" disabled selected>Select an activity</option>
+                  <!-- Your options here -->
+                </select>
+              </div>
+              <div class="form-group">
+                <select class="form-control select-custom" id="financialStatus" name="financialStatus">
+                  <option value="" disabled selected>Select Financial Status</option>
+                  <!-- Your options here -->
+                </select>
+              </div>
+              <div class="form-group">
+                <input type="password" class="form-control" id="password1" name="password1" placeholder="Enter password" />
+              </div>
+              <div class="form-group">
+                <input type="password" class="form-control" id="password2" name="password2" placeholder="Confirm password" />
+              </div>
+              <div class="form-buttons">
+                <button type="button" class="btn btn-secondary btn-back" id="backButton">Back</button>
+                <button type="submit" class="btn btn-primary btn-submit">Submit</button>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="register-container">
+          <p>Already have an account?<a href="/login"> Log in here.</a></p>
+        </div>
+      </div>
+      
+      
+    </div>
+  </div>
 </div>
 
 <script>
@@ -121,71 +86,16 @@ content %}
       input.value = 0;
     }
   }
+
+  document.getElementById('nextButton').addEventListener('click', function() {
+    document.getElementById('step1').style.display = 'none';
+    document.getElementById('step2').style.display = 'block';
+  });
+
+  document.getElementById('backButton').addEventListener('click', function() {
+    document.getElementById('step2').style.display = 'none';
+    document.getElementById('step1').style.display = 'block';
+  });
 </script>
 
-  <div class="form-group">
-    <label for="extracurricularActivities">Extracurricular Activities</label>
-    <select class="form-control" id="extracurricularActivities" name="extracurricularActivities">
-        <option value="" disabled selected>Select an activity</option>
-        <option value="Sports">Sports</option>
-        <option value="Community Service">Community Service</option>
-        <option value="Academic Clubs">Academic Clubs</option>
-        <option value="Theater">Theater</option>
-        <option value="Academic">Academic</option>
-        <option value="Cultural Activities">Cultural Activities</option>
-        <option value="Internships">Internships</option>
-        <option value="Science and Technology Studies">Science and Technology Studies</option>
-        <option value="Arts and Creativity">Arts and Creativity</option>
-        <option value="Competitions">Competitions</option>
-        <option value="Leadership and Entrepreneurship">Leadership and Entrepreneurship</option>
-        <option value="Art Music">Art Music</option>
-        <option value="Sculpture">Sculpture</option>
-        <option value="Social Justice">Social Justice</option>
-        <option value="Art Club">Art Club</option>
-        <option value="Drama">Drama</option>
-        <option value="Interest Clubs">Interest Clubs</option>
-        <option value="Animation">Animation</option>
-        <option value="Basketball">Basketball</option>
-        <option value="Choir">Choir</option>
-        <option value="Cycling">Cycling</option>
-        <option value="English Club">English Club</option>
-        <option value="Graphic Design">Graphic Design</option>
-        <option value="Gymnastics">Gymnastics</option>
-    </select>
-</div>
-
-  <div class="form-group">
-    <label for="financialStatus">Financial Status</label>
-      <select class="form-control" id="financialStatus" name="financialStatus">
-        <option value="" disabled selected>What is your Financial Status?</option>
-        <option value="Low Income">Low Income</option>
-        <option value="Lower Middle">Lower Middle</option>
-        <option value="Middle">Middle</option>
-        <option value="Upper Middle">Upper Middle</option>
-        <option value="Rich">Rich</option>
-    </select>
-  </div>
-  <div class="form-group">
-    <label for="password1">Password</label>
-    <input
-      type="password"
-      class="form-control"
-      id="password1"
-      name="password1"
-      placeholder="Enter password"
-    />
-  </div>
-  <div class="form-group">
-    <label for="password2">Password (Confirm)</label>
-    <input
-      type="password"
-      class="form-control"
-      id="password2"
-      name="password2"
-      placeholder="Confirm password"
-    />
-  </div>
-  <br />
-  <button type="submit" class="btn btn-primary">Submit</button>
-</form>
 {% endblock %}

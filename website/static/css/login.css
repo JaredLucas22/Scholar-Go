@@ -174,7 +174,7 @@ html, body {
 .btn-block {
   display: block; 
   width: 100%; 
-  margin-top: 10px; 
+  margin-top: 20px; 
   background-color: #012cb8;
   font-weight: bold;
   font-size: 13px;
@@ -383,3 +383,66 @@ h1 {
     font-size: 8px;
   }
 }
+
+/* Sign Up */
+
+.select-custom {
+  width: 100%;
+  padding: 8px;
+  font-size: 13px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.form-buttons {
+  display: flex;
+  justify-content: flex-end; /* Align buttons to the right */
+  margin-top: 20px;
+}
+
+.btn-block {
+  display: block; 
+  width: 100%; 
+  margin-top: 20px; 
+  background-color: #012cb8;
+  font-weight: bold;
+  font-size: 13px;
+  padding: 10px;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+.btn-block:hover {
+  background-color: #0027a5;
+}
+
+.btn-back {
+  flex: 1; /* Adjusts the width of the "Back" button */
+  margin-right: 10px; /* Space between buttons */
+}
+
+.btn-submit {
+  flex: 2; /* Adjusts the width of the "Submit" button */
+}
+
+.btn-submit:hover {
+  background-color: #0027a5;
+}
+
+@media (max-width: 768px) {
+  .form-buttons {
+    flex-direction: column; /* Stack buttons vertically on small screens */
+    align-items: flex-end; /* Align buttons to the right */
+  }
+
+  .btn-back,
+  .btn-submit {
+    margin-right: 0; /* Remove right margin for stacked buttons */
+    margin-bottom: 10px; /* Space between stacked buttons */
+  }
+
+  .btn-submit {
+    margin-bottom: 0;
+  }
+}
+
