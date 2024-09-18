@@ -458,19 +458,47 @@ h1 {
   }
 }
 
-.select-custom {
+/* Wrapper to position the custom arrow */
+.custom-select-wrapper {
+  position: relative;
+  display: inline-block;
   width: 100%;
-  padding: 8px;
+}
+
+/* Style the select element */
+.custom-select {
+  appearance: none; /* Remove default styling in modern browsers */
+  -webkit-appearance: none; /* Remove default styling in WebKit browsers */
+  -moz-appearance: none; /* Remove default styling in Firefox */
+  width: 100%;
+  padding: 8px 30px 8px 15px; /* Adjust padding to make space for the arrow */
   font-size: 13px;
   border: 1px solid #ccc;
   border-radius: 4px;
   box-sizing: border-box; /* Ensure padding and border are included in width */
+  background: #fff; /* Ensure background is white or matches the design */
 }
+
+/* Position the custom arrow */
+.custom-select-wrapper::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 18px; /* Adjust this value for right margin of the arrow */
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent; /* Adjust size and color of the custom arrow */
+  border-right: 6px solid transparent;
+  border-top: 6px solid #ccc; /* Arrow color */
+  transform: translateY(-50%); /* Center the arrow vertically */
+}
+
+
 
 .form-buttons {
   display: flex;
   justify-content: flex-end; /* Align buttons to the right */
-  gap: 10px; /* Add space between buttons */
+  gap: 5px; /* Add space between buttons */
   flex-wrap: wrap; /* Ensure buttons wrap if the screen is too small */
 }
 
@@ -484,7 +512,6 @@ h1 {
   padding: 10px;
   border: none;
   transition: background-color 0.3s ease;
-  margin-top: 10px; /* Applied only when buttons are side by side */
 }
 
 .btn-back:hover {
@@ -507,7 +534,6 @@ h1 {
 }
 
 .btn-submit {
-  margin-top: 10px;
   flex: 2; /* Adjusts the width of the "Submit" button */
   background-color: #012cb8;
   display: block; 
@@ -543,11 +569,14 @@ h1 {
   }
 
   .btn-submit {
-    margin-bottom: 0;
+    margin-bottom: 10px; /* Add bottom margin for spacing between buttons */
   }
 
-  .select-custom {
-    font-size: 12px; /* Slightly reduce font size for smaller screens */
+  .btn-back,
+  .custom-next-btn,
+  .btn-submit {
+    padding: 8px; /* Reduce padding for smaller screens */
+    font-size: 12px; /* Adjust font size for better fit */
   }
 }
 
@@ -555,12 +584,25 @@ h1 {
   .btn-back,
   .custom-next-btn,
   .btn-submit {
-    padding: 8px; /* Reduce padding for very small screens */
-    font-size: 12px; /* Adjust font size for better fit */
+    padding: 6px; /* Reduce padding further for very small screens */
+    font-size: 11px; /* Further adjust font size */
   }
 
-  .select-custom {
-    padding: 6px; /* Reduce padding on small screens */
-    font-size: 12px; /* Slightly smaller font */
+  .btn-submit {
+    margin-bottom: 8px; /* Adjust bottom margin */
   }
 }
+
+@media (max-width: 320px) {
+  .btn-back,
+  .custom-next-btn,
+  .btn-submit {
+    padding: 4px; /* Further reduce padding */
+    font-size: 10px; /* Further reduce font size */
+  }
+
+  .btn-submit {
+    margin-bottom: 6px; /* Adjust bottom margin */
+  }
+}
+
