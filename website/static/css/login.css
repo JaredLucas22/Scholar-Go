@@ -170,98 +170,151 @@ html, body {
   }
 }
 
-
 .btn-block {
   display: block; 
   width: 100%; 
-  margin-top: 20px; 
+  margin-top: 12px; 
   background-color: #012cb8;
   font-weight: bold;
-  font-size: 13px;
-  padding: 10px;
+  font-size: 13px; /* Default font size */
+  padding: 8px; /* Default padding */
   border: none;
   transition: background-color 0.3s ease;
+  text-align: center; /* Center text within the button */
 }
 
 .btn-block:hover {
   background-color: #0027a5;
 }
 
+/* Responsive adjustments */
 @media (max-width: 768px) {
   .btn-block {
-    padding: 8px;
+    padding: 8px; /* Slightly reduced padding */
+    font-size: 12px; /* Reduce font size for better fit */
   }
 }
 
 @media (max-width: 576px) {
   .btn-block {
-    padding: 5px;
+    padding: 6px; /* Further reduced padding */
+    font-size: 11px; /* Further reduced font size */
   }
 }
 
 @media (max-width: 480px) {
   .btn-block {
-    padding: 3px;
+    padding: 4px; /* More reduced padding */
+    font-size: 10px; /* Reduce font size further */
   }
 }
 
 @media (max-width: 320px) {
   .btn-block {
-    padding: 2px;
+    padding: 2px; /* Minimal padding for very small screens */
+    font-size: 9px; /* Further reduced font size */
   }
 }
 
 .btn-short {
   display: block; 
-  width: auto;
+  width: 57%;
   margin: 20px auto 0; 
-  font-size: 13px;
-  padding: 8px;
+  font-size: 13px; /* Default font size */
+  padding: 10px; /* Default padding */
   font-weight: bold;
   background-color: #017cff;
   border: none;
   transition: background-color 0.3s ease;
+  text-align: center; /* Center text within the button */
+  white-space: nowrap; /* Prevent text from wrapping to a new line */
+  overflow: hidden; /* Hide any overflowing text */
 }
 
 .btn-short:hover {
   background-color: #006de2;
 }
 
+/* Responsive adjustments */
 @media (max-width: 768px) {
   .btn-short {
-    margin: 15px auto 0;
-    padding: 5px;
+    width: 60%; /* Increase button width for tablets */
+    margin: 15px auto 0; /* Adjust margin for better spacing */
+    padding: 8px; /* Slightly reduce padding */
+    font-size: 12px; /* Reduce font size to fit better */
   }
 }
 
 @media (max-width: 576px) {
   .btn-short {
-    margin: 10px auto 0;
-    padding: 3px;
+    width: 70%; /* Increase button width for smaller screens */
+    margin: 10px auto 0; /* Adjust margin */
+    padding: 6px; /* Reduce padding */
+    font-size: 11px; /* Further reduce font size */
   }
 }
 
 @media (max-width: 480px) {
   .btn-short {
-    margin: 5px auto 0;
-    padding: 2px;
+    width: 85%; /* Increase button width to fit more text */
+    margin: 8px auto 0; /* Adjust margin */
+    padding: 4px; /* Reduce padding */
+    font-size: 10px; /* Further reduce font size */
   }
 }
 
 @media (max-width: 320px) {
   .btn-short {
-    margin: 2px auto 0;
-    padding: 1px;
+    width: 90%; /* Button takes almost full width for very small screens */
+    margin: 5px auto 0; /* Adjust margin */
+    padding: 3px; /* Reduce padding */
+    font-size: 9px; /* Further reduce font size */
   }
 }
+
+
 
 .forgot-password {
   display: block; 
   text-align: center;
   margin-top: 10px; 
-  font-size: 0.875rem; 
+  font-size: 0.875rem; /* Default font size */
   margin-bottom: 30px; 
 }
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .forgot-password {
+    font-size: 0.8rem; /* Slightly smaller font size for tablets */
+    margin-top: 8px; /* Reduce top margin */
+    margin-bottom: 25px; /* Reduce bottom margin */
+  }
+}
+
+@media (max-width: 576px) {
+  .forgot-password {
+    font-size: 0.75rem; /* Further reduce font size for smaller screens */
+    margin-top: 6px; /* Reduce top margin */
+    margin-bottom: 20px; /* Reduce bottom margin */
+  }
+}
+
+@media (max-width: 480px) {
+  .forgot-password {
+    font-size: 0.7rem; /* Further reduce font size for very small screens */
+    margin-top: 4px; /* Reduce top margin */
+    margin-bottom: 15px; /* Reduce bottom margin */
+  }
+}
+
+@media (max-width: 320px) {
+  .forgot-password {
+    font-size: 0.65rem; /* Further reduce font size for extremely small screens */
+    margin-top: 2px; /* Reduce top margin */
+    margin-bottom: 10px; /* Reduce bottom margin */
+  }
+}
+
 
 .form-actions {
   text-align: center; 
@@ -386,25 +439,62 @@ h1 {
 
 /* Sign Up */
 
+.text-center {
+  text-align: center; /* Centers the text horizontally */
+  font-size: 30px; /* Default font size */
+  margin-bottom: 10px;
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+  .text-center {
+    font-size: 24px; /* Reduce font size for tablet screens */
+  }
+}
+
+@media (max-width: 480px) {
+  .text-center {
+    font-size: 18px; /* Further reduce font size for mobile screens */
+  }
+}
+
 .select-custom {
   width: 100%;
   padding: 8px;
   font-size: 13px;
   border: 1px solid #ccc;
   border-radius: 4px;
+  box-sizing: border-box; /* Ensure padding and border are included in width */
 }
 
 .form-buttons {
   display: flex;
   justify-content: flex-end; /* Align buttons to the right */
-  margin-top: 20px;
+  gap: 10px; /* Add space between buttons */
+  flex-wrap: wrap; /* Ensure buttons wrap if the screen is too small */
 }
 
-.btn-block {
+.btn-back {
+  flex: 1;
+  background-color: #7a7a7a; /* Example: Set a custom background color */
   display: block; 
   width: 100%; 
-  margin-top: 20px; 
-  background-color: #012cb8;
+  font-weight: bold;
+  font-size: 13px;
+  padding: 10px;
+  border: none;
+  transition: background-color 0.3s ease;
+  margin-top: 10px; /* Applied only when buttons are side by side */
+}
+
+.btn-back:hover {
+  background-color: #5b5b5b;
+}
+
+.custom-next-btn {
+  background-color: #017cff; /* Example: Set a custom background color */
+  display: block; 
+  width: 100%; 
   font-weight: bold;
   font-size: 13px;
   padding: 10px;
@@ -412,37 +502,65 @@ h1 {
   transition: background-color 0.3s ease;
 }
 
-.btn-block:hover {
-  background-color: #0027a5;
-}
-
-.btn-back {
-  flex: 1; /* Adjusts the width of the "Back" button */
-  margin-right: 10px; /* Space between buttons */
+.custom-next-btn:hover {
+  background-color: #006de2;
 }
 
 .btn-submit {
+  margin-top: 10px;
   flex: 2; /* Adjusts the width of the "Submit" button */
+  background-color: #012cb8;
+  display: block; 
+  width: 100%; 
+  font-weight: bold;
+  font-size: 13px;
+  padding: 10px;
+  border: none;
+  transition: background-color 0.3s ease;
 }
 
 .btn-submit:hover {
   background-color: #0027a5;
 }
 
+/* Responsive adjustments */
 @media (max-width: 768px) {
   .form-buttons {
     flex-direction: column; /* Stack buttons vertically on small screens */
-    align-items: flex-end; /* Align buttons to the right */
+    align-items: stretch; /* Make buttons fill the available width */
   }
 
   .btn-back,
-  .btn-submit {
+  .btn-submit,
+  .custom-next-btn {
+    width: 100%; /* Make buttons take full width */
     margin-right: 0; /* Remove right margin for stacked buttons */
-    margin-bottom: 10px; /* Space between stacked buttons */
+    margin-top: 0; /* Remove top margin when buttons stack */
+  }
+
+  .btn-back:first-child {
+    margin-top: 10px; /* Apply top margin only to the first button */
   }
 
   .btn-submit {
     margin-bottom: 0;
   }
+
+  .select-custom {
+    font-size: 12px; /* Slightly reduce font size for smaller screens */
+  }
 }
 
+@media (max-width: 480px) {
+  .btn-back,
+  .custom-next-btn,
+  .btn-submit {
+    padding: 8px; /* Reduce padding for very small screens */
+    font-size: 12px; /* Adjust font size for better fit */
+  }
+
+  .select-custom {
+    padding: 6px; /* Reduce padding on small screens */
+    font-size: 12px; /* Slightly smaller font */
+  }
+}
