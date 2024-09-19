@@ -7,13 +7,15 @@
     <div class="row">
         {% if sponsors %}
             {% for item in sponsors %}
-            <div class="col-12 mb-4"> <!-- Full-width column with bottom margin -->
+            <div class="col-12 mb-4">
                 <div class="card">
                     <div class="card-body position-relative">
-                        <!-- Bookmark Button -->
-                        <button class="btn btn-outline-secondary position-absolute" style="top: 10px; right: 10px;" type="button" data-toggle="tooltip" data-placement="top" title="Bookmark">
-                            <i class="fa fa-bookmark"></i>
-                        </button>
+                        <!-- Bookmark Form -->
+                        <form action="{{ url_for('auth.bookmark', sponsorship_id=item.sponsor.id) }}" method="post">
+                            <button class="btn btn-outline-secondary position-absolute" style="top: 10px; right: 10px;" type="submit" data-toggle="tooltip" data-placement="top" title="Bookmark">
+                                <i class="fa fa-bookmark"></i>
+                            </button>
+                        </form>
 
                         <h5 class="card-title">{{ item.sponsor.sponsor_name }}</h5>
                         <p class="card-text">Passing Requirement: <b>{{ item.sponsor.passing_requirement }}</b></p>
@@ -56,12 +58,9 @@
                     if (this.getAttribute('aria-expanded') === 'true') {
                         icon.classList.add('fa-chevron-down');
                         icon.classList.remove('fa-chevron-up');
-                    
                     } else {
                         icon.classList.add('fa-chevron-up');
                         icon.classList.remove('fa-chevron-down');
-                    
-                
                     }
                 }
             });

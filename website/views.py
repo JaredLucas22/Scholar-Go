@@ -50,3 +50,24 @@ def delete_note():
             db.session.commit()
 
     return jsonify({})
+
+@views.route('/sponsorlist')
+@login_required
+def sponsorlist():
+    # Fetch all sponsorships
+    sponsors = Sponsorship_data.query.all()
+    
+    # Get user's bookmarked sponsorships
+    bookmarked_sponsorships = [bookmark.sponsorship_id for bookmark in current_user.user_bookmarks]
+
+    # Annotate sponsorships with bookmark status
+    annotated_sponsors = []
+    for sponsor in sponsors:
+        annotated_sponsors.append({
+            'sponsor': sponsor,
+
+            'bookmarked': sponsor.id in bookmarked_sponsorships
+        })
+
+    return render_template('sponsorlist.html', sponsors=annotated_sponsors)
+
