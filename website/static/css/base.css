@@ -100,6 +100,12 @@ body {
   background-color: rgba(0, 0, 0, 0.1); 
 }
 
+@media (min-width: 1400px) {
+    .container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
+        max-width: 1180px !important;
+    }
+}
+
 @media (min-width: 992px) {
   .navbar .container {
     justify-content: space-between;
