@@ -10,6 +10,11 @@
             <div class="col-12 mb-4"> <!-- Full-width column with bottom margin -->
                 <div class="card">
                     <div class="card-body position-relative">
+                        <!-- Bookmark Button -->
+                        <button class="btn btn-outline-secondary position-absolute" style="top: 10px; right: 10px;" type="button" data-toggle="tooltip" data-placement="top" title="Bookmark">
+                            <i class="fa fa-bookmark"></i>
+                        </button>
+
                         <h5 class="card-title">{{ item.sponsor.sponsor_name }}</h5>
                         <p class="card-text">Passing Requirement: <b>{{ item.sponsor.passing_requirement }}</b></p>
                         <p class="card-text">Student Score: <b>{{ item.score }}</b></p>
@@ -61,6 +66,9 @@
                 }
             });
         });
+
+        // Initialize tooltips
+        $('[data-toggle="tooltip"]').tooltip();
     });
 </script>
 {% endblock %}
