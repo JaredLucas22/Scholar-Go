@@ -1,11 +1,10 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
-from .models import User, Sponsorship_data
+from .models import User, Sponsorship_data, Bookmark
 from werkzeug.security import generate_password_hash, check_password_hash
-from . import db  
+from . import db
 from flask_login import login_user, login_required, logout_user, current_user
 
 auth = Blueprint('auth', __name__)
-
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
@@ -26,13 +25,11 @@ def login():
 
     return render_template("login.html", user=current_user)
 
-
 @auth.route('/logout')
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('auth.login'))
-
 
 @auth.route('/sign-up', methods=['GET', 'POST'])
 def sign_up():
@@ -40,7 +37,7 @@ def sign_up():
         email = request.form.get('email')
         first_name = request.form.get('firstName')
         course = request.form.get('course')
-        gpa  = request.form.get('gpa')
+        gpa = request.form.get('gpa')
         extracurricular_activities = request.form.get('extracurricularActivities')
         financial_status = request.form.get('financialStatus')
         password1 = request.form.get('password1')
@@ -61,11 +58,12 @@ def sign_up():
             new_user = User(
                 email=email,
                 first_name=first_name,
-                course = course,
+                course=course,
                 password=generate_password_hash(password1, method='pbkdf2:sha256'),
                 gpa=gpa,
                 extracurricular_activities=extracurricular_activities,
-                financial_status = financial_status)
+                financial_status=financial_status
+            )
             db.session.add(new_user)
             db.session.commit()
             login_user(new_user, remember=True)
@@ -73,7 +71,6 @@ def sign_up():
             return redirect(url_for('views.home'))
 
     return render_template("sign_up.html", user=current_user)
-
 
 @auth.route('/sign-sponsor', methods=['GET', 'POST'])
 def sign_sponsor():
@@ -89,8 +86,6 @@ def sign_sponsor():
         description = request.form.get('description')
         full_description = request.form.get('fulldescription')
 
-       
-        # Create a new Sponsorship_data entry with verified set to False
         new_sponsor = Sponsorship_data(
             sponsor_name=sponsor_name,
             course=course,
@@ -101,11 +96,10 @@ def sign_sponsor():
             passing_requirement=passing_requirement,
             description=description,
             full_description=full_description,
-            extracurricular_activty =extracurricular_activity,
-            verified=False  
+            extracurricular_activity=extracurricular_activity,
+            verified=False
         )
 
-        # Add and commit to the database
         db.session.add(new_sponsor)
         db.session.commit()
 
@@ -113,3 +107,18 @@ def sign_sponsor():
         return redirect(url_for('auth.login'))
 
     return render_template("sign_sponsor.html", user=current_user)
+
+@auth.route('/bookmark/<int:sponsorship_id>', methods=['POST'])
+@login_required
+def bookmark(sponsorship_id):
+    existing_bookmark = Bookmark.query.filter_by(user_id=current_user.id, sponsorship_id=sponsorship_id).first()
+    
+    if existing_bookmark:
+        flash('This sponsorship is already bookmarked.', category='info')
+    else:
+        new_bookmark = Bookmark(user_id=current_user.id, sponsorship_id=sponsorship_id)
+        db.session.add(new_bookmark)
+        db.session.commit()
+        flash('Sponsorship bookmarked successfully!', category='success')
+    
+    return redirect(request.referrer or url_for('views.home'))
