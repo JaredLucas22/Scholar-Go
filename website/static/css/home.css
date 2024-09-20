@@ -386,5 +386,30 @@ body {
     object-fit: cover; /* Ensures the image covers the fixed dimensions */
 }
 
+.features h2 {
+    font-size: 25px;
+    font-weight: bold;
+    text-align: center;
+    padding-bottom: 8%;
+}
 
+.features p {
+    text-align: center;
+    color: rgb(109, 109, 109);
+}
+
+.partners p {
+    text-align: center;
+}
+
+.partner-logo {
+    flex: 0 0 20%; /* Makes each logo take up 20% of the width */
+    max-width: 10%; /* Ensures the maximum width is 20% */
+}
+
+.logo-img {
+    width: auto;  /* Maintain aspect ratio */
+    height: 100px; /* Set desired height */
+    object-fit: contain; /* Maintain aspect ratio */
+}
 
