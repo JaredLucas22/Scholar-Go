@@ -6,17 +6,33 @@
 <div class="container">
     <div class="row">
         {% if sponsors %}
+        
             {% for item in sponsors %}
+
             <div class="col-12 mb-4">
                 <div class="card">
                     <div class="card-body position-relative">
                         <!-- Bookmark Form -->
-                        <form action="{{ url_for('auth.bookmark', sponsorship_id=item.sponsor.id) }}" method="post">
-                            <button class="btn btn-outline-secondary position-absolute" style="top: 10px; right: 10px;" type="submit" data-toggle="tooltip" data-placement="top" title="Bookmark">
-                                <i class="fa fa-bookmark"></i>
-                            </button>
+                        <form action="{{ url_for('auth.follow', sponsorship_id=item.sponsor.id) }}" method="post">
+                        {% if item.is_followed %}
+                        <button class="btn btn-danger position-absolute" style="top: 10px; right: 10px;" type="submit" data-toggle="tooltip" data-placement="top" title="Bookmark">
+                            <i class="fa fa-bookmark"></i>
+                        </button>
+                        {% endif %}
+                        <button class="btn btn-outline-secondary position-absolute" style="top: 10px; right: 10px;" 
+                        data-sponsorship-id="{{ item.sponsor.id }}" 
+                        onclick="toggleFollowColor(this)" 
+                        data-toggle="tooltip" data-placement="top" title="Follow">
+                    <i class="fa fa-bookmark"></i>
+                </button>
+                
+                </button>
+                
                         </form>
-
+                        
+                        {% if item.is_followed %}
+                    
+                        {% endif %}
                         <h5 class="card-title">{{ item.sponsor.sponsor_name }}</h5>
                         <p class="card-text">Passing Requirement: <b>{{ item.sponsor.passing_requirement }}</b></p>
                         <p class="card-text">Student Score: <b>{{ item.score }}</b></p>
@@ -69,7 +85,27 @@
         // Initialize tooltips
         $('[data-toggle="tooltip"]').tooltip();
     });
+
+    
 </script>
+
+<script>
+    function toggleFollowColor(button) {
+        button.classList.toggle('following');
+    
+        // Change the button color
+        if (button.classList.contains('following')) {
+            button.style.backgroundColor = '#28a745'; // Green when following
+            button.style.color = '#fff'; // White text
+        } else {
+            button.style.backgroundColor = ''; // Reset to default
+            button.style.color = ''; // Reset to default text color
+        }
+    }
+    </script>
+    
+
+
 {% endblock %}
 
 {% endblock %}

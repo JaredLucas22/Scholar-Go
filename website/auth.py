@@ -1,10 +1,36 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for
-from .models import User, Sponsorship_data, Bookmark
+from flask import Blueprint, render_template, request, flash, redirect, url_for, jsonify
+from .models import User, Sponsorship_data
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import db
 from flask_login import login_user, login_required, logout_user, current_user
 
 auth = Blueprint('auth', __name__)
+
+def follow_sponsorship(user_id, sponsorship_id):
+    user = User.query.get(user_id)
+    sponsorship = Sponsorship_data.query.get(sponsorship_id)
+
+    if not user or not sponsorship:
+        return False  # User or sponsorship not found
+
+    if sponsorship not in user.followed_sponsorships:
+        user.followed_sponsorships.append(sponsorship)
+        db.session.commit()
+        return True  # Successfully followed
+    return False  # Already following
+
+def unfollow_sponsorship(user_id, sponsorship_id):
+    user = User.query.get(user_id)
+    sponsorship = Sponsorship_data.query.get(sponsorship_id)
+
+    if not user or not sponsorship:
+        return False  # User or sponsorship not found
+
+    if sponsorship in user.followed_sponsorships:
+        user.followed_sponsorships.remove(sponsorship)
+        db.session.commit()
+        return True  # Successfully unfollowed
+    return False  # Not currently following
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
@@ -108,17 +134,17 @@ def sign_sponsor():
 
     return render_template("sign_sponsor.html", user=current_user)
 
-@auth.route('/bookmark/<int:sponsorship_id>', methods=['POST'])
+@auth.route('/follow/<int:sponsorship_id>', methods=['POST'])
 @login_required
-def bookmark(sponsorship_id):
-    existing_bookmark = Bookmark.query.filter_by(user_id=current_user.id, sponsorship_id=sponsorship_id).first()
-    
-    if existing_bookmark:
-        flash('This sponsorship is already bookmarked.', category='info')
+def follow(sponsorship_id):
+    # Check if the user is currently following the sponsorship
+    if current_user.is_following(sponsorship_id):  # Assuming you have this method defined
+        unfollow_sponsorship(current_user.id, sponsorship_id)
+        flash('You have unfollowed this sponsorship.', category='success')
     else:
-        new_bookmark = Bookmark(user_id=current_user.id, sponsorship_id=sponsorship_id)
-        db.session.add(new_bookmark)
-        db.session.commit()
-        flash('Sponsorship bookmarked successfully!', category='success')
-    
+        follow_sponsorship(current_user.id, sponsorship_id)
+        flash('You are now following this sponsorship!', category='success')
+
     return redirect(request.referrer or url_for('views.home'))
+
+

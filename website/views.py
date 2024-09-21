@@ -3,9 +3,7 @@ from flask_login import login_required, current_user
 from .models import Note, Sponsorship_data
 from . import db
 import json
-import sys
-sys.path.append('..')
-from scoring import calculate_compatibility_score, match_students_to_sponsorships
+from scoring import calculate_compatibility_score
 
 views = Blueprint('views', __name__)
 
@@ -21,15 +19,31 @@ def recommendation():
         for sponsor in sponsors
         if calculate_compatibility_score(current_user, sponsor) >= sponsor.passing_requirement
     ]
-    return render_template('sponsorlist.html', user=current_user, sponsors=compatible_sponsors)
+    
+    # Get followed sponsorship IDs for this user
+    followed_sponsorship_ids = [sponsorship.id for sponsorship in current_user.followed_sponsorships]
+    
+    sponsors_with_follow_status = [
+        {
+            'sponsor': item['sponsor'],
+            'score': item['score'],
+            'is_followed': item['sponsor'].id in followed_sponsorship_ids
+        }
+        for item in compatible_sponsors
+    ]
+    
+    return render_template('sponsorlist.html', user=current_user, sponsors=sponsors_with_follow_status)
 
 @views.route('/', methods=['GET', 'POST'])
 @login_required
 def home():
     # Query to get all sponsorships
     sponsorships = Sponsorship_data.query.all()
-
-    return render_template("home.html", user=current_user, sponsorships=sponsorships)
+    
+    # Get followed sponsorship IDs for this user
+    followed_sponsorship_ids = [sponsorship.id for sponsorship in current_user.followed_sponsorships]
+    
+    return render_template("home.html", user=current_user, sponsorships=sponsorships, followed_sponsorship_ids=followed_sponsorship_ids)
 
 @views.route('/delete-note', methods=['POST'])
 def delete_note():  
@@ -40,26 +54,10 @@ def delete_note():
         if note.user_id == current_user.id:
             db.session.delete(note)
             db.session.commit()
-
     return jsonify({})
 
-@views.route('/sponsorlist')
+@views.route('/follow', methods=['GET'])
 @login_required
-def sponsorlist():
-    # Fetch all sponsorships
-    sponsors = Sponsorship_data.query.all()
-    
-    # Get user's bookmarked sponsorships
-    bookmarked_sponsorships = [bookmark.sponsorship_id for bookmark in current_user.user_bookmarks]
-
-    # Annotate sponsorships with bookmark status
-    annotated_sponsors = []
-    for sponsor in sponsors:
-        annotated_sponsors.append({
-            'sponsor': sponsor,
-
-            'bookmarked': sponsor.id in bookmarked_sponsorships
-        })
-
-    return render_template('sponsorlist.html', sponsors=annotated_sponsors)
-
+def follow():
+    followed_sponsorships = current_user.followed_sponsorships  # Assuming this relationship is set up in your User model
+    return render_template("follow.html", followed_sponsorships=followed_sponsorships, user=current_user)
