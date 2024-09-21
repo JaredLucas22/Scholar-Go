@@ -6,15 +6,20 @@ html, body {
 body {
   font-family: 'Montserrat', sans-serif;
   background-color: #f2f4f7;
-  margin: 0;
-  display: flex;
-  flex-direction: column
 }
 
 .navbar {
   background: linear-gradient(90deg, #012cb8, #017cff) !important;
-  padding: 0 1rem;
-  height: auto;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 1000 !important;
+}
+
+.navbar .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0;
 }
 
 /* Adjust padding for medium screens */
@@ -34,7 +39,7 @@ body {
 /* Adjust padding for extra small screens */
 @media (max-width: 767px) {
   .navbar {
-    padding: 0rem 2.5rem; /* Further increased padding for extra small screens */
+    padding: 0 2.5rem; /* Further increased padding for extra small screens */
   }
 }
 
@@ -98,6 +103,12 @@ body {
 
 .navbar-collapse.show + .navbar-toggler {
   background-color: rgba(0, 0, 0, 0.1); 
+}
+
+@media (min-width: 1400px) {
+    .container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
+        max-width: 1180px !important;
+    }
 }
 
 @media (min-width: 992px) {
