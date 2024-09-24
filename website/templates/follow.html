@@ -10,7 +10,8 @@
             <div class="col-12 mb-4">
                 <div class="card">
                     <div class="card-body position-relative">
-                        <form action="{{ url_for('auth.follow', sponsorship_id=item.id) }}" method="post">
+                        <form action="{{ url_for('auth.follow', sponsorship_id=sponsorship.id) }}" method="post">
+
                             <button class="btn btn-outline-danger position-absolute" style="top: 10px; right: 10px;" type="submit" data-toggle="tooltip" data-placement="top" title="Unfollow">
                                 <i class="fa fa-times"></i>
                             </button>

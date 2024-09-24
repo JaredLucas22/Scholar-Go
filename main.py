@@ -1,6 +1,7 @@
 
-from website import create_app
+from website import create_app, socketio
 from scoring import match_students_to_sponsorships
+
 
 app = create_app()
 
@@ -11,4 +12,4 @@ def match():
         print(f"Student {student.first_name} matched with Sponsor {sponsor.sponsor_name} with a score of {score}")
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    socketio.run(app, debug=True) 

@@ -1,17 +1,23 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from os import path
 from flask_login import LoginManager
+from flask_socketio import SocketIO
+import os
 
 db = SQLAlchemy()
+socketio = SocketIO()  # Initialize SocketIO
 DB_NAME = "database.db"
+
 
 
 def create_app():
     app = Flask(__name__)
     app.config['SECRET_KEY'] = 'hjshjhdjah kjshkjdhjs'
     app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
+    app.config['UPLOAD_FOLDER'] = os.path.join('static', 'uploads')
     db.init_app(app)
+    socketio.init_app(app)  # Initialize SocketIO with the app
+    
 
     from .views import views
     from .auth import auth
@@ -33,9 +39,3 @@ def create_app():
         return User.query.get(int(id))
 
     return app
-
-
-def create_database(app):
-    if not path.exists('website/' + DB_NAME):
-        db.create_all(app=app)
-        print('Created Database!')

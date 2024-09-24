@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block title %}Sign Up{% endblock %}
 {% block content %}
-<form method="POST" onsubmit="return validateWeights()">
+<form method="POST" enctype="multipart/form-data" onsubmit="return validateWeights()">
     <h3 align="center">Sign your Sponsor</h3>
     <div class="form-group">
         <label for="sponsor-name">Sponsor Name</label>
@@ -11,6 +11,7 @@
             id="sponsor-name"
             name="sponsor-name"
             placeholder="Enter sponsor name"
+            required
         />
     </div>
     <div class="form-group">
@@ -25,6 +26,7 @@
             min="0"
             max="1"
             oninput="validateWeight(this)"
+            required
         />
     </div>
     <div class="form-group">
@@ -39,6 +41,7 @@
             min="0"
             max="1"
             oninput="validateWeight(this)"
+            required
         />
     </div>
     <div class="form-group">
@@ -53,12 +56,12 @@
             min="0"
             max="1"
             oninput="validateWeight(this)"
+            required
         />
     </div>
-
     <div class="form-group">
         <label for="extracurricularActivities">Extracurricular Activities</label>
-        <select class="form-control" id="extracurricularActivities" name="extracurricularActivities">
+        <select class="form-control" id="extracurricularActivities" name="extracurricularActivities" required>
             <option value="" disabled selected>Select an activity</option>
             <option value="Sports">Sports</option>
             <option value="Community Service">Community Service</option>
@@ -98,11 +101,12 @@
             min="0"
             max="1"
             oninput="validateWeight(this)"
+            required
         />
     </div>
     <div class="form-group">
         <label for="course">Course</label>
-        <select class="form-control" id="course" name="course">
+        <select class="form-control" id="course" name="course" required>
             <option value="" disabled selected>Select your course</option>
             <optgroup label="Business and Management">
                 <option value="business_admin">Bachelor of Science in Business Administration</option>
@@ -126,33 +130,37 @@
             <optgroup label="Arts and Humanities">
                 <option value="communication">Bachelor of Arts in Communication</option>
                 <option value="fine_arts">Bachelor of Fine Arts</option>
-                <option value="psychology">Bachelor of Arts in Psychology</option>
                 <option value="english">Bachelor of Arts in English</option>
+                <option value="philosophy">Bachelor of Arts in Philosophy</option>
             </optgroup>
             <optgroup label="Social Sciences">
-                <option value="criminology">Bachelor of Science in Criminology</option>
-                <option value="social_work">Bachelor of Science in Social Work</option>
-                <option value="sociology">Bachelor of Science in Sociology</option>
+                <option value="psychology">Bachelor of Arts in Psychology</option>
+                <option value="political_science">Bachelor of Arts in Political Science</option>
+                <option value="sociology">Bachelor of Arts in Sociology</option>
+                <option value="anthropology">Bachelor of Arts in Anthropology</option>
             </optgroup>
             <optgroup label="Education">
-                <option value="elementary_education">Bachelor of Elementary Education</option>
-                <option value="secondary_education">Bachelor of Secondary Education</option>
+                <option value="education">Bachelor of Science in Education</option>
+                <option value="special_education">Bachelor of Special Education</option>
+                <option value="early_childhood_education">Bachelor of Early Childhood Education</option>
             </optgroup>
             <optgroup label="Natural Sciences">
                 <option value="biology">Bachelor of Science in Biology</option>
-                <option value="environmental_science">Bachelor of Science in Environmental Science</option>
                 <option value="chemistry">Bachelor of Science in Chemistry</option>
+                <option value="physics">Bachelor of Science in Physics</option>
+                <option value="environmental_science">Bachelor of Science in Environmental Science</option>
             </optgroup>
             <optgroup label="Hospitality and Tourism">
-                <option value="hotel_restaurant_management">Bachelor of Science in Hotel and Restaurant Management</option>
+                <option value="hotel_management">Bachelor of Science in Hotel and Restaurant Management</option>
                 <option value="tourism_management">Bachelor of Science in Tourism Management</option>
             </optgroup>
             <optgroup label="Law and Governance">
-                <option value="laws">Bachelor of Laws</option>
+                <option value="law">Bachelor of Laws (LLB)</option>
                 <option value="public_administration">Bachelor of Public Administration</option>
             </optgroup>
             <optgroup label="Architecture">
                 <option value="architecture">Bachelor of Science in Architecture</option>
+                <option value="interior_design">Bachelor of Science in Interior Design</option>
             </optgroup>
         </select>
     </div>
@@ -160,70 +168,68 @@
         <label for="passingrequirement">Passing Requirement</label>
         <input
             type="number"
-            step="0.01"
             class="form-control"
             id="passingrequirement"
             name="passingrequirement"
             placeholder="Enter Passing Requirement"
-            min="0"
-            max="100"
-            oninput="validateRequirement(this)"
+            required
         />
     </div>
     <div class="form-group">
         <label for="description">Description</label>
-        <textarea
-            class="form-control"
-            id="description"
-            name="description"
-            rows="5"
-            placeholder="Enter a description of the scholarship"
-        ></textarea>
+        <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
     </div>
-
-
-<div class="form-group">
-    <label for="fulldescription">Full Description</label>
-    <textarea
-        class="form-control"
-        id="fulldescription"
-        name="fulldescription"
-        rows="5"
-        placeholder="Enter the full description of the scholarship"
-    ></textarea>
-</div>
-<button type="submit" class="btn btn-primary">Submit</button>
+    <div class="form-group">
+        <label for="fulldescription">Full Description</label>
+        <textarea class="form-control" id="fulldescription" name="fulldescription" rows="3" required></textarea>
+    </div>
+    <div class="form-group">
+        <label for="amount_per_semester">Amount per Semester</label>
+        <input
+            type="number"
+            step="0.01"
+            class="form-control"
+            id="amount_per_semester"
+            name="amount_per_semester"
+            placeholder="Enter Amount per Semester"
+            required
+        />
+    </div>
+    <div class="form-group">
+        <label for="deadline_date">Deadline Date</label>
+        <input
+            type="date"
+            class="form-control"
+            id="deadline_date"
+            name="deadline_date"
+            required
+        />
+    </div>
+    <div class="form-group">
+        <label for="picture">Upload Picture</label>
+        <input
+            type="file"
+            class="form-control-file"
+            id="picture"
+            name="picture"
+            required
+        />
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
 </form>
-
 <script>
-    function validateWeight(input) {
-        if (input.value > 1) {
-            input.value = 1;
-        } else if (input.value < 0) {
-            input.value = 0;
-        }
-    }
+function validateWeights() {
+    // Custom validation logic can go here
+    return true; // Ensure this returns true to submit the form
+}
 
-    function validateRequirement(input) {
-        if (input.value > 100) {
-            input.value = 100;
-        } else if (input.value < 0) {
-            input.value = 0;
-        }
+function validateWeight(input) {
+    let value = parseFloat(input.value);
+    if (value < 0 || value > 1) {
+        input.setCustomValidity("Weight must be between 0 and 1.");
+    } else {
+        input.setCustomValidity("");
     }
-
-    function validateWeights() {
-        const weight_fos = parseFloat(document.getElementById('weight_fos').value) || 0;
-        const weightGPA = parseFloat(document.getElementById('weightgpa').value) || 0;
-        const weightExtracurricular = parseFloat(document.getElementById('weightextracurricularActivities').value) || 0;
-        const weightFinancial = parseFloat(document.getElementById('weightfinancialStatus').value) || 0;
-        const totalWeight = weight_fos + weightGPA + weightExtracurricular + weightFinancial;
-
-        if (totalWeight !== 1) {
-            alert('The total weight of FOS, GPA, extracurricular activities, and financial status must be equal to 1.');
-            return false;
-        }
-        return true;
-    }
+}
 </script>
 {% endblock %}

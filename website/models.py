@@ -6,6 +6,12 @@ from sqlalchemy.sql import func
 user_sponsorship = db.Table('user_sponsorship',
     db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
     db.Column('sponsorship_id', db.Integer, db.ForeignKey('sponsorship_data.id'), primary_key=True)
+    
+)
+
+user_sponsorship_likes = db.Table('user_sponsorship_likes',
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
+    db.Column('sponsorship_id', db.Integer, db.ForeignKey('sponsorship_data.id'), primary_key=True)
 )
 
 class Note(db.Model):
@@ -28,6 +34,9 @@ class User(db.Model, UserMixin):
                                              lazy='subquery', backref=db.backref('followers', lazy=True))
     def is_following(self, sponsorship_id):
         return any(sponsorship.id == sponsorship_id for sponsorship in self.followed_sponsorships)
+    def has_liked(self, sponsorship):
+        return sponsorship in self.liked_sponsorships
+
 
 
 class Sponsorship_data(db.Model):
@@ -43,3 +52,10 @@ class Sponsorship_data(db.Model):
     verified = db.Column(db.Boolean, default=False, nullable=False)
     description = db.Column(db.Text)  
     full_description = db.Column(db.Text, nullable=True)
+    image = db.Column(db.String(300), nullable=True)  # For the uploaded picture
+    likes = db.relationship('Like', backref='sponsorship', lazy=True)  # For user likes
+    deadline_date = db.Column(db.Date, nullable=False)  # Scholarship deadline
+    active = db.Column(db.Boolean, default=True, nullable=False)  # Active or inactive status
+    amount_per_semester = db.Column(db.Float, nullable=False)  # Amount awarded per semester
+    likes = db.relationship('User', secondary=user_sponsorship_likes, backref='liked_by')
+    picture_path = db.Column(db.String(255), nullable=False)  # Ensure this line is present

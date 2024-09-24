@@ -6,47 +6,31 @@
 <div class="container">
     <div class="row">
         {% if sponsors %}
-        
             {% for item in sponsors %}
-
             <div class="col-12 mb-4">
                 <div class="card">
                     <div class="card-body position-relative">
-                        <!-- Bookmark Form -->
-                        <form action="{{ url_for('auth.follow', sponsorship_id=item.sponsor.id) }}" method="post">
-                        {% if item.is_followed %}
-                        <button class="btn btn-danger position-absolute" style="top: 10px; right: 10px;" type="submit" data-toggle="tooltip" data-placement="top" title="Bookmark">
+                        <button class="btn btn-outline-secondary position-absolute" style="top: 10px; right: 10px;" 
+                                data-sponsorship-id="{{ item.sponsor.id }}" 
+                                onclick="followSponsorship(this)" 
+                                data-toggle="tooltip" data-placement="top" title="Follow">
                             <i class="fa fa-bookmark"></i>
                         </button>
-                        {% endif %}
-                        <button class="btn btn-outline-secondary position-absolute" style="top: 10px; right: 10px;" 
-                        data-sponsorship-id="{{ item.sponsor.id }}" 
-                        onclick="toggleFollowColor(this)" 
-                        data-toggle="tooltip" data-placement="top" title="Follow">
-                    <i class="fa fa-bookmark"></i>
-                </button>
-                
-                </button>
-                
-                        </form>
-                        
-                        {% if item.is_followed %}
-                    
-                        {% endif %}
+
                         <h5 class="card-title">{{ item.sponsor.sponsor_name }}</h5>
                         <p class="card-text">Passing Requirement: <b>{{ item.sponsor.passing_requirement }}</b></p>
                         <p class="card-text">Student Score: <b>{{ item.score }}</b></p>
                         <p class="card-text"><b>Description:</b> {{ item.sponsor.description | safe }}</p>
                         
-                        <!-- Collapsible full description (collapsed by default) -->
                         <div class="collapse mt-3" id="collapseDescription{{ loop.index }}">
                             <div class="card card-body">
                                 {{ item.sponsor.full_description | safe }}
                             </div>
                         </div>
 
-                        <!-- Button to toggle full description, positioned at the bottom right -->
-                        <button class="btn btn-primary position-absolute" style="bottom: 10px; right: 10px;" type="button" data-toggle="collapse" data-target="#collapseDescription{{ loop.index }}" aria-expanded="false" aria-controls="collapseDescription{{ loop.index }}">
+                        <button class="btn btn-primary position-absolute" style="bottom: 10px; right: 10px;" 
+                                type="button" data-toggle="collapse" data-target="#collapseDescription{{ loop.index }}" 
+                                aria-expanded="false" aria-controls="collapseDescription{{ loop.index }}">
                             <i class="fa fa-chevron-down"></i>
                         </button>
                         
@@ -62,38 +46,22 @@
     </div>
 </div>
 
+
 {% block scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.min.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var toggles = document.querySelectorAll('[data-toggle="collapse"]');
+    const socket = io(); // Initialize the SocketIO connection
 
-        toggles.forEach(function (toggle) {
-            toggle.addEventListener('click', function () {
-                var icon = this.querySelector('i');
-                if (icon) {
-                    if (this.getAttribute('aria-expanded') === 'true') {
-                        icon.classList.add('fa-chevron-down');
-                        icon.classList.remove('fa-chevron-up');
-                    } else {
-                        icon.classList.add('fa-chevron-up');
-                        icon.classList.remove('fa-chevron-down');
-                    }
-                }
-            });
-        });
+    function followSponsorship(button) {
+        const sponsorshipId = button.getAttribute('data-sponsorship-id');
 
-        // Initialize tooltips
-        $('[data-toggle="tooltip"]').tooltip();
-    });
+        // Emit the follow/unfollow event
+        socket.emit('follow', sponsorshipId);
 
-    
-</script>
-
-<script>
-    function toggleFollowColor(button) {
+        // Optionally, handle button state change here
         button.classList.toggle('following');
-    
-        // Change the button color
+
+        // Change button color based on state
         if (button.classList.contains('following')) {
             button.style.backgroundColor = '#28a745'; // Green when following
             button.style.color = '#fff'; // White text
@@ -102,10 +70,15 @@
             button.style.color = ''; // Reset to default text color
         }
     }
-    </script>
-    
 
+    // Listen for follow/unfollow notifications
+    socket.on('follow_notification', function(data) {
+        alert(data.message);
+    });
 
+    socket.on('unfollow_notification', function(data) {
+        alert(data.message);
+    });
+</script>
 {% endblock %}
-
 {% endblock %}

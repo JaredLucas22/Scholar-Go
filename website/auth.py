@@ -1,10 +1,30 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for, jsonify
-from .models import User, Sponsorship_data
+from flask import Blueprint, render_template, request, flash, redirect, url_for, current_app
+from flask_socketio import emit
+from .models import User, Sponsorship_data, user_sponsorship 
 from werkzeug.security import generate_password_hash, check_password_hash
-from . import db
+from werkzeug.utils import secure_filename
+from . import db, socketio  # Import socketio here
 from flask_login import login_user, login_required, logout_user, current_user
+from datetime import datetime
+import os
 
 auth = Blueprint('auth', __name__)
+
+import os
+from flask import current_app
+
+def save_picture(form_picture):
+    # Get the original filename
+    original_filename = form_picture.filename
+    # Ensure the filename is safe and create a unique filename
+    filename = original_filename  # You could also append a timestamp if needed
+    picture_path = os.path.join(current_app.root_path, 'static/uploads', filename)
+    
+    # Save the picture
+    form_picture.save(picture_path)
+
+    return filename
+
 
 def follow_sponsorship(user_id, sponsorship_id):
     user = User.query.get(user_id)
@@ -101,17 +121,35 @@ def sign_up():
 @auth.route('/sign-sponsor', methods=['GET', 'POST'])
 def sign_sponsor():
     if request.method == 'POST':
+        # Retrieve form data
         sponsor_name = request.form.get('sponsor-name')
         course = request.form.get('course')
-        extracurricular_activity = request.form.get('extracurricularActivities')
-        weight_fos = float(request.form.get('weight_fos'))
-        weight_gpa = float(request.form.get('weightgpa'))
-        weight_extracurricular = float(request.form.get('weightextracurricularActivities'))
-        weight_financial = float(request.form.get('weightfinancialStatus'))
-        passing_requirement = float(request.form.get('passingrequirement'))
+        weight_fos = request.form.get('weight_fos', type=float)
+        weight_gpa = request.form.get('weightgpa', type=float)
+        weight_extracurricular = request.form.get('weightextracurricularActivities', type=float)
+        weight_financial = request.form.get('weightfinancialStatus', type=float)
+        passing_requirement = request.form.get('passingrequirement', type=float)
         description = request.form.get('description')
         full_description = request.form.get('fulldescription')
+        extracurricular_activity = request.form.get('extracurricularActivities')
+        amount_per_semester = request.form.get('amount_per_semester', type=float)
+        deadline_date_str = request.form.get('deadline_date')  # Get the date input from the form
 
+        # Convert it directly into a date object
+        deadline_date = datetime.strptime(deadline_date_str, '%Y-%m-%d').date() if deadline_date_str else None
+        
+        # Check if the deadline_date is None or invalid before proceeding
+        if not deadline_date:
+            flash('Deadline date is required.', category='error')
+            return redirect(url_for('auth.sign_sponsor'))
+
+        try:
+            picture_path = save_picture(request.files.get('picture'))
+        except ValueError as e:
+            flash(str(e), category='error')
+            return redirect(url_for('auth.sign_sponsor'))
+
+        # Create new Sponsorship_data object without additional validation
         new_sponsor = Sponsorship_data(
             sponsor_name=sponsor_name,
             course=course,
@@ -123,28 +161,55 @@ def sign_sponsor():
             description=description,
             full_description=full_description,
             extracurricular_activity=extracurricular_activity,
-            verified=False
+            verified=False,
+            amount_per_semester=amount_per_semester,
+            deadline_date=deadline_date,  # Ensure this is a valid date
+            picture_path=picture_path  # Save the picture path here
         )
 
-        db.session.add(new_sponsor)
-        db.session.commit()
-
-        flash('Sponsor added successfully!')
-        return redirect(url_for('auth.login'))
+        try:
+            db.session.add(new_sponsor)
+            db.session.commit()
+            flash('Sponsor added successfully!')
+            return redirect(url_for('auth.login'))
+        except Exception as e:
+            db.session.rollback()  # Roll back the session on error
+            print(e)  # Log the error for debugging
+            flash('An error occurred while adding the sponsor. Please try again.', category='error')
+            return redirect(url_for('auth.sign_sponsor'))
 
     return render_template("sign_sponsor.html", user=current_user)
 
 @auth.route('/follow/<int:sponsorship_id>', methods=['POST'])
 @login_required
 def follow(sponsorship_id):
+    sponsorship = Sponsorship_data.query.get(sponsorship_id)
+    if not sponsorship:
+        flash('Sponsorship not found.', category='error')
+        return redirect(url_for('views.home'))
+
     # Check if the user is currently following the sponsorship
-    if current_user.is_following(sponsorship_id):  # Assuming you have this method defined
-        unfollow_sponsorship(current_user.id, sponsorship_id)
-        flash('You have unfollowed this sponsorship.', category='success')
+    if current_user.is_following(sponsorship_id):
+        # Unfollow the sponsorship
+        if unfollow_sponsorship(current_user.id, sponsorship_id):
+            flash('You have unfollowed this sponsorship!', category='success')
+            socketio.emit('unfollow_notification', {
+                'message': f"You unfollowed {sponsorship.sponsor_name}.",
+                'user_id': current_user.id,
+                'sponsorship_id': sponsorship.id
+            })
+        else:
+            flash('Error unfollowing sponsorship. Please try again.', category='error')
     else:
-        follow_sponsorship(current_user.id, sponsorship_id)
-        flash('You are now following this sponsorship!', category='success')
+        # Follow the sponsorship
+        if follow_sponsorship(current_user.id, sponsorship_id):
+            flash('You are now following this sponsorship!', category='success')
+            socketio.emit('follow_notification', {
+                'message': f"You are now following {sponsorship.sponsor_name}.",
+                'user_id': current_user.id,
+                'sponsorship_id': sponsorship.id
+            })
+        else:
+            flash('Error following sponsorship. Please try again.', category='error')
 
     return redirect(request.referrer or url_for('views.home'))
-
-

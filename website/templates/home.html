@@ -1,40 +1,56 @@
 {% extends "base.html" %}
 {% block title %}Sponsorships{% endblock %}
 {% block content %}
-<h3>All Sponsorships</h3>
+<link rel="stylesheet" href="/static/css/test.css"/>
+<h3 class="text-center">All Sponsorships</h3>
 
 <div class="container">
     <div class="row">
         {% if sponsorships %}
             {% for sponsorship in sponsorships %}
             <div class="col-12 mb-4">
-                <div class="card">
-                    <div class="card-body position-relative">
-                        <!-- Bookmark Form -->
-                        <form action="{{ url_for('auth.follow', sponsorship_id=sponsorship.id) }}" method="post">
-                            <button class="btn btn-outline-secondary position-absolute" style="top: 10px; right: 10px;" type="submit" data-toggle="tooltip" data-placement="top" title="Follow">
-                                <i class="fa fa-user-plus"></i>
-                            </button>
-                        </form>
-
-                        <h5 class="card-title">{{ sponsorship.sponsor_name }}</h5>
-                        <p class="card-text"><b>Course:</b> {{ sponsorship.course }}</p>
-                        <p class="card-text"><b>Description:</b> {{ sponsorship.description | safe }}</p>
-                        
-                        <!-- Collapsible full description (collapsed by default) -->
-                        <div class="collapse mt-3" id="collapseDescription{{ loop.index }}">
-                            <div class="card card-body">
-                                {{ sponsorship.full_description | safe }}
+                <a href="#" class="listing d-flex position-relative p-3 border rounded" data-bs-toggle="modal" data-bs-target="#modalDescription{{ loop.index }}">
+                    <div class="logo me-3">
+                        <img src="{{ url_for('static', filename='uploads/' ~ sponsorship.picture_path) }}" alt="Logo" class="img-fluid" style="max-width: 100px;">
+                    </div>
+            
+                    <!-- Beside the logo content: Right side -->
+                    <div class="content flex-grow-1">
+                        <h5 class="title mb-1">{{ sponsorship.sponsor_name }}</h5>
+                        <p class="description mb-1">{{ sponsorship.description | safe }}</p>
+                        <p class="likes mb-1">Likes: {{ sponsorship.likes }} | Deadline on {{ sponsorship.deadline_date.strftime('%B %d, %Y') }}</p>
+                        <br>
+                        <!-- One line content -->
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="badge bg-success">Active Program</span>
+                            <p class="mb-0"><strong>Scholarship Program:</strong> {{ sponsorship.course }}</p>
+                            <p class="mb-0"><strong>Amount per Semester:</strong> P{{ sponsorship.amount_per_semester | round(2) }}</p>
+                        </div>
+                    </div>
+                </a>
+            
+                <div class="modal fade" id="modalDescription{{ loop.index }}" tabindex="-1" aria-labelledby="modalLabel{{ loop.index }}" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" style="color: black;" id="modalLabel{{ loop.index }}">{{ sponsorship.sponsor_name }} - Full Description</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p><strong>Passing Requirement:</strong> {{ sponsorship.passing_requirement }}</p>
+                                <p><strong>Description:</strong> {{ sponsorship.description | safe }}</p>
+                                <div class="full-description">
+                                    <p><strong>Full Description:</strong></p>
+                                    <p class="text-break">{{ sponsorship.full_description | safe }}</p>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                             </div>
                         </div>
-
-                        <!-- Button to toggle full description, positioned at the bottom right -->
-                        <button class="btn btn-primary position-absolute" style="bottom: 10px; right: 10px;" type="button" data-toggle="collapse" data-target="#collapseDescription{{ loop.index }}" aria-expanded="false" aria-controls="collapseDescription{{ loop.index }}">
-                            <i class="fa fa-chevron-down"></i>
-                        </button>
-                        
                     </div>
-                </div>
+                </div>               
+                
             </div>
             {% endfor %}
         {% else %}
@@ -47,25 +63,8 @@
 
 {% block scripts %}
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var toggles = document.querySelectorAll('[data-toggle="collapse"]');
-
-        toggles.forEach(function (toggle) {
-            toggle.addEventListener('click', function () {
-                var icon = this.querySelector('i');
-                if (icon) {
-                    if (this.getAttribute('aria-expanded') === 'true') {
-                        icon.classList.add('fa-chevron-down');
-                        icon.classList.remove('fa-chevron-up');
-                    } else {
-                        icon.classList.add('fa-chevron-up');
-                        icon.classList.remove('fa-chevron-down');
-                    }
-                }
-            });
-        });
-
-        // Initialize tooltips
+    // Initialize tooltips if needed
+    $(document).ready(function () {
         $('[data-toggle="tooltip"]').tooltip();
     });
 </script>
