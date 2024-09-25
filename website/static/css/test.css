@@ -16,6 +16,23 @@
     overflow-y: visible; /* Ensure no overflow hidden */
     
 }
+/* Custom styles for the modal backdrop */
+.modal-backdrop {
+    background-color: rgb(255, 255, 255); /* Solid white without transparency */
+}
+
+
+
+/* Custom styles for the modal background */
+.modal-content {
+    background-color: white; /* Set modal background to white */
+}
+
+/* Optional: Change the text color for better contrast */
+.modal-header, .modal-body, .modal-footer {
+    color: #333; /* Change text color to a darker shade for readability */
+}
+
 
 /* Adjust for overflow if needed */
 body {

@@ -52,6 +52,8 @@ def unfollow_sponsorship(user_id, sponsorship_id):
         return True  # Successfully unfollowed
     return False  # Not currently following
 
+
+
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
