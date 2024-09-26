@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <img src="{{ url_for('static', filename='uploads/' ~ sponsor.picture_path) }}" alt="Logo" class="img-fluid" style="max-width: 100px;">
+    <h2>{{ sponsor.sponsor_name }}</h2>
+    <p><strong>Course:</strong> {{ sponsor.course }}</p>
+    <p><strong>Amount Per Semester:</strong> P{{ sponsor.amount_per_semester }}</p>
+    <p><strong>Description:</strong> {{ sponsor.full_description | safe  }}</p>
+    <p><strong>Deadline Date:</strong> {{ sponsor.deadline_date.strftime('%B %d, %Y') }}</p>
+
+    <!-- Thumbs-up button -->
+    <form id="like-form" action="{{ url_for('auth.like_sponsorship', sponsor_id=sponsor.id) }}" method="POST" style="display:inline;">
+        <button type="submit" class="btn" id="like-button" style="border: none; background: none; cursor: pointer;">
+            {% if is_liked %}
+                <i class="fas fa-thumbs-up" style="color: rgb(24, 47, 195);; font-size: 2rem;"></i>
+            {% else %}
+                <i class="far fa-thumbs-up" style="color: gray; font-size: 2rem;"></i>
+            {% endif %}
+        </button>
+    </form>
+
+    <div id="like-count">
+        <p><strong>Likes:</strong> {{ sponsor.likes|length }}</p>
+    </div>
+    
+</div>
+
+<script>
+    document.getElementById('like-form').onsubmit = function() {
+        const button = document.getElementById('like-button');
+        button.disabled = true; // Disable button to prevent multiple clicks
+    };
+</script>
+
+{% endblock %}

@@ -14,6 +14,7 @@ user_sponsorship_likes = db.Table('user_sponsorship_likes',
     db.Column('sponsorship_id', db.Integer, db.ForeignKey('sponsorship_data.id'), primary_key=True)
 )
 
+
 class Note(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     data = db.Column(db.String(10000))

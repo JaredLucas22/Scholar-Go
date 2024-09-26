@@ -13,6 +13,14 @@ auth = Blueprint('auth', __name__)
 import os
 from flask import current_app
 
+@login_required
+@auth.route('/sponsor_details/<int:sponsor_id>', methods=['GET'])
+def view_sponsorship(sponsor_id):
+    sponsor = Sponsorship_data.query.get_or_404(sponsor_id)
+    is_liked = current_user in sponsor.likes
+    return render_template('sponsor_details.html', user=current_user, sponsor=sponsor, is_liked=is_liked)
+
+
 def save_picture(form_picture):
     # Get the original filename
     original_filename = form_picture.filename
@@ -214,4 +222,20 @@ def follow(sponsorship_id):
         else:
             flash('Error following sponsorship. Please try again.', category='error')
 
+    return redirect(request.referrer or url_for('views.home'))
+
+
+@auth.route('/like/<int:sponsor_id>', methods=['POST'])
+def like_sponsorship(sponsor_id):
+    # Your logic to like/unlike the sponsorship
+    if current_user.is_authenticated:
+        sponsorship = Sponsorship_data.query.get(sponsor_id)
+        if sponsorship:
+            if current_user in sponsorship.likes:  # Assuming likes is a relationship
+                sponsorship.likes.remove(current_user)
+                flash('You unliked this sponsorship.', 'info')
+            else:
+                sponsorship.likes.append(current_user)
+                flash('You liked this sponsorship!', 'success')
+            db.session.commit()
     return redirect(request.referrer or url_for('views.home'))

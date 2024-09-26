@@ -7,23 +7,16 @@ from scoring import calculate_compatibility_score
 
 views = Blueprint('views', __name__)
 
-@views.route('/sponsorship/<int:sponsorship_id>', methods=['GET'])
+
+
+@views.route('/sponsor/<int:sponsor_id>', methods=['GET'])
 @login_required
-def get_sponsorship(sponsorship_id):
-    # Fetch the sponsorship data by ID
-    sponsorship = Sponsorship_data.query.get_or_404(sponsorship_id)
-    
-    # Return sponsorship details as JSON
-    return jsonify({
-        'sponsor_name': sponsorship.sponsor_name,
-        'passing_requirement': sponsorship.passing_requirement,
-        'description': sponsorship.description,
-        'full_description': sponsorship.full_description,
-        'likes': sponsorship.likes,
-        'deadline_date': sponsorship.deadline_date.strftime('%B %d, %Y'),
-        'course': sponsorship.course,
-        'amount_per_semester': sponsorship.amount_per_semester
-    })
+def view_sponsorship(sponsor_id):
+    print("Sponsor route hit")  # Check if this prints in the logs
+    sponsor = Sponsorship_data.query.get_or_404(sponsor_id)
+    is_liked = current_user in sponsor.likes
+    return render_template('sponsor_details.html', sponsor=sponsor, is_liked=is_liked, user=current_user)
+
 
 
 @views.route('/sponsorlist', methods=['GET'])
