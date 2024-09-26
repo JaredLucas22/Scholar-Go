@@ -15,6 +15,7 @@ user_sponsorship_likes = db.Table('user_sponsorship_likes',
 )
 
 
+
 class Note(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     data = db.Column(db.String(10000))
@@ -37,6 +38,19 @@ class User(db.Model, UserMixin):
         return any(sponsorship.id == sponsorship_id for sponsorship in self.followed_sponsorships)
     def has_liked(self, sponsorship):
         return sponsorship in self.liked_sponsorships
+    comments = db.relationship('Comment', backref='user', lazy=True)
+
+
+from sqlalchemy.sql import func
+
+class Comment(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.Text, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    sponsorship_id = db.Column(db.Integer, db.ForeignKey('sponsorship_data.id'), nullable=False)
+    created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())  # Add this line
+
+    
 
 
 
@@ -60,3 +74,4 @@ class Sponsorship_data(db.Model):
     amount_per_semester = db.Column(db.Float, nullable=False)  # Amount awarded per semester
     likes = db.relationship('User', secondary=user_sponsorship_likes, backref='liked_by')
     picture_path = db.Column(db.String(255), nullable=False)  # Ensure this line is present
+    comments = db.relationship('Comment', backref='sponsorship')

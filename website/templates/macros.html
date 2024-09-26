@@ -1,0 +1,23 @@
+{% macro sponsorship_options(sponsorship) %}
+<div class="position-absolute top-0 end-0 p-2">
+    <button class="btn btn-link dropdown-toggle" type="button" id="optionsMenu-{{ sponsorship.id }}" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="fas fa-ellipsis-v"></i>
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="optionsMenu-{{ sponsorship.id }}">
+        <li>
+            <form action="{{ url_for('auth.like_sponsorship', sponsor_id=sponsorship.id) }}" method="POST" style="display: inline;">
+                <button type="submit" class="dropdown-item" style="border: none; background: none; cursor: pointer;">
+                    {% if current_user in sponsorship.likes %}
+                        <i class="fas fa-thumbs-up" style="color: rgb(24, 47, 195);"></i> Unlike
+                    {% else %}
+                        <i class="far fa-thumbs-up" style="color: gray;"></i> Like
+                    {% endif %}
+                </button>
+            </form>
+        </li>
+        <li><a class="dropdown-item" href="#">Delete</a></li>
+        <li><a class="dropdown-item" href="#">Share</a></li>
+    </ul>
+</div>
+</div>
+{% endmacro %}

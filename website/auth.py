@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for, current_app
 from flask_socketio import emit
-from .models import User, Sponsorship_data, user_sponsorship 
+from .models import User, Sponsorship_data, user_sponsorship, Comment
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from . import db, socketio  # Import socketio here
@@ -17,6 +17,7 @@ from flask import current_app
 @auth.route('/sponsor_details/<int:sponsor_id>', methods=['GET'])
 def view_sponsorship(sponsor_id):
     sponsor = Sponsorship_data.query.get_or_404(sponsor_id)
+    comments = Comment.query.filter_by(sponsor_id=sponsor_id).all()  # Assuming you have a Comment model
     is_liked = current_user in sponsor.likes
     return render_template('sponsor_details.html', user=current_user, sponsor=sponsor, is_liked=is_liked)
 
@@ -226,6 +227,7 @@ def follow(sponsorship_id):
 
 
 @auth.route('/like/<int:sponsor_id>', methods=['POST'])
+@login_required
 def like_sponsorship(sponsor_id):
     # Your logic to like/unlike the sponsorship
     if current_user.is_authenticated:
@@ -233,9 +235,30 @@ def like_sponsorship(sponsor_id):
         if sponsorship:
             if current_user in sponsorship.likes:  # Assuming likes is a relationship
                 sponsorship.likes.remove(current_user)
-                flash('You unliked this sponsorship.', 'info')
             else:
                 sponsorship.likes.append(current_user)
-                flash('You liked this sponsorship!', 'success')
             db.session.commit()
     return redirect(request.referrer or url_for('views.home'))
+
+@auth.route('/add_comment/<int:sponsor_id>', methods=['POST'])
+@login_required
+def add_comment(sponsor_id):
+    content = request.form.get('content')
+
+    # Check if content is empty
+    if not content:
+        flash('Comment cannot be empty.', 'danger')
+        return redirect(request.referrer or url_for('views.home'))
+
+    new_comment = Comment(content=content, user_id=current_user.id, sponsorship_id=sponsor_id)
+
+    try:
+        db.session.add(new_comment)
+        db.session.commit()
+        flash('Comment added successfully!', 'success')
+    except Exception as e:
+        db.session.rollback()
+        flash('An error occurred. Please try again.', 'danger')
+
+    return redirect(request.referrer or url_for('views.home'))
+

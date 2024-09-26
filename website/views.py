@@ -1,13 +1,11 @@
 from flask import Blueprint, render_template, request, flash, jsonify
 from flask_login import login_required, current_user
-from .models import Note, Sponsorship_data
+from .models import Note, Sponsorship_data, Comment
 from . import db
 import json
 from scoring import calculate_compatibility_score
 
 views = Blueprint('views', __name__)
-
-
 
 @views.route('/sponsor/<int:sponsor_id>', methods=['GET'])
 @login_required
@@ -15,9 +13,15 @@ def view_sponsorship(sponsor_id):
     print("Sponsor route hit")  # Check if this prints in the logs
     sponsor = Sponsorship_data.query.get_or_404(sponsor_id)
     is_liked = current_user in sponsor.likes
-    return render_template('sponsor_details.html', sponsor=sponsor, is_liked=is_liked, user=current_user)
 
-
+    # Fetch comments for the sponsor
+    comments = Comment.query.filter_by(sponsorship_id=sponsor.id).all()
+    
+    return render_template('sponsor_details.html', 
+                           sponsor=sponsor, 
+                           comments=comments, 
+                           is_liked=is_liked, 
+                           user=current_user)
 
 @views.route('/sponsorlist', methods=['GET'])
 @login_required
@@ -54,14 +58,9 @@ def recommendation():
                            sponsors=sponsors_with_follow_status,  # Recommendations tab data
                            followed_sponsorship_ids=followed_sponsorship_ids)  # For follow buttons
 
-
-
-
-
 @views.route('/', methods=['GET', 'POST'])
 @login_required
 def home():
-    
     return render_template("home.html", user=current_user)
 
 @views.route('/delete-note', methods=['POST'])

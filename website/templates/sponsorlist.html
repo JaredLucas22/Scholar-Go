@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {% block title %}Sponsorships{% endblock %}
 {% block content %}
-<link rel="stylesheet" href="/static/css/test.css"/>
 <h3 class="text-center">All Sponsorships</h3>
 
 <!-- Tabs Navigation -->
@@ -23,21 +22,44 @@
                 {% if sponsorships %}
                 {% for sponsorship in sponsorships %}
                 <div class="col-12 mb-4">
-                    <a href="{{ url_for('views.view_sponsorship', sponsor_id=sponsorship.id) }}">
-                        <div class="logo me-3">
-                            <img src="{{ url_for('static', filename='uploads/' ~ sponsorship.picture_path) }}" alt="Logo" class="img-fluid" style="max-width: 100px;">
-                        </div>
-                        <div class="content flex-grow-1">
-                            <h5 class="title mb-1">{{ sponsorship.sponsor_name }}</h5>
-                            <p class="description mb-1">{{ sponsorship.description | safe }}</p>
-                            <p class="likes mb-1">Likes: {{ sponsorship.likes | length  }} | Deadline on {{ sponsorship.deadline_date.strftime('%B %d, %Y') }}</p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <span class="badge bg-success">Active Program</span>
-                                <p class="mb-0"><strong>Scholarship Program:</strong> {{ sponsorship.course }}</p>
-                                <p class="mb-0"><strong>Amount per Semester:</strong> P{{ sponsorship.amount_per_semester | round(2) }}</p>
+                    <div class="card position-relative">
+                        <a href="{{ url_for('views.view_sponsorship', sponsor_id=sponsorship.id) }}">
+                            <div class="logo me-3">
+                                <img src="{{ url_for('static', filename='uploads/' ~ sponsorship.picture_path) }}" alt="Logo" class="img-fluid" style="max-width: 100px;">
                             </div>
+                            <div class="content flex-grow-1">
+                                <h5 class="title mb-1">{{ sponsorship.sponsor_name }}</h5>
+                                <p class="description mb-1">{{ sponsorship.description | safe }}</p>
+                                <p class="likes mb-1">Likes: {{ sponsorship.likes | length  }} | Deadline on {{ sponsorship.deadline_date.strftime('%B %d, %Y') }}</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="badge bg-success">Active Program</span>
+                                    <p class="mb-0"><strong>Scholarship Program:</strong> {{ sponsorship.course }}</p>
+                                    <p class="mb-0"><strong>Amount per Semester:</strong> P{{ sponsorship.amount_per_semester | round(2) }}</p>
+                                </div>
+                            </div>
+                        </a>
+                         <!-- Ellipses Icon -->
+                         <div class="position-absolute top-0 end-0 p-2">
+                            <button class="btn btn-link dropdown-toggle" type="button" id="optionsMenu-{{ sponsorship.id }}" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="optionsMenu-{{ sponsorship.id }}">
+                                <li>
+                                    <form action="{{ url_for('auth.like_sponsorship', sponsor_id=sponsorship.id) }}" method="POST" style="display: inline;">
+                                        <button type="submit" class="dropdown-item" style="border: none; background: none; cursor: pointer;">
+                                            {% if current_user in sponsorship.likes %}
+                                                <i class="fas fa-thumbs-up" style="color: rgb(24, 47, 195);"></i> Unlike
+                                            {% else %}
+                                                <i class="far fa-thumbs-up" style="color: gray;"></i> Like
+                                            {% endif %}
+                                        </button>
+                                    </form>
+                                </li>
+                                <li><a class="dropdown-item" href="#">Delete</a></li>
+                                <li><a class="dropdown-item" href="#">Share</a></li>
+                            </ul>
                         </div>
-                    </a>
+                    </div>
                 </div>
                 {% endfor %}
                 {% else %}
@@ -56,6 +78,7 @@
                 {% if sponsors %}
                 {% for item in sponsors %}
                 <div class="col-12 mb-4">
+                    <div class="card position-relative">
                     <a href="{{ url_for('views.view_sponsorship', sponsor_id=item.sponsor.id) }}">
                         <div class="logo me-3">
                             <img src="{{ url_for('static', filename='uploads/' ~ item.sponsor.picture_path) }}" alt="Logo" class="img-fluid" style="max-width: 100px;">
@@ -70,10 +93,33 @@
                                 <p class="mb-0"><strong>Amount per Semester:</strong> P{{ item.sponsor.amount_per_semester | round(2) }}</p>
                             </div>
                         </div>
+                        </div>
                     </a>
                     
-                            </a>                     
-                </div>
+                            </a>     
+<!-- Ellipses Icon -->
+<div class="position-absolute top-0 end-0 p-2">
+    <button class="btn btn-link dropdown-toggle" type="button" id="optionsMenu-{{ item.sponsor.id}}" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="fas fa-ellipsis-v"></i>
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="optionsMenu-{{ item.sponsor.id }}">
+        <li>
+            <form action="{{ url_for('auth.like_sponsorship', sponsor_id=item.sponsor.id) }}" method="POST" style="display: inline;">
+                <button type="submit" class="dropdown-item" style="border: none; background: none; cursor: pointer;">
+                    {% if current_user in item.sponsor.likes %}
+                        <i class="fas fa-thumbs-up" style="color: rgb(24, 47, 195);"></i> Unlike
+                    {% else %}
+                        <i class="far fa-thumbs-up" style="color: gray;"></i> Like
+                    {% endif %}
+                </button>
+            </form>
+        </li>
+        <li><a class="dropdown-item" href="#">Delete</a></li>
+        <li><a class="dropdown-item" href="#">Share</a></li>
+    </ul>
+        </div>
+    </div>
+</div>
                 {% endfor %}
                 {% else %}
                 <div class="col-12">
@@ -88,7 +134,12 @@
 
 
 {% block scripts %}
-
+<script>
+    document.getElementById('like-form').onsubmit = function() {
+        const button = document.getElementById('like-button');
+        button.disabled = true; // Disable button to prevent multiple clicks
+    };
+</script>
 {% endblock %}
 
 {% endblock %}
