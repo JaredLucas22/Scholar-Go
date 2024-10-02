@@ -8,33 +8,44 @@
         {% if followed_sponsorships %}
             {% for item in followed_sponsorships %}
             <div class="col-12 mb-4">
-                <div class="card">
-                    <div class="card-body position-relative">
-                        <form action="{{ url_for('auth.follow', sponsorship_id=sponsorship.id) }}" method="post">
-
-                            <button class="btn btn-outline-danger position-absolute" style="top: 10px; right: 10px;" type="submit" data-toggle="tooltip" data-placement="top" title="Unfollow">
-                                <i class="fa fa-times"></i>
-                            </button>
-                        </form>
-
-                        <h5 class="card-title">{{ item.sponsor_name }}</h5>
-                        <p class="card-text">Passing Requirement: <b>{{ item.passing_requirement }}</b></p>
-                        <p class="card-text">Description: <b>{{ item.description | safe }}</b></p>
-
-                        <!-- Collapsible full description (collapsed by default) -->
-                        <div class="collapse mt-3" id="collapseDescription{{ loop.index }}">
-                            <div class="card card-body">
-                                {{ item.full_description | safe }}
-                            </div>
-                        </div>
-
-                        <!-- Button to toggle full description -->
-                        <button class="btn btn-primary position-absolute" style="bottom: 10px; right: 10px;" type="button" data-toggle="collapse" data-target="#collapseDescription{{ loop.index }}" aria-expanded="false" aria-controls="collapseDescription{{ loop.index }}">
-                            <i class="fa fa-chevron-down"></i>
-                        </button>
+            <div class="card position-relative">
+                <a href="{{ url_for('views.view_sponsorship', sponsor_id=item.id) }}">
+                    <div class="logo me-3">
+                        <img src="{{ url_for('static', filename='uploads/' ~ item.picture_path) }}" alt="Logo" class="img-fluid" style="max-width: 100px;">
                     </div>
+                    <div class="content flex-grow-1">
+                        <h5 class="title mb-1">{{ item.sponsor_name }}</h5>
+                        <p class="description mb-1">{{ item.description | safe }}</p>
+                        <p class="likes mb-1">Likes: {{ item.likes | length  }} | Deadline on {{ item.deadline_date.strftime('%B %d, %Y') }}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="badge bg-success">Active Program</span>
+                            <p class="mb-0"><strong>Scholarship Program:</strong> {{ item.course }}</p>
+                            <p class="mb-0"><strong>Amount per Semester:</strong> P{{ item.amount_per_semester | round(2) }}</p>
+                        </div>
+                    </div>
+                </a>
+                 <!-- Ellipses Icon -->
+                 <div class="position-absolute top-0 end-0 p-2">
+                    <button class="btn btn-link dropdown-toggle" type="button" id="optionsMenu-{{ item.id }}" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-ellipsis-v"></i>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="optionsMenu-{{ item.id }}">
+                        <li>
+                            <form action="{{ url_for('auth.follow_sponsorship', sponsorship_id=item.id) }}" method="POST" style="display: inline;">
+                                <button type="submit" class="dropdown-item" style="border: none; background: none; cursor: pointer;">
+                                    {% if current_user.is_following(item.id) %}
+                                    <i class="fa-solid fa-bookmark" style="color: rgb(24, 47, 195);"></i> Remove from Bookmark
+                                    {% else %}
+                                    <i class="fa-regular fa-bookmark" style="color: gray;"></i> Add to Bookmark
+                                    {% endif %}
+                                </button>
+                            </form>
+                        </li>
+                        <li><a class="dropdown-item" href="#">Share</a></li>
+                    </ul>
                 </div>
             </div>
+        </div>
             {% endfor %}
         {% else %}
             <div class="col-12">
@@ -45,29 +56,7 @@
 </div>
 
 {% block scripts %}
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var toggles = document.querySelectorAll('[data-toggle="collapse"]');
 
-        toggles.forEach(function (toggle) {
-            toggle.addEventListener('click', function () {
-                var icon = this.querySelector('i');
-                if (icon) {
-                    if (this.getAttribute('aria-expanded') === 'true') {
-                        icon.classList.add('fa-chevron-down');
-                        icon.classList.remove('fa-chevron-up');
-                    } else {
-                        icon.classList.add('fa-chevron-up');
-                        icon.classList.remove('fa-chevron-down');
-                    }
-                }
-            });
-        });
-
-        // Initialize tooltips
-        $('[data-toggle="tooltip"]').tooltip();
-    });
-</script>
 
 
 {% endblock %}

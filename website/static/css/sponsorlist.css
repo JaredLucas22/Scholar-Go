@@ -1,0 +1,281 @@
+/* Original styles */
+.col-12 {
+    height: auto; /* Fixed height for the entire column */
+    background-color: #0738a8;
+    border-radius: 20px;
+    overflow-x: hidden; /* Add this to prevent horizontal scrolling */
+    padding: 0 20px; /* Add some padding to ensure content is not cut off */
+    display: flex;
+    flex-direction: column; /* Stack content vertically */
+}
+
+.row {
+    flex-direction: column;
+}
+
+.logo {
+    height: 100%; /* Full height for the logo container */
+    align-items: left; /* Center the logo vertically */
+    justify-content: left;
+    text-align: left;
+}
+
+.logo img {
+    margin: 5vh 0; /* Margin for vertical spacing */
+    align-items: left; /* Align items in the center */
+    max-width: 17vh;
+    max-height: 17vh;
+    object-fit: contain; /* Ensure the logo scales properly */
+}
+
+.content {
+    flex-grow: 1; /* Allow content to take the remaining space */
+    display: flex;
+    flex-direction: column; /* Stack content vertically */
+    justify-content: space-between; /* Distribute space between items */
+    max-height: 230px;
+    text-decoration: none;
+    margin-left: 20px; /* Add some margin to separate from logo */
+}
+
+.title {
+    font-size: 3vh;
+    color: white;
+    font-weight: bold;
+    margin-top: 5vh;
+    text-transform: uppercase;
+}
+
+.description {
+    color: rgb(246, 246, 246);
+}
+
+.likes {
+    color: rgb(174, 204, 255);
+}
+
+.content-between {
+    margin-bottom: 1%;
+    display: flex;
+    gap: 5%;
+    color: white;
+    width: 100%;
+    white-space: wrap;
+}
+
+.content-between p {
+    font-size: 1.6vh;
+    margin-bottom: 5px;
+}
+
+.bg-success {
+    background-color: rgb(114, 249, 114);
+    flex-shrink: 0; /* Prevent shrinking of the badge */
+    white-space: nowrap; /* Prevents the text from wrapping */
+    padding: 8px 18px; /* Adjusted padding */
+    width: fit-content; /* Allow width to be determined by content */
+    font-size: 0.8em;
+    white-space: nowrap;
+    margin-top: auto; /* Push button to the bottom of the container */
+    margin-bottom: 0; /* Remove space below button */
+}
+
+.verified-check {
+    color: #fafcff;; /* Checkmark color */
+    font-size: 25px; /* Adjust size as needed */
+    margin: 30px 20px;
+}
+
+.recommendation-text {
+    font-weight: bold;
+    font-size: 2vh;
+    color: rgb(44, 44, 44);
+    text-align: right;
+    margin-top: 3%;
+}
+
+/* Tab Navigation Styles */
+a {
+    text-decoration: none; /* Removes the underline from links */
+}
+
+.nav-tabs {
+    margin-top: 5%;
+}
+
+.nav-tabs .nav-link {
+    color: #0738a8; /* Set the text color */
+    font-weight: normal; /* Default font weight */
+    transition: background-color 0.3s ease, color 0.3s ease, border 0.3s ease, transform 0.2s ease; /* Smooth transition for hover effects */
+    border: 2px solid transparent; /* Add transparent border for animation */
+    border-radius: 4px; /* Optional: Rounded corners */
+}
+
+.nav-tabs .nav-link.active {
+    color: white; /* Text color for active tab */
+    background-color: #0738a8; /* Background color for active tab */
+    border: 2px solid #0738a8; /* Border color for active tab */
+}
+
+/* Click Animation */
+.nav-tabs .nav-link:active {
+    transform: scale(0.95); /* Slightly scale down when clicked */
+}
+
+/* Optional: Additional styling for a better appearance */
+.nav-tabs .nav-link {
+    padding: 10px 15px; /* Adjust padding for better spacing */
+}
+
+/* Media Query for Medium Screens */
+@media (max-width: 992px) {
+    .nav-tabs {
+        margin-top: 3%; /* Reduce margin for medium screens */
+    }
+
+    .nav-tabs .nav-link {
+        padding: 8px 12px; /* Reduce padding for medium screens */
+        font-size: 14px; /* Reduce font size for medium screens */
+    }
+}
+
+/* Media Query for Small Screens */
+@media (max-width: 768px) {
+    .nav-tabs {
+        margin-top: 2%; /* Reduce margin for small screens */
+    }
+
+    .nav-tabs .nav-link {
+        padding: 6px 10px; /* Reduce padding for small screens */
+        font-size: 12px; /* Reduce font size for small screens */
+    }
+}
+
+/* Media Query for Extra Small Screens */
+@media (max-width: 480px) {
+    .nav-tabs {
+        margin-top: 1%; /* Reduce margin for extra small screens */
+    }
+
+    .nav-tabs .nav-link {
+        padding: 4px 8px; /* Reduce padding for extra small screens */
+        font-size: 10px; /* Reduce font size for extra small screens */
+    }
+}
+
+
+
+/* Media Query for Medium Screens */
+@media (max-width: 992px) {
+    .col-12 {
+        height: 25vh; /* Reduce height for medium screens */
+    }
+
+    .logo img {
+        max-width: 15vh; /* Reduce logo size for medium screens */
+        max-height: 15vh; /* Reduce logo size for medium screens */
+        margin: 4vh 0; /* Reduce vertical margin for medium screens */
+    }
+
+    .title {
+        font-size: 2.5vh; /* Reduce font size for medium screens */
+    }
+
+    .description {
+        font-size: 1.8vh; /* Reduce font size for medium screens */
+    }
+
+    .likes {
+        font-size: 1.6vh; /* Reduce font size for medium screens */
+    }
+
+    .content-between p {
+        font-size: 1.4vh; /* Reduce font size for medium screens */
+    }
+
+    .bg-success {
+        height: 3vh;
+        font-size: 12px;
+    }
+}
+
+/* Media Query for Small Screens */
+/* Styles for smaller screens */
+@media (max-width: 768px) { 
+    .col-12 {
+        padding: 20px; /* Add some padding on smaller screens */
+        overflow-y: hidden; /* Remove scrollbar */
+        height: 50%;
+        width: 87%;
+        margin: auto;
+        padding-bottom: 5%;
+    }
+
+    .logo img {
+        max-width: 90px; /* Increase logo size */
+        max-height: 90px; /* Increase logo size */
+        margin: 10px auto; 
+    }
+
+    .logo {
+        margin: auto;
+    }
+
+    .title {
+        font-size: 1.5em; 
+        text-align: center;
+        margin-top: 0;
+    }
+
+    .description {
+        font-size: 1em;
+        text-align: center;
+    }
+
+    .likes {
+        font-size: 0.9em;
+        text-align: center;
+    }
+
+    .content-between {
+        display: flex; /* Use flexbox for horizontal arrangement */
+        flex-direction: column; /* Stack elements vertically on small screens */
+        align-items: center; /* Center content horizontally */
+        width: 100%; /* Make content span full width */
+        margin-top: 10px;
+        flex-wrap: wrap; /* Wrap content to prevent overflow */
+        margin: auto;
+        padding-bottom: 5%;
+        padding-top: 5%;
+    }
+
+    .content-between p {
+        font-size: 0.8em; 
+        margin: 5px 0; /* Add some spacing between elements */
+        text-align: center; /* Center text */
+    }
+
+    .verified-check {
+        color: #fafcff;; /* Checkmark color */
+        font-size: 18px; /* Adjust size as needed */
+        margin:0;
+    }
+
+    .recommendation-text {
+        margin-top: 3%;
+        font-size: 1.5vh;
+        text-align: center;
+    }
+}
+/* Media Query for Extra Small Screens */
+@media (max-width: 480px) {
+    .col-12 {
+        height: 15vh; /* Reduce height for extra small screens */
+    }
+
+    .logo img {
+        max-width: 9vh; /* Reduce logo size for extra small screens */
+        max-height: 9vh; /* Reduce logo size for extra small screens */
+        margin: 2vh 0; /* Reduce vertical margin for extra small screens */
+    }
+}

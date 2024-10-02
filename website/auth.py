@@ -35,19 +35,28 @@ def save_picture(form_picture):
     return filename
 
 
-def follow_sponsorship(user_id, sponsorship_id):
-    user = User.query.get(user_id)
+@auth.route('/follow/<int:sponsorship_id>', methods=['POST'])
+@login_required
+def follow_sponsorship(sponsorship_id):
     sponsorship = Sponsorship_data.query.get(sponsorship_id)
+    if not sponsorship:
+        flash('Sponsorship not found.', category='error')
+        return redirect(url_for('views.home'))
 
-    if not user or not sponsorship:
-        return False  # User or sponsorship not found
+    if current_user.is_following(sponsorship_id):
+        current_user.remove_follow(sponsorship)
+        flash('You have unfollowed this sponsorship!', category='success')
+    else:
+        current_user.add_follow(sponsorship)
+        flash('You are now following this sponsorship!', category='success')
 
-    if sponsorship not in user.followed_sponsorships:
-        user.followed_sponsorships.append(sponsorship)
-        db.session.commit()
-        return True  # Successfully followed
-    return False  # Already following
+    return redirect(request.referrer or url_for('views.home'))
 
+
+
+
+@auth.route('/follow/<int:sponsorship_id>', methods=['POST'])
+@login_required
 def unfollow_sponsorship(user_id, sponsorship_id):
     user = User.query.get(user_id)
     sponsorship = Sponsorship_data.query.get(sponsorship_id)
@@ -57,11 +66,13 @@ def unfollow_sponsorship(user_id, sponsorship_id):
 
     if sponsorship in user.followed_sponsorships:
         user.followed_sponsorships.remove(sponsorship)
-        db.session.commit()
-        return True  # Successfully unfollowed
+        try:
+            db.session.commit()
+            return True  # Successfully unfollowed
+        except Exception as e:
+            db.session.rollback()
+            return False  # Error occurred during commit
     return False  # Not currently following
-
-
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():

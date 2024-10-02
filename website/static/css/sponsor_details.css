@@ -1,0 +1,378 @@
+.sponsor-card {
+    height: auto; /* Fixed height for the entire column */
+    background-color: #0738a8;
+    border-radius: 20px;
+    overflow-x: hidden; /* Add this to prevent horizontal scrolling */
+    padding: 0 20px; /* Add some padding to ensure content is not cut off */
+    display: flex;
+    flex-direction: column; /* Stack content vertically */
+    color: white;
+    position: relative;
+    padding-top: 4%;
+    margin-top: 5%;
+    margin-bottom: 5%;
+  }
+  
+  .verified-check {
+    color: #fafcff;; /* Checkmark color */
+    font-size: 25px; /* Adjust size as needed */
+    margin: 30px 20px;
+    position: absolute;  /* Position the checkmark absolutely */
+    top: 0;           /* Adjust the vertical position */
+    left: 1%;          /* Adjust the horizontal position */
+    height: auto;
+  }
+  
+  .sponsor-header {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+  }
+  
+  .sponsor-logo {
+    width: 17vh;
+    height: 17vh;
+    border-radius: 50%;
+    margin-left: 5%;
+    margin-right: 2%;
+  }
+  
+  .sponsor-name {
+        font-size: 3vh;
+        color: white;
+        font-weight: bold;
+        text-transform: uppercase;
+        margin: 0;
+  }
+  
+  .likes {
+    font-size: 16px;
+    color: rgb(174, 204, 255);
+  }
+  
+  .sponsor-info {
+    margin-top: 10%;
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 1%;
+    display: flex;
+    gap: 2vw;
+    color: white;
+    white-space: wrap;
+  }
+
+  .sponsor-info p {
+    font-size: 1.6vh;
+    margin-bottom: 5px;
+  }
+  
+  .sponsor-status {
+    font-weight: bold;
+  }
+  
+  .active {
+    background-color: #4CAF50;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+  }
+  
+  .inactive {
+    background-color: #f44336;
+    color: white;
+    border-radius: 5px;
+    padding: 8px 18px; /* Adjusted padding */
+    width: fit-content; /* Allow width to be determined by content */
+    font-size: 0.8em;
+    white-space: nowrap;
+    margin-top: auto; /* Push button to the bottom of the container */
+    margin-bottom: 0; /* Remove space below button */
+  }
+  
+  .info-label {
+    font-weight: bold;
+  }
+  
+  .sponsor-footer {
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  .footer-actions {
+    display: flex;
+    align-items: center;
+  }
+  
+  .icon-container {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+  }
+
+#like-form {
+  width: 40px;
+}
+
+  .like-button, 
+  .bookmark-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;  /* Increased size */
+    height: 60px; /* Increased size */
+    background-color: transparent;
+    color: #ffffff;
+    cursor: pointer;
+    border: none;
+    font-size: 24px; /* Adjust font size for icons */
+    margin: 0;
+    padding: 0; /* Ensure no padding inside buttons */
+    transition: background-color 0.3s ease; /* Smooth transition for background color */
+  }
+  
+/* Hover effect specifically for the bookmark icon */
+.bookmark-button:hover i {
+  color: rgb(255, 238, 140); /* Change the color of the bookmark icon on hover */
+  transition: color 0.3s ease; /* Smooth transition for the color change */
+}
+
+/* Keep the thumbs-up button hover effect unchanged */
+.like-button:hover {
+  background-color: rgb(255, 255, 255); /* Light white background on hover */
+  color: rgb(213, 245, 255);
+}
+  
+  .liked.active {
+    color: blue;
+  }
+
+
+
+
+
+
+  /* Description Section */
+  /* sponsor_details.css */
+
+.sponsor-description {
+  padding: 20px;
+  color: white;
+}
+
+.description-title {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.description-text {
+  font-size: 16px;
+  color: #ffffff;
+  margin-top: 1%;
+  margin-bottom: 2%;
+  text-align: justify;
+}
+
+.sponsor-requirements {
+  padding: 20px;
+}
+
+.requirements-title {
+  font-weight: bold;
+  margin-bottom: 3%;
+  text-transform: uppercase;
+}
+
+.requirements-list {
+  padding: 0;
+  margin: 0;
+}
+
+.requirement-item {
+  font-size: 2vh;
+  color: #ffffff;
+  margin-left: 2%;
+}
+
+.requirements-list ul {
+  margin-bottom: 3%;
+  margin-left: 3%;
+}
+
+.blue-button {
+  background-color: #017cff; /* Button background color */
+  color: white; /* Text color */
+  border: none; /* No border */
+  width: 30%;
+  padding: 10px 20px; /* Padding inside the button */
+  text-align: center; /* Center text */
+  text-decoration: none; /* No underline */
+  margin: auto; /* Center button horizontally and add space above/below */
+  margin-top: 5%;
+  display: block; /* Change to block to enable margin auto */
+  font-size: 2vh; /* Font size */
+  cursor: pointer; /* Cursor changes to pointer on hover */
+  border-radius: 10px; /* Rounded corners */
+  transition: background-color 0.3s; /* Smooth background transition */
+}
+
+
+.blue-button:hover {
+  background-color: #1787ff; /* Darker blue on hover */
+}
+
+
+
+
+
+
+
+/* Media Query */
+/* Medium screens (tablets and smaller) */
+@media (max-width: 768px) {
+  .sponsor-card {
+    padding: 10px;
+    margin-top: 3%;
+    margin-bottom: 3%;
+    flex-direction: column;
+  }
+  
+  .sponsor-logo {
+    width: 12vh;
+    height: 12vh;
+    margin-bottom: 40px;
+  }
+
+  .sponsor-name {
+    font-size: 2.3vh;
+    margin-top: 40px;
+    margin-right: 20px;
+  }
+
+  .sponsor-info {
+    flex-direction: column; /* Stack information vertically */
+    line-height: 1;
+    margin-top: 30px;
+  }
+
+  .sponsor-info p {
+    font-size: 1.3vh;
+    margin: 0;
+    margin-top: 5px;
+    padding: 0%;
+  }
+
+  .inactive {
+    padding: 6px 14px;
+    font-size: 0.8em;
+  }
+
+  .blue-button {
+    width: 50%;
+    font-size: 1.5vh;
+  }
+
+  .description-text {
+    font-size: 15px;
+  }
+
+  .requirements-title {
+    font-size: 2.1vh;
+  }
+
+  .requirement-item {
+    font-size: 1.6vh;
+  }
+
+  .requirements-list ul {
+    font-size: 1.5vh;
+  }
+
+  .likes {
+    font-size: 14px;
+  }
+
+  .like-button, 
+  .bookmark-button {
+    font-size: 19px; /* Adjust font size for icons */
+  }
+  
+  .verified-check {
+    font-size: 20px; /* Adjust size as needed */
+  }
+}
+
+/* Small screens (phones) */
+@media (max-width: 576px) {
+  .sponsor-card {
+    padding: 10px;
+    margin-top: 3%;
+    margin-bottom: 3%;
+    flex-direction: column;
+  }
+  
+  .sponsor-logo {
+    width: 10vh;
+    height: 10vh;
+    margin-bottom: 50px;
+  }
+
+  .sponsor-name {
+    font-size: 2vh;
+    margin-top: 40px;
+    margin-right: 20px;
+  }
+
+  .sponsor-info {
+    flex-direction: column; /* Stack information vertically */
+    line-height: 1.2;
+    margin-top: 30px;
+  }
+
+  .sponsor-info p {
+    font-size: 1.2vh;
+    margin: 0;
+    margin-top: 5px;
+    padding: 0%;
+  }
+
+  .inactive {
+    padding: 6px 14px;
+    font-size: 0.9em;
+  }
+
+  .blue-button {
+    width: 50%;
+    font-size: 1.3vh;
+  }
+
+  .description-text {
+    font-size: 13px;
+  }
+
+  .requirements-title {
+    font-size: 1.8vh;
+  }
+
+  .requirement-item {
+    font-size: 1.4vh;
+  }
+
+  .requirements-list ul {
+    font-size: 1.3vh;
+  }
+
+  .likes {
+    font-size: 12px;
+  }
+
+  .like-button, 
+  .bookmark-button {
+    font-size: 16px; /* Adjust font size for icons */
+  }
+  
+  .verified-check {
+    font-size: 18px; /* Adjust size as needed */
+  }
+}

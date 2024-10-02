@@ -32,33 +32,39 @@
                                 <p class="description mb-1">{{ sponsorship.description | safe }}</p>
                                 <p class="likes mb-1">Likes: {{ sponsorship.likes | length  }} | Deadline on {{ sponsorship.deadline_date.strftime('%B %d, %Y') }}</p>
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <span class="badge bg-success">Active Program</span>
+                                {% if sponsorship.active %}
+                                <span class="badge bg-success">Active Program</span>
+                                {% else %}
+                                <span class="badge bg-danger">Inactive Program</span>
+                                {% endif %}
+                                
+                                
                                     <p class="mb-0"><strong>Scholarship Program:</strong> {{ sponsorship.course }}</p>
                                     <p class="mb-0"><strong>Amount per Semester:</strong> P{{ sponsorship.amount_per_semester | round(2) }}</p>
                                 </div>
                             </div>
                         </a>
-                         <!-- Ellipses Icon -->
-                         <div class="position-absolute top-0 end-0 p-2">
+                        <!-- Ellipses Icon -->
+                        <div class="position-absolute top-0 end-0 p-2">
                             <button class="btn btn-link dropdown-toggle" type="button" id="optionsMenu-{{ sponsorship.id }}" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="fas fa-ellipsis-v"></i>
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="optionsMenu-{{ sponsorship.id }}">
                                 <li>
-                                    <form action="{{ url_for('auth.like_sponsorship', sponsor_id=sponsorship.id) }}" method="POST" style="display: inline;">
+                                    <form action="{{ url_for('auth.follow_sponsorship', sponsorship_id=sponsorship.id) }}" method="POST" style="display: inline;">
                                         <button type="submit" class="dropdown-item" style="border: none; background: none; cursor: pointer;">
-                                            {% if current_user in sponsorship.likes %}
-                                                <i class="fas fa-thumbs-up" style="color: rgb(24, 47, 195);"></i> Unlike
+                                            {% if current_user.is_following(sponsorship.id) %}
+                                                <i class="fa-solid fa-bookmark" style="color: rgb(24, 47, 195);"></i> Remove Bookmark
                                             {% else %}
-                                                <i class="far fa-thumbs-up" style="color: gray;"></i> Like
+                                                <i class="fa-regular fa-bookmark" style="color: gray;"></i> Add Bookmark
                                             {% endif %}
                                         </button>
                                     </form>
                                 </li>
-                                <li><a class="dropdown-item" href="#">Delete</a></li>
                                 <li><a class="dropdown-item" href="#">Share</a></li>
                             </ul>
                         </div>
+
                     </div>
                 </div>
                 {% endfor %}
@@ -88,38 +94,40 @@
                             <p class="description mb-1">{{ item.sponsor.description | safe }}</p>
                             <p class="likes mb-1">Likes: {{ item.sponsor.likes | length }} | Deadline on {{ item.sponsor.deadline_date.strftime('%B %d, %Y') }}</p>
                             <div class="d-flex justify-content-between align-items-center">
+                                {% if item.sponsor.active %}
                                 <span class="badge bg-success">Active Program</span>
+                                {% else %}
+                                <span class="badge bg-danger">Inactive Program</span>
+                                {% endif %}
                                 <p class="mb-0"><strong>Scholarship Program:</strong> {{ item.sponsor.course }}</p>
                                 <p class="mb-0"><strong>Amount per Semester:</strong> P{{ item.sponsor.amount_per_semester | round(2) }}</p>
                             </div>
                         </div>
-                        </div>
                     </a>
-                    
-                            </a>     
-<!-- Ellipses Icon -->
-<div class="position-absolute top-0 end-0 p-2">
-    <button class="btn btn-link dropdown-toggle" type="button" id="optionsMenu-{{ item.sponsor.id}}" data-bs-toggle="dropdown" aria-expanded="false">
-        <i class="fas fa-ellipsis-v"></i>
-    </button>
-    <ul class="dropdown-menu" aria-labelledby="optionsMenu-{{ item.sponsor.id }}">
-        <li>
-            <form action="{{ url_for('auth.like_sponsorship', sponsor_id=item.sponsor.id) }}" method="POST" style="display: inline;">
-                <button type="submit" class="dropdown-item" style="border: none; background: none; cursor: pointer;">
-                    {% if current_user in item.sponsor.likes %}
-                        <i class="fas fa-thumbs-up" style="color: rgb(24, 47, 195);"></i> Unlike
-                    {% else %}
-                        <i class="far fa-thumbs-up" style="color: gray;"></i> Like
-                    {% endif %}
+                        
+            <!-- Ellipses Icon -->
+            <div class="position-absolute top-0 end-0 p-2">
+                <button class="btn btn-link dropdown-toggle" type="button" id="optionsMenu-{{ item.sponsor.id }}" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-ellipsis-v"></i>
                 </button>
-            </form>
-        </li>
-        <li><a class="dropdown-item" href="#">Delete</a></li>
-        <li><a class="dropdown-item" href="#">Share</a></li>
-    </ul>
+                <ul class="dropdown-menu" aria-labelledby="optionsMenu-{{ item.sponsor.id }}">
+                    <li>
+                        <form action="{{ url_for('auth.follow_sponsorship', sponsorship_id=item.sponsor.id) }}" method="POST" style="display: inline;">
+                            <button type="submit" class="dropdown-item" style="border: none; background: none; cursor: pointer;">
+                                {% if current_user.is_following(item.sponsor.id) %}
+                                <i class="fa-solid fa-bookmark" style="color: rgb(24, 47, 195);"></i> Remove Bookmark
+                                {% else %}
+                                    <i class="fa-regular fa-bookmark" style="color: gray;"></i> Add Bookmark
+                                {% endif %}
+                            </button>
+                        </form>
+                    </li>
+                    <li><a class="dropdown-item" href="#">Share</a></li>
+                </ul>
+            </div>
         </div>
     </div>
-</div>
+
                 {% endfor %}
                 {% else %}
                 <div class="col-12">

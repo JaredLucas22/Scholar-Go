@@ -15,7 +15,6 @@ user_sponsorship_likes = db.Table('user_sponsorship_likes',
 )
 
 
-
 class Note(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     data = db.Column(db.String(10000))
@@ -34,11 +33,21 @@ class User(db.Model, UserMixin):
     notes = db.relationship('Note', backref='user', lazy=True)
     followed_sponsorships = db.relationship('Sponsorship_data', secondary=user_sponsorship,
                                              lazy='subquery', backref=db.backref('followers', lazy=True))
+    comments = db.relationship('Comment', backref='user', lazy=True)
+
     def is_following(self, sponsorship_id):
         return any(sponsorship.id == sponsorship_id for sponsorship in self.followed_sponsorships)
-    def has_liked(self, sponsorship):
-        return sponsorship in self.liked_sponsorships
-    comments = db.relationship('Comment', backref='user', lazy=True)
+
+    def add_follow(self, sponsorship):
+        if not self.is_following(sponsorship.id):
+            self.followed_sponsorships.append(sponsorship)
+            db.session.commit()
+
+    def remove_follow(self, sponsorship):
+        if self.is_following(sponsorship.id):
+            self.followed_sponsorships.remove(sponsorship)
+            db.session.commit()
+
 
 
 from sqlalchemy.sql import func
