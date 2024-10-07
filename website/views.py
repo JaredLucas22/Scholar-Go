@@ -86,3 +86,9 @@ def my_bookmarks():
     # Fetch followed sponsorships
     bookmarks = current_user.followed_sponsorships
     return render_template('follow.html', bookmarks=bookmarks)
+
+@views.route("/profile")
+@login_required
+def profile():
+
+    return render_template('profile.html', user=current_user)

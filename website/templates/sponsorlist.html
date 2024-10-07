@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 {% block title %}Sponsorships{% endblock %}
 {% block content %}
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOM07j8e5K/9v11H5F1Rtt0F1Xh4mL0c1YyG3aV" crossorigin="anonymous">
+<link rel="stylesheet" href="/static/css/sponsorlist.css"/>
+
 <h3 class="text-center">All Sponsorships</h3>
 
 <!-- Tabs Navigation -->
@@ -12,61 +16,61 @@
         <button class="nav-link" id="recommendations-tab" data-bs-toggle="tab" data-bs-target="#recommendations" type="button" role="tab" aria-controls="recommendations" aria-selected="false">Recommendations</button>
     </li>
 </ul>
-
 <!-- Tabs Content -->
 <div class="tab-content" id="sponsorshipTabsContent">
     <!-- All Sponsorships Tab -->
     <div class="tab-pane fade show active" id="all" role="tabpanel" aria-labelledby="all-tab">
-        <div class="container mt-4">
+        <div class="container-list mt-4">
             <div class="row">
                 {% if sponsorships %}
                 {% for sponsorship in sponsorships %}
                 <div class="col-12 mb-4">
-                    <div class="card position-relative">
-                        <a href="{{ url_for('views.view_sponsorship', sponsor_id=sponsorship.id) }}">
-                            <div class="logo me-3">
-                                <img src="{{ url_for('static', filename='uploads/' ~ sponsorship.picture_path) }}" alt="Logo" class="img-fluid" style="max-width: 100px;">
+                    <a href="{{ url_for('views.view_sponsorship', sponsor_id=sponsorship.id) }}">
+                        <div class="d-flex flex-column flex-sm-row align-items-stretch"> 
+                            <div class="verified-check">
+                                <i class="fas fa-check-circle" aria-hidden="true"></i> 
                             </div>
-                            <div class="content flex-grow-1">
-                                <h5 class="title mb-1">{{ sponsorship.sponsor_name }}</h5>
+                            <div class="logo">
+                                <img src="{{ url_for('static', filename='uploads/' ~ sponsorship.picture_path) }}" alt="Logo" class="img-fluid logo-img">
+                            </div>
+                            <div class="content flex-grow-1 ms-3"> 
+                                <h5 class="title mb-1 me-2">{{ sponsorship.sponsor_name }}</h5>
                                 <p class="description mb-1">{{ sponsorship.description | safe }}</p>
-                                <p class="likes mb-1">Likes: {{ sponsorship.likes | length  }} | Deadline on {{ sponsorship.deadline_date.strftime('%B %d, %Y') }}</p>
-                                <div class="d-flex justify-content-between align-items-center">
-                                {% if sponsorship.active %}
-                                <span class="badge bg-success">Active Program</span>
-                                {% else %}
-                                <span class="badge bg-danger">Inactive Program</span>
-                                {% endif %}
-                                
-                                
+                                <p class="likes mb-1">Likes: {{ sponsorship.likes | length }} | Deadline on Feb. 25, 2025</p>
+                                <div class="d-flex content-between mt-auto"> 
+                                    {% if sponsorship.active %}
+                                    <span class="badge bg-success">Active Program</span>
+                                    {% else %}
+                                    <span class="badge bg-danger">Inactive Program</span>
+                                    {% endif %}
+                                    
                                     <p class="mb-0"><strong>Scholarship Program:</strong> {{ sponsorship.course }}</p>
                                     <p class="mb-0"><strong>Amount per Semester:</strong> P{{ sponsorship.amount_per_semester | round(2) }}</p>
                                 </div>
                             </div>
-                        </a>
-                        <!-- Ellipses Icon -->
-                        <div class="position-absolute top-0 end-0 p-2">
-                            <button class="btn btn-link dropdown-toggle" type="button" id="optionsMenu-{{ sponsorship.id }}" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="fas fa-ellipsis-v"></i>
-                            </button>
-                            <ul class="dropdown-menu" aria-labelledby="optionsMenu-{{ sponsorship.id }}">
-                                <li>
-                                    <form action="{{ url_for('auth.follow_sponsorship', sponsorship_id=sponsorship.id) }}" method="POST" style="display: inline;">
-                                        <button type="submit" class="dropdown-item" style="border: none; background: none; cursor: pointer;">
-                                            {% if current_user.is_following(sponsorship.id) %}
-                                                <i class="fa-solid fa-bookmark" style="color: rgb(24, 47, 195);"></i> Remove Bookmark
-                                            {% else %}
-                                                <i class="fa-regular fa-bookmark" style="color: gray;"></i> Add Bookmark
-                                            {% endif %}
-                                        </button>
-                                    </form>
-                                </li>
-                                <li><a class="dropdown-item" href="#">Share</a></li>
-                            </ul>
-                        </div>
-
+                        </div>   
+                    </a>
+                        <div class="position-relative">
+                        <button class="btn btn-link dropdown-toggle" type="button" id="optionsMenu-{{ sponsorship.id }}" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                        <ul class="dropdown-menu" style="display: block;" aria-labelledby="optionsMenu-{{ sponsorship.id }}">
+                            <li>
+                                <form action="{{ url_for('auth.follow_sponsorship', sponsorship_id=sponsorship.id) }}" method="POST" style="display: inline;">
+                                    <button type="submit" class="dropdown-item" style="border: none; background: none; cursor: pointer;">
+                                        {% if current_user.is_following(sponsorship.id) %}
+                                            <i class="fa-solid fa-bookmark" style="color: rgb(24, 47, 195);"></i> Remove Bookmark
+                                        {% else %}
+                                            <i class="fa-regular fa-bookmark" style="color: gray;"></i> Add Bookmark
+                                        {% endif %}
+                                    </button>
+                                </form>
+                            </li>
+                            <li><a class="dropdown-item" href="#">Share</a></li>
+                        </ul>
                     </div>
                 </div>
+                
                 {% endfor %}
                 {% else %}
                 <div class="col-12">
@@ -76,58 +80,64 @@
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Recommendations Tab -->
-    <div class="tab-pane fade" id="recommendations" role="tabpanel" aria-labelledby="recommendations-tab">
+     <!-- Recommendations Tab -->
+     <div class="tab-pane fade" id="recommendations" role="tabpanel" aria-labelledby="recommendations-tab">
         <div class="container mt-4">
             <div class="row">
                 {% if sponsors %}
                 {% for item in sponsors %}
                 <div class="col-12 mb-4">
-                    <div class="card position-relative">
                     <a href="{{ url_for('views.view_sponsorship', sponsor_id=item.sponsor.id) }}">
-                        <div class="logo me-3">
-                            <img src="{{ url_for('static', filename='uploads/' ~ item.sponsor.picture_path) }}" alt="Logo" class="img-fluid" style="max-width: 100px;">
-                        </div>
-                        <div class="content flex-grow-1">
-                            <h5 class="title mb-1">{{ item.sponsor.sponsor_name }}</h5>
-                            <p class="description mb-1">{{ item.sponsor.description | safe }}</p>
-                            <p class="likes mb-1">Likes: {{ item.sponsor.likes | length }} | Deadline on {{ item.sponsor.deadline_date.strftime('%B %d, %Y') }}</p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                {% if item.sponsor.active %}
-                                <span class="badge bg-success">Active Program</span>
-                                {% else %}
-                                <span class="badge bg-danger">Inactive Program</span>
-                                {% endif %}
-                                <p class="mb-0"><strong>Scholarship Program:</strong> {{ item.sponsor.course }}</p>
-                                <p class="mb-0"><strong>Amount per Semester:</strong> P{{ item.sponsor.amount_per_semester | round(2) }}</p>
+                        <div class="d-flex flex-column flex-sm-row align-items-stretch"> 
+                            <div class="verified-check">
+                                <i class="fas fa-check-circle" aria-hidden="true"></i> 
                             </div>
-                        </div>
+                            <div class="logo">
+                                <img src="{{ url_for('static', filename='uploads/' ~ item.sponsor.picture_path) }}" alt="Logo" class="img-fluid logo-img">
+                            </div>
+                            <div class="content flex-grow-1 ms-3"> 
+                                <h5 class="title mb-1">{{ item.sponsor.sponsor_name }}</h5>
+                                <p class="description mb-1">{{ item.sponsor.description | safe }}</p>
+                                <p class="likes mb-1">Likes: {{ item.sponsor.likes | length }} | Deadline on {{ item.sponsor.deadline_date.strftime('%B %d, %Y') }}</p>
+                                <div class="d-flex content-between mt-auto"> 
+                                    {% if item.sponsor.active %}
+                                    <span class="badge bg-success">Active Program</span>
+                                    {% else %}
+                                    <span class="badge bg-danger">Inactive Program</span>
+                                    {% endif %}
+                                    
+                                    <p class="mb-0"><strong>Scholarship Program:</strong> {{ item.sponsor.course }}</p>
+                                    <p class="mb-0"><strong>Amount per Semester:</strong> P{{ item.sponsor.amount_per_semester | round(2) }}</p>
+                                </div>
+                            </div>
+                            
+                        </div>   
                     </a>
-                        
-            <!-- Ellipses Icon -->
-            <div class="position-absolute top-0 end-0 p-2">
-                <button class="btn btn-link dropdown-toggle" type="button" id="optionsMenu-{{ item.sponsor.id }}" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="fas fa-ellipsis-v"></i>
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="optionsMenu-{{ item.sponsor.id }}">
-                    <li>
-                        <form action="{{ url_for('auth.follow_sponsorship', sponsorship_id=item.sponsor.id) }}" method="POST" style="display: inline;">
-                            <button type="submit" class="dropdown-item" style="border: none; background: none; cursor: pointer;">
-                                {% if current_user.is_following(item.sponsor.id) %}
-                                <i class="fa-solid fa-bookmark" style="color: rgb(24, 47, 195);"></i> Remove Bookmark
-                                {% else %}
-                                    <i class="fa-regular fa-bookmark" style="color: gray;"></i> Add Bookmark
-                                {% endif %}
-                            </button>
-                        </form>
-                    </li>
-                    <li><a class="dropdown-item" href="#">Share</a></li>
-                </ul>
-            </div>
-        </div>
-    </div>
-
+                    
+                        <div class="position-relative">
+                        <button class="btn btn-link dropdown-toggle" type="button" id="optionsMenu-{{ item.sponsor.id }}" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                        <ul class="dropdown-menu" style="display: block;" aria-labelledby="optionsMenu-{{ item.sponsor.id }}">
+                            <li>
+                                <form action="{{ url_for('auth.follow_sponsorship', sponsorship_id=item.sponsor.id) }}" method="POST" style="display: inline;">
+                                    <button type="submit" class="dropdown-item" style="border: none; background: none; cursor: pointer;">
+                                        {% if current_user.is_following(item.sponsor.id) %}
+                                            <i class="fa-solid fa-bookmark" style="color: rgb(24, 47, 195);"></i> Remove Bookmark
+                                        {% else %}
+                                            <i class="fa-regular fa-bookmark" style="color: gray;"></i> Add Bookmark
+                                        {% endif %}
+                                    </button>
+                                </form>
+                            </li>
+                            <li><a class="dropdown-item" href="#">Share</a></li>
+                        </ul>
+                    </div>
+                </div>
+            
+                
                 {% endfor %}
                 {% else %}
                 <div class="col-12">
