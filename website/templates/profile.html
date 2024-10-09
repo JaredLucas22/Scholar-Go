@@ -22,7 +22,7 @@
 
         <!-- Profile Settings Form (Right) -->
         <div class="col-md-9 border-right">
-            <form method="POST" action="{{ url_for('update_profile') }}">
+            <form method="POST" action="{{ url_for('auth.update_profile') }}">
                 <div class="p-3 py-5">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h4 class="text-right">Profile Settings</h4>
@@ -35,12 +35,12 @@
                             <input type="text" class="form-control" name="first_name" value="{{ current_user.first_name }}">
                         </div>
                         <div class="col-md-4">
-                            <label class="labels">User</label>
-                            <input type="text" class="form-control" name="username" value="{{ current_user.username }}">
+                            <label class="labels">Last Name</label>
+                            <input type="text" class="form-control" name="last_name" value="{{ current_user.last_name }}">
                         </div>
                         <div class="col-md-4">
-                            <label class="labels">Last name</label>
-                            <input type="text" class="form-control" name="last_name" value="{{ current_user.last_name }}">
+                            <label class="labels">Suffix</label>
+                            <input type="text" class="form-control" name="suffix" value="{{ current_user.suffix }}">
                         </div>
                     </div>
 
@@ -81,7 +81,7 @@
                         </div>
                         <div class="col-md-6">
                             <label class="labels">Postal Code</label>
-                            <input type="text" class="form-control" name="postal_code" value="{{ current_user.postal_code }}">
+                            <input type="text" class="form-control" name="postalcode" value="{{ current_user.postalcode }}">
                         </div>
                     </div>
 

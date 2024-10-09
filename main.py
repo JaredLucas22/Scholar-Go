@@ -12,4 +12,5 @@ def match():
         print(f"Student {student.first_name} matched with Sponsor {sponsor.sponsor_name} with a score of {score}")
 
 if __name__ == '__main__':
-    socketio.run(app, debug=True) 
+    socketio.run(app, debug=True, allow_unsafe_werkzeug=True)
+

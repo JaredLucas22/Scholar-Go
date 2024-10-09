@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+<link rel="stylesheet" href="/static/css/sponsor_details.css"/>
 <div class="container mt-4">
     <img src="{{ url_for('static', filename='uploads/' ~ sponsor.picture_path) }}" alt="Logo" class="img-fluid" style="max-width: 100px;">
     <h2>{{ sponsor.sponsor_name }}</h2>
@@ -39,16 +40,28 @@
 </form>
 
 <h4>Comments:</h4>
-<div id="comments-section">
+{% if comments %}
     {% for comment in comments %}
         <div class="comment">
-            <p><strong>{{ comment.user.first_name }}:</strong> {{ comment.content }}</p> <!-- Use first_name or any relevant field -->
-            <p><small>Posted on: {{ comment.created_at.strftime('%B %d, %Y') }}</small></p> <!-- Ensure created_at is defined in the Comment model -->
+            <!-- Display user's profile picture -->
+            <img src="{{ url_for('static', filename='uploads/' ~ comment.user.picture_path) }}"
+                 alt="{{ comment.user.first_name }}'s Profile Picture"
+                 class="profile-picture"
+                 width="50px" height="50px">
+
+            <!-- Display user's name and comment content -->
+            <p><strong>{{ comment.user.first_name }}:</strong> {{ comment.content }}</p>
+
+            <!-- Display when the comment was posted -->
+            <p><small>Posted on: {{ comment.created_at.strftime('%B %d, %Y') }}</small></p>
         </div>
-    {% else %}
-        <p>No comments yet.</p>
     {% endfor %}
+{% else %}
+    <p>No comments yet. Be the first to comment!</p>
+{% endif %}
+
 </div>
+
 
 
 {% endblock %}

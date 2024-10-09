@@ -117,6 +117,7 @@ def sign_up():
         financial_status = request.form.get('financialStatus')
         password1 = request.form.get('password1')
         password2 = request.form.get('password2')
+        educationlevel = request.form.get('educationlevel')
         birthdate = request.form.get('dateOfBirth')
         phone_number = request.form.get('phoneNumber')
 
@@ -172,6 +173,7 @@ def sign_up():
                 course=course,
                 gpa=gpa,
                 phone_number = phone_number,
+                educationlevel = educationlevel,
                 birthdate = birthdate,
                 extracurricular_activities=extracurricular_activities,
                 financial_status=financial_status,
@@ -320,3 +322,52 @@ def add_comment(sponsor_id):
 
     return redirect(request.referrer or url_for('views.home'))
 
+
+
+@auth.route('/update_profile', methods=['POST'])
+@login_required
+def update_profile():
+    # Get form data
+    first_name = request.form.get('first_name')
+    last_name = request.form.get('last_name')
+    username = request.form.get('username')
+    email = request.form.get('email')
+    phone_number = request.form.get('phone_number')
+    suffix = request.form.get('suffix')
+    city = request.form.get('city')
+    province = request.form.get('province')
+    gender = request.form.get('gender')
+    postalcode = request.form.get('postalcode')
+    education_level = request.form.get('educationlevel')
+    gpa = request.form.get('gpa')
+    course = request.form.get('course')
+
+    # Validate required fields (you can customize this validation as per your needs)
+    if not first_name or not last_name or not username or not email:
+        flash('Please fill out all required fields.', category='error')
+        return redirect(url_for('profile_settings'))
+
+    # Update the current user's details
+    current_user.first_name = first_name
+    current_user.last_name = last_name
+    current_user.username = username
+    current_user.email = email
+    current_user.phone_number = phone_number
+    current_user.suffix = suffix
+    current_user.city = city
+    current_user.province = province
+    current_user.gender = gender
+    current_user.postalcode = postalcode
+    current_user.education_level = education_level
+    current_user.gpa = gpa
+    current_user.course = course
+
+    try:
+        # Commit the changes to the database
+        db.session.commit()
+        flash('Profile updated successfully!', category='success')
+    except Exception as e:
+        db.session.rollback()
+        flash('An error occurred while updating your profile. Please try again.', category='error')
+
+    return redirect(url_for('views.profile'))
