@@ -23,10 +23,22 @@ class Note(db.Model):
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(150), unique=True)
+    image = db.Column(db.String(300), nullable=True) 
+    city = db.Column(db.String(150))
+    birthdate = db.Column(db.Date, nullable=False)
+    province = db.Column(db.String(150))
+    postalcode = db.Column(db.String(150))
+    picture_path = db.Column(db.String(255), nullable=False)  # Ensure this line is present
+    educationlevel = db.Column(db.String(150))
     email = db.Column(db.String(150), unique=True)
     password = db.Column(db.String(150))
     first_name = db.Column(db.String(150))
+    last_name = db.Column(db.String(150))
+    suffix = db.Column(db.String(150), nullable= True)
+    gender = db.Column(db.String(150))
     course = db.Column(db.String(150))
+    phone_number = db.Column(db.String(150))
     gpa = db.Column(db.Float)
     extracurricular_activities = db.Column(db.String(300))
     financial_status = db.Column(db.String(150))

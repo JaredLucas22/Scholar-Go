@@ -2,121 +2,126 @@
 {% block content %}
 <div class="container right-form rounded bg-white mt-5 mb-5">
     <div class="row">
-      <!-- Profile Section (Left) -->
-      <div class="col-md-3 border-right profile-left">
-        <div class="d-flex flex-column align-items-center text-center p-3 py-5">
-          <img class="profile-picture mt-5" width="150px" src="profile-sample.png">
-          <span class="text-white-name">John Doe</span>
-          <span class="text-white-un">@johndoe1</span>
-          <span class="text-white-em">john.doe@ua.edu.ph</span>
-          <span class="contact-text">+63123456789</span>
+        <!-- Profile Section (Left) -->
+        <div class="col-md-3 border-right profile-left">
+            <div class="d-flex flex-column align-items-center text-center p-3 py-5">
+                <!-- Display profile picture -->
+                <img class="profile-picture mt-5" width="150px"
+                     src="{{ url_for('static', filename='uploads/' ~ current_user.picture_path) }}" 
+                     alt="Profile Picture">
+                <!-- Display user's name -->
+                <span class="text-white-name">{{ current_user.first_name }} {{ current_user.last_name }}</span>
+                <!-- Display username -->
+                <span class="text-white-un">@{{ current_user.username }}</span>
+                <!-- Display email -->
+                <span class="text-white-em">{{ current_user.email }}</span>
+                <!-- Display contact number -->
+                <span class="contact-text">{{ current_user.phone_number if current_user.phone_number else 'No contact provided' }}</span>
+            </div>
         </div>
-      </div>
-  
-      <!-- Profile Settings Form (Right) -->
-      <div class="col-md-9 border-right">
-        <div class="p-3 py-5">
-          <div class="d-flex justify-content-between align-items-center mb-3">
-            <h4 class="text-right">Profile Settings</h4>
-          </div>
-          
-          <!-- First and Last Name Row -->
-          <div class="row mt-2">
-            <div class="col-md-4">
-              <label class="labels">First name</label>
-              <input type="text" class="form-control">
-            </div>
-            <div class="col-md-4">
-              <label class="labels">Last name</label>
-              <input type="text" class="form-control">
-            </div>
-            <div class="col-md-4">
-              <label class="labels">Suffix</label>
-              <select class="form-control">
-                <option value="">N/A</option>
-                <option>Jr.</option>
-                <option>Sr.</option>
-              </select>
-            </div>
-          </div>
-  
-          <!-- Username and Date of Birth Row -->
-          <div class="row mt-3">
-            <div class="col-md-6">
-              <label class="labels">Username</label>
-              <input type="text" class="form-control">
-            </div>
-            <div class="col-md-6">
-              <label class="labels">Date of Birth</label>
-              <input type="date" class="form-control">
-            </div>
-          </div>
-  
-          <!-- City and Province Row -->
-          <div class="row mt-3">
-            <div class="col-md-6">
-              <label class="labels">City</label>
-              <input type="text" class="form-control">
-            </div>
-            <div class="col-md-6">
-              <label class="labels">Province</label>
-              <input type="text" class="form-control">
-            </div>
-          </div>
-  
-          <!-- Gender and Postal Code Row -->
-          <div class="row mt-3">
-            <div class="col-md-6">
-              <label class="labels">Gender</label>
-              <select class="form-select">
-                <option value="" disabled selected>Select</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-                <option value="Other">Other</option>
-              </select>
-            </div>
-            <div class="col-md-6">
-              <label class="labels">Postal Code</label>
-              <input type="text" class="form-control">
-            </div>
-          </div>
-  
-          <!-- Education and GPA/GWA Row -->
-          <div class="row mt-3">
-            <div class="col-md-6">
-              <label class="labels">Education Level</label>
-              <select class="form-select">
-                <option value="" disabled selected>Select</option> <!-- Disabled and selected -->
-                <option value="Elementary">Elementary</option>
-                <option value="Highschool">Highschool</option>
-                <option value="College">College</option>
-              </select>
-            </div>
-            <div class="col-md-6">
-              <label class="labels">GPA / GWA</label>
-              <input type="number" class="form-control">
-            </div>
-          </div>
-  
-          <!-- Mobile Number and Email Address Row -->
-          <div class="row mt-3">
-            <div class="col-md-6">
-              <label class="labels">Mobile Number</label>
-              <input type="text" class="form-control">
-            </div>
-            <div class="col-md-6">
-              <label class="labels">Email Address</label>
-              <input type="email" class="form-control">
-            </div>
-          </div>
-  
-          <!-- Save Profile Button -->
-          <div class="mt-5 text-center">
-            <button class="btn btn-primary profile-button" type="button">Save Profile</button>
-          </div>
+
+        <!-- Profile Settings Form (Right) -->
+        <div class="col-md-9 border-right">
+            <form method="POST" action="{{ url_for('update_profile') }}">
+                <div class="p-3 py-5">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="text-right">Profile Settings</h4>
+                    </div>
+
+                    <!-- First and Last Name Row -->
+                    <div class="row mt-2">
+                        <div class="col-md-4">
+                            <label class="labels">First name</label>
+                            <input type="text" class="form-control" name="first_name" value="{{ current_user.first_name }}">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="labels">User</label>
+                            <input type="text" class="form-control" name="username" value="{{ current_user.username }}">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="labels">Last name</label>
+                            <input type="text" class="form-control" name="last_name" value="{{ current_user.last_name }}">
+                        </div>
+                    </div>
+
+                    <!-- Username and Date of Birth Row -->
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <label class="labels">Username</label>
+                            <input type="text" class="form-control" name="username" value="{{ current_user.username }}">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="labels">Date of Birth</label>
+                            <input type="date" class="form-control" name="dob" value="{{ current_user.dob }}">
+                        </div>
+                    </div>
+
+                    <!-- City and Province Row -->
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <label class="labels">City</label>
+                            <input type="text" class="form-control" name="city" value="{{ current_user.city }}">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="labels">Province</label>
+                            <input type="text" class="form-control" name="province" value="{{ current_user.province }}">
+                        </div>
+                    </div>
+
+                    <!-- Gender and Postal Code Row -->
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <label class="labels">Gender</label>
+                            <select class="form-select" name="gender">
+                                <option value="" disabled selected>Select</option>
+                                <option value="Male" {% if current_user.gender == 'Male' %}selected{% endif %}>Male</option>
+                                <option value="Female" {% if current_user.gender == 'Female' %}selected{% endif %}>Female</option>
+                                <option value="Other" {% if current_user.gender == 'Other' %}selected{% endif %}>Other</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="labels">Postal Code</label>
+                            <input type="text" class="form-control" name="postal_code" value="{{ current_user.postal_code }}">
+                        </div>
+                    </div>
+
+                    <!-- Education and GPA/GWA Row -->
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <label class="labels">Education Level</label>
+                            <select class="form-select" name="education_level">
+                                <option value="" disabled selected>Select</option>
+                                <option value="Elementary" {% if current_user.education_level == 'Elementary' %}selected{% endif %}>Elementary</option>
+                                <option value="Highschool" {% if current_user.education_level == 'Highschool' %}selected{% endif %}>Highschool</option>
+                                <option value="College" {% if current_user.education_level == 'College' %}selected{% endif %}>College</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="labels">GPA / GWA</label>
+                            <input type="number" class="form-control" name="gpa" value="{{ current_user.gpa }}">
+                        </div>
+                    </div>
+
+                    <!-- Course and Email Address Row -->
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <label class="labels">Course</label>
+                            <input type="text" class="form-control" name="course" value="{{ current_user.course }}">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="labels">Email Address</label>
+                            <input type="email" class="form-control" name="email" value="{{ current_user.email }}">
+                        </div>
+                    </div>
+
+                    <!-- Save Profile Button -->
+                    <div class="mt-5 text-center">
+                        <button class="btn btn-primary profile-button" type="submit">Save Profile</button>
+                    </div>
+                </div>
+            </form>
         </div>
-      </div>
     </div>
-  </div>
+</div>
 
 {% endblock %}

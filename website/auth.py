@@ -104,13 +104,47 @@ def sign_up():
     if request.method == 'POST':
         email = request.form.get('email')
         first_name = request.form.get('firstName')
+        username = request.form.get('username')
+        last_name = request.form.get('lastName')
+        suffix = request.form.get('suffix')
+        city = request.form.get('city')
+        province = request.form.get('province')
+        postalcode = request.form.get('postalcode')
+        gender = request.form.get('gender')
         course = request.form.get('course')
         gpa = request.form.get('gpa')
         extracurricular_activities = request.form.get('extracurricularActivities')
         financial_status = request.form.get('financialStatus')
         password1 = request.form.get('password1')
         password2 = request.form.get('password2')
+        birthdate = request.form.get('dateOfBirth')
+        phone_number = request.form.get('phoneNumber')
 
+                # Inside the sign_up function
+        birthdate_str = request.form.get('dateOfBirth')  # This is a string in YYYY-MM-DD format
+
+        # Convert string to date object
+        if birthdate_str:
+            try:
+                birthdate = datetime.strptime(birthdate_str, '%Y-%m-%d').date()
+            except ValueError:
+                flash('Invalid birthdate format. Please use YYYY-MM-DD.', category='error')
+                return redirect(url_for('auth.sign_up'))
+        else:
+            birthdate = None  # Handle case where no birthdate is provided
+        
+        # Handle picture upload
+        picture = request.files.get('picture')  # Get the uploaded file
+        if picture:
+            try:
+                picture_path = save_picture(picture)  # Call the function to save the picture
+            except ValueError as e:
+                flash(str(e), category='error')
+                return redirect(url_for('auth.sign_up'))
+        else:
+            picture_path = None  # Handle case where no picture is uploaded
+
+        # Error handling and validation
         user = User.query.filter_by(email=email).first()
         if user:
             flash('Email already exists.', category='error')
@@ -122,15 +156,27 @@ def sign_up():
             flash('Passwords don\'t match.', category='error')
         elif len(password1) < 7:
             flash('Password must be at least 7 characters.', category='error')
+        
         else:
+            # Create new user
             new_user = User(
                 email=email,
                 first_name=first_name,
+                username=username,
+                last_name=last_name,
+                suffix=suffix,
+                city=city,
+                province=province,
+                postalcode=postalcode,
+                gender=gender,
                 course=course,
-                password=generate_password_hash(password1, method='pbkdf2:sha256'),
                 gpa=gpa,
+                phone_number = phone_number,
+                birthdate = birthdate,
                 extracurricular_activities=extracurricular_activities,
-                financial_status=financial_status
+                financial_status=financial_status,
+                password=generate_password_hash(password1, method='pbkdf2:sha256'),
+                picture_path=picture_path  # Save the picture path here
             )
             db.session.add(new_user)
             db.session.commit()
@@ -139,6 +185,7 @@ def sign_up():
             return redirect(url_for('views.home'))
 
     return render_template("sign_up.html", user=current_user)
+
 
 @auth.route('/sign-sponsor', methods=['GET', 'POST'])
 def sign_sponsor():
