@@ -1,5 +1,5 @@
 /* Original styles */
-.col-12 {
+.list {
     height: auto; /* Fixed height for the entire column */
     background-color: #0738a8;
     border-radius: 20px;
@@ -7,10 +7,6 @@
     padding: 0 20px; /* Add some padding to ensure content is not cut off */
     display: flex;
     flex-direction: column; /* Stack content vertically */
-}
-
-.row {
-    flex-direction: column;
 }
 
 .logo {
@@ -21,10 +17,10 @@
 }
 
 .logo img {
-    margin: 5vh 0; /* Margin for vertical spacing */
+    margin: 5vh 2vw; /* Margin for vertical spacing */
     align-items: left; /* Align items in the center */
-    max-width: 17vh;
-    max-height: 17vh;
+    max-width: 15vh;
+    max-height: 15vh;
     object-fit: contain; /* Ensure the logo scales properly */
 }
 
@@ -55,7 +51,6 @@
 }
 
 .content-between {
-    margin-bottom: 1%;
     display: flex;
     gap: 5%;
     color: white;
@@ -63,13 +58,35 @@
     white-space: wrap;
 }
 
+/* Media query for small screens */
+@media (max-width: 768px) {
+    .content-between {
+        margin-top: 5%; /* Adjust margin-top for small screens */
+    }
+}
+
+/* Media query for medium screens */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .content-between {
+        margin-top: 10%; /* Adjust margin-top for medium screens */
+    }
+}
+
+/* Media query for large screens */
+@media (min-width: 1025px) {
+    .content-between {
+        margin-top: 15%; /* Adjust margin-top for large screens */
+    }
+}
+
+
 .content-between p {
     font-size: 1.6vh;
     margin-bottom: 5px;
 }
 
-.bg-success {
-    background-color: rgb(114, 249, 114);
+.bg-success, .bg-danger {
+    background-color: rgb(30, 158, 30) !important;
     flex-shrink: 0; /* Prevent shrinking of the badge */
     white-space: nowrap; /* Prevents the text from wrapping */
     padding: 8px 18px; /* Adjusted padding */
@@ -78,6 +95,10 @@
     white-space: nowrap;
     margin-top: auto; /* Push button to the bottom of the container */
     margin-bottom: 0; /* Remove space below button */
+}
+
+.bg-danger {
+    background-color: rgb(255, 40, 40) !important;
 }
 
 .verified-check {
@@ -94,10 +115,168 @@
     margin-top: 3%;
 }
 
+.dropdown-top-right {
+    position: absolute;
+    top: 12px;
+    right: -10px;
+    z-index: 3; /* Ensure it's above the card but below dropdown */
+}
+
+.dropdown-menu {
+    position: absolute; /* For larger screens, position absolutely */
+    top: 100%; /* Position it below the ellipsis button */
+    right: 0; /* Align it to the right */
+    z-index: 9999; /* Ensure it appears above other elements */
+    display: none; /* Hide by default */
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 10px;
+}
+
+/* Media query for responsiveness */
+@media (max-width: 576px) {
+    .dropdown-menu {
+        position: fixed; /* Fix the position for dropdown */
+        top: calc(100% + 10px); /* Position just below the button */
+        right: 10px; /* Adjust as needed */
+        width: auto; /* Adjust width if needed */
+        max-width: 200px; /* Optional max width */
+        display: none; /* Ensure it's hidden by default */
+    }
+
+    .dropdown-menu.show {
+        display: block; /* Show dropdown when toggled */
+    }
+}
+
+
+.ellipsis-button {
+    z-index: 3;
+}
+
+.dropdown-menu-container {
+    position: absolute;
+    z-index: 4;
+}
+
+.dropdown-menu.show {
+    display: block; /* Show when toggled */
+}
+
+
+
+
+
+
+
+
+
+
+
+/* General styling for dropdown items to appear like a box */
+/* General styling for all dropdown items */
+.dropdown-item {
+    display: block;
+    padding: 5px 15px;  /* Ensure consistent padding */
+    background-color: transparent;
+    border-radius: 4px;
+    color: #000;
+    text-align: left;
+    text-decoration: none;
+    width: 100%;  /* Ensure full width for all items */
+    box-sizing: border-box;  /* Include padding in width calculation */
+}
+
+/* Hover effect for all dropdown items */
+.dropdown-item:hover {
+    background-color: #f0f0f0;  /* Hover background color */
+    color: #007bff;  /* Text color on hover */
+    text-decoration: none;  /* Remove underline */
+    border-radius: 4px;  /* Optional rounded corners */
+    cursor: pointer;
+}
+
+/* Specific styles for button to remove default button styles */
+button.dropdown-item {
+    border: none;
+    background: none;
+    padding: 10px 15px;  /* Match the padding with other items */
+    width: 100%;
+    color: inherit;
+    box-sizing: border-box;  /* Include padding in width calculation */
+}
+
+/* Ensure the share link matches the button styles */
+a.dropdown-item {
+    padding: 10px 15px;  /* Match padding */
+    box-sizing: border-box;  /* Ensure consistent width behavior */
+    width: 100%;
+    color: inherit;
+}
+
+.dropdown-item i {
+    margin-right: 8px;
+}
+
+/* Hover effect for the bookmark part (button) */
+button.dropdown-item:hover {
+    background-color: #e8e8e8;  /* Hover background for button */
+    color: #007bff;
+}
+
+/* Hover effect for the share link (a tag) */
+a.dropdown-item:hover {
+    background-color: #e8e8e8;  /* Hover background for link */
+}
+
+button.dropdown-item, .fa-regular.fa-bookmark {
+    color: black;  /* Keep icon color black on hover */
+}
+
+.dropdown-item:hover .fa-regular.fa-bookmark {
+    color: #007bff; /* Change icon color to blue on hover */
+}
+
+/* Media query for small screens (max-width: 768px) */
+
+
+
+
+
+
+
+
+
+
+
+
+.list {
+    overflow: visible; /* Override the overflow property */
+}
+
+.btn-link {
+    color: white;
+}
+
+.btn-link:hover {
+    color: rgb(213, 249, 255);
+}
+
 /* Tab Navigation Styles */
 a {
     text-decoration: none; /* Removes the underline from links */
 }
+
+.tab-pane {
+    display: none;
+}
+
+.tab-pane.active {
+    display: block;
+}
+
+
+
 
 .nav-tabs {
     margin-top: 5%;
@@ -107,14 +286,22 @@ a {
     color: #0738a8; /* Set the text color */
     font-weight: normal; /* Default font weight */
     transition: background-color 0.3s ease, color 0.3s ease, border 0.3s ease, transform 0.2s ease; /* Smooth transition for hover effects */
-    border: 2px solid transparent; /* Add transparent border for animation */
     border-radius: 4px; /* Optional: Rounded corners */
+    padding: 10px 15px; /* Adjust padding for better spacing */
 }
 
+/* Styles for active tab */
 .nav-tabs .nav-link.active {
     color: white; /* Text color for active tab */
     background-color: #0738a8; /* Background color for active tab */
     border: 2px solid #0738a8; /* Border color for active tab */
+}
+
+/* Hover effect for non-active tabs */
+.nav-tabs .nav-link:hover {
+    background-color: rgba(7, 56, 168, 0.1); /* Light background on hover */
+    color: #0738a8; /* Text color remains the same */
+    border: 2px solid transparent; /* No border on hover */
 }
 
 /* Click Animation */
@@ -122,10 +309,6 @@ a {
     transform: scale(0.95); /* Slightly scale down when clicked */
 }
 
-/* Optional: Additional styling for a better appearance */
-.nav-tabs .nav-link {
-    padding: 10px 15px; /* Adjust padding for better spacing */
-}
 
 /* Media Query for Medium Screens */
 @media (max-width: 992px) {
@@ -193,7 +376,7 @@ a {
         font-size: 1.4vh; /* Reduce font size for medium screens */
     }
 
-    .bg-success {
+    .bg-success, .bg-danger {
         height: 3vh;
         font-size: 12px;
     }
@@ -202,19 +385,23 @@ a {
 /* Media Query for Small Screens */
 /* Styles for smaller screens */
 @media (max-width: 768px) { 
+    body {
+        background-color: #98c8fc;
+    }
+    
     .col-12 {
         padding: 20px; /* Add some padding on smaller screens */
         overflow-y: hidden; /* Remove scrollbar */
-        height: 50%;
+        height: auto;
         width: 87%;
         margin: auto;
-        padding-bottom: 5%;
+        padding: 20px;
     }
 
     .logo img {
-        max-width: 90px; /* Increase logo size */
-        max-height: 90px; /* Increase logo size */
-        margin: 10px auto; 
+        max-width: 95px; /* Increase logo size */
+        max-height: 95px; /* Increase logo size */
+        margin: 0;
     }
 
     .logo {
@@ -237,15 +424,17 @@ a {
         text-align: center;
     }
 
+    .content {
+        margin-top: 10px;
+    }
+
     .content-between {
         display: flex; /* Use flexbox for horizontal arrangement */
         flex-direction: column; /* Stack elements vertically on small screens */
         align-items: center; /* Center content horizontally */
         width: 100%; /* Make content span full width */
-        margin-top: 10px;
         flex-wrap: wrap; /* Wrap content to prevent overflow */
         margin: auto;
-        padding-bottom: 5%;
         padding-top: 5%;
     }
 
@@ -269,6 +458,7 @@ a {
 }
 /* Media Query for Extra Small Screens */
 @media (max-width: 480px) {
+
     .col-12 {
         height: 15vh; /* Reduce height for extra small screens */
     }
@@ -276,6 +466,6 @@ a {
     .logo img {
         max-width: 9vh; /* Reduce logo size for extra small screens */
         max-height: 9vh; /* Reduce logo size for extra small screens */
-        margin: 2vh 0; /* Reduce vertical margin for extra small screens */
+        margin: 3vh 0; /* Reduce vertical margin for extra small screens */
     }
 }

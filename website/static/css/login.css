@@ -83,9 +83,7 @@ html, body {
   margin-bottom: 10px;
 }
 
-.container {
-  padding-bottom: 5%; /* Add padding to make sure footer does not overlap */
-}
+
 
 /* Media queries for smaller screens */
 
@@ -93,6 +91,7 @@ html, body {
   .login-form-container {
     margin-top: 40px;
     max-width: 300px;
+    margin-bottom: 10%;
   }
   
   .left-side-content {
@@ -104,6 +103,7 @@ html, body {
   .login-form-container {
     margin-top: 20px;
     max-width: 250px;
+    margin-bottom: 10%;
   }
 
   .left-side-content {
@@ -141,7 +141,7 @@ html, body {
 
 .form-control {
   border: 1px solid #c8c8c8; 
-  padding: 15px; 
+  padding: 10px; 
   font-size: 13px; 
   border-radius: 4px; 
 }
@@ -177,7 +177,7 @@ html, body {
   background-color: #012cb8;
   font-weight: bold;
   font-size: 13px; /* Default font size */
-  padding: 8px; /* Default padding */
+  padding: 11px; /* Default padding */
   border: none;
   transition: background-color 0.3s ease;
   text-align: center; /* Center text within the button */
@@ -229,10 +229,15 @@ html, body {
   text-align: center; /* Center text within the button */
   white-space: nowrap; /* Prevent text from wrapping to a new line */
   overflow: hidden; /* Hide any overflowing text */
+  border-radius: 5px;
 }
 
 .btn-short:hover {
   background-color: #006de2;
+}
+
+.nav-link.btn-short {
+  transform: none; /* Deactivates any scaling effect */
 }
 
 /* Responsive adjustments */
@@ -243,6 +248,10 @@ html, body {
     padding: 8px; /* Slightly reduce padding */
     font-size: 12px; /* Reduce font size to fit better */
   }
+
+  .form-control {
+    padding-bottom: 5px;
+  }
 }
 
 @media (max-width: 576px) {
@@ -251,6 +260,10 @@ html, body {
     margin: 10px auto 0; /* Adjust margin */
     padding: 6px; /* Reduce padding */
     font-size: 11px; /* Further reduce font size */
+  }
+
+  .form-control {
+    padding-bottom: 5px;
   }
 }
 

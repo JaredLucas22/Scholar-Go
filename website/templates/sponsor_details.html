@@ -1,27 +1,83 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container mt-4">
-    <img src="{{ url_for('static', filename='uploads/' ~ sponsor.picture_path) }}" alt="Logo" class="img-fluid" style="max-width: 100px;">
-    <h2>{{ sponsor.sponsor_name }}</h2>
-    <p><strong>Course:</strong> {{ sponsor.course }}</p>
-    <p><strong>Amount Per Semester:</strong> P{{ sponsor.amount_per_semester }}</p>
-    <p><strong>Description:</strong> {{ sponsor.full_description | safe }}</p>
-    <p><strong>Deadline Date:</strong> {{ sponsor.deadline_date.strftime('%B %d, %Y') }}</p>
-
-    <!-- Thumbs-up button -->
-    <form id="like-form" action="{{ url_for('auth.like_sponsorship', sponsor_id=sponsor.id) }}" method="POST" style="display:inline;">
-        <button type="submit" class="btn" id="like-button" style="border: none; background: none; cursor: pointer;">
+<link rel="stylesheet" href="/static/css/comment.css"/>
+<link rel="stylesheet" href="/static/css/sponsor_details.css"/>
+<div class="sponsor-card">
+    <div class="sponsor-header">
+      <div class="icon-container">
+        <form id="like-form" action="{{ url_for('auth.like_sponsorship', sponsor_id=sponsor.id) }}" method="POST" style="display:inline;">
+          <button type="submit" class="like-button" id="like-button" style="border: none; background-color: transparent;">
             {% if is_liked %}
-                <i class="fas fa-thumbs-up" style="color: rgb(24, 47, 195); font-size: 2rem;"></i>
+                <i class="fas fa-thumbs-up liked"></i>
             {% else %}
-                <i class="far fa-thumbs-up" style="color: gray; font-size: 2rem;"></i>
+                <i class="far fa-thumbs-up"></i>
             {% endif %}
-        </button>
-    </form>
+          </button>
+        </form>
+        <a href="#" class="bookmark-button">
+          <i class="fas fa-bookmark"></i>
+        </a>
+      </div>
+      <div class="verified-check">
+        <i class="fas fa-check-circle" aria-hidden="true"></i> <!-- Checkmark icon -->
+      </div>
+      <img src="{{ url_for('static', filename='uploads/' ~ sponsor.picture_path) }}" alt="Logo" class="sponsor-logo">
+      <div>
+        <h2 class="sponsor-name">{{ sponsor.sponsor_name }}</h2>
+        <p class="likes mb-1">Likes: {{ sponsor.likes|length }} | Deadline on {{ sponsor.deadline_date.strftime('%b. %d, %Y') }}</p>
+        <div class="sponsor-info">
+            <p class="sponsor-details">
+            {% if sponsor.scholarship_status %}
+                <span class="sponsor-status active">Active Program</span>
+            {% else %}
+                <span class="sponsor-status inactive">Inactive Program</span>
+            {% endif %}
+        </p>
+            <p><span class="info-label">Scholarship Program:</span> {{ sponsor.course }}</p>
+            <p><span class="info-label">Amount per Semester:</span> P{{ sponsor.amount_per_semester }}</p>
+          </div>
+      </div>
+    </div>
 
-    <div id="like-count">
-        <p><strong>Likes:</strong> {{ sponsor.likes|length }}</p>
+    <div class="sponsor-description">
+      <p class="description-text">
+        {{ sponsor.description }}</p>
+    </div>
+
+    <div class="sponsor-requirements">
+      <h3 class="requirements-title">Requirements</h3>
+      <ul class="requirements-list">
+        <li class="requirement-item"><strong>Academic Requirements:</strong></li>
+        <ul>
+          <li>Must be a high school graduate or currently enrolled in a senior high school</li>
+          <li>Must have a minimum average grade of 85% in the last two years of high school</li>
+        </ul>
+        <li class="requirement-item"><strong>Personal Requirements:</strong></li>
+        <ul>
+          <li>Must be a Filipino citizen</li>
+          <li>Must have a good moral character and a strong sense of social responsibility</li>
+          <li>Must be willing to participate in community service and volunteer work</li>
+        </ul>
+        <li class="requirement-item"><strong>Financial Requirements:</strong></li>
+        <ul>
+          <li>Must have a gross family income of not more than P250,000 per year</li>
+        </ul>
+        <li class="requirement-item"><strong>Additional Requirements:</strong></li>
+        <ul>
+          <li>Must submit a personal statement of purpose (500 words)</li>
+          <li>Must submit a letter of recommendation from a teacher or school administrator</li>
+          <li>Must submit a copy of the latest report card or transcript of records</li>
+          <li>Must pass a panel interview with the scholarship committee</li>
+        </ul>
+      </ul>
+      <button class="blue-button">Visit Page</button>
+    </div>
+
+    <div class="sponsor-footer">
+      <div class="footer-actions">
+        <!-- Footer actions can be kept here if needed -->
+      </div>
     </div>
 </div>
 
@@ -32,23 +88,37 @@
     };
 </script>
 
-<h4>Add a Comment:</h4>
-<form action="{{ url_for('auth.add_comment', sponsor_id=sponsor.id) }}" method="POST">
-    <textarea name="content" required placeholder="Write your comment here..."></textarea>
-    <button type="submit" class="btn btn-primary">Submit</button>
-</form>
+<div class="comment-container">
+<div class="d-flex justify-content-between align-items-center mb-3 comment-title">
+    <div>
+        <h4>Comments</h4>
+    </div>
+</div>
 
-<h4>Comments:</h4>
+<div class="d-flex align-items-start mb-3">
+    <!-- <img src="profile_placeholder.png" alt="Profile" class="rounded-circle me-2" style="width: 50px; height: 50px;"> -->
+    <img src="/static/images/ua.png" alt="Profile" class="rounded-circle me-2" style="width: 50px; height: 50px;"> 
+    <form action="{{ url_for('auth.add_comment', sponsor_id=sponsor.id) }}" method="POST" class="flex-grow-1">
+        <textarea class="form-control" name="content" required placeholder="Add a comment..."></textarea>
+        <button type="submit" class="btn btn-primary mt-2 comment-submit">Submit</button>
+    </form>
+</div>
+
 <div id="comments-section">
     {% for comment in comments %}
-        <div class="comment">
-            <p><strong>{{ comment.user.first_name }}:</strong> {{ comment.content }}</p> <!-- Use first_name or any relevant field -->
-            <p><small>Posted on: {{ comment.created_at.strftime('%B %d, %Y') }}</small></p> <!-- Ensure created_at is defined in the Comment model -->
+        <div class="d-flex align-items-start mb-4">
+             <!-- <img src="{{ comment.user.profile_picture }}" alt="Profile" class="rounded-circle me-2" style="width: 50px; height: 50px;"> -->
+             <img src="/static/images/angeles.png" alt="Profile" class="rounded-circle me-2" style="width: 50px; height: 50px;">
+            <div class="name-comment">
+                <p><strong>{{ comment.user.first_name }}</strong> <small class="text-muted m-1">{{ comment.created_at.strftime('%B %d, %Y') }}</small></p>
+                <p>{{ comment.content }}</p>
+            </div>
         </div>
     {% else %}
         <p>No comments yet.</p>
     {% endfor %}
 </div>
-
+</div>
 
 {% endblock %}
+

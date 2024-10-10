@@ -1,213 +1,239 @@
-/* Ensure body and HTML take full height */
 html, body {
   height: 100%;
   margin: 0;
+}
+
+body {
   display: flex;
   flex-direction: column;
 }
 
-/* Main content area should take available space, pushing footer down */
-main {
+/* Main container should take up remaining space */
+.container {
   flex: 1;
 }
 
-/* Footer styling */
+.text-center {
+  margin-top: 2%;
+}
+
 footer {
-  background-color: #0a1219;
-  color: #ffffff;
-  padding-top: 1rem;
-  width: 100%;
-  box-sizing: border-box;
-  margin-top: auto;
-  display: flex;
-  flex-direction: column;
-  transition: padding 0.3s ease, height 0.3s ease;
+  padding: 2rem 0;
+  background-color: #242424;
 }
 
-/* Footer content container aligned to match navigation */
-/* Base styling for the container */
-footer .container-fluid {
-  max-width: 1230px; /* Default max-width for larger screens */
-  margin: 0 auto;
-  padding: 0 15px;
-  box-sizing: border-box;
+.footer-column:not(:first-child) {
+  padding-top: 2rem;
 }
 
-/* Adjust max-width for medium screens */
-@media (max-width: 1199px) {
-  footer .container-fluid {
-    max-width: 992px; /* Adjusted max-width for medium screens */
+@media (min-width: 768px) {
+  .footer-column:not(:first-child) {
+    padding-top: 0rem;
   }
 }
 
-/* Adjust max-width for smaller screens */
-@media (max-width: 991px) {
-  footer .container-fluid {
-    max-width: 800px; /* Adjusted max-width for smaller screens */
-  }
+.footer-column {
+  text-align: center;
 }
-
-/* Further adjust max-width for extra small screens */
-@media (max-width: 767px) {
-  footer .container-fluid {
-    max-width: 600px; /* Full width for extra small screens */
-    padding: 0 10px; /* Reduced padding for smaller screens */
-  }
-}
-
-/* Align the rows in the footer */
-footer .row {
-  display: flex;
-  flex-wrap: wrap;
-  margin: 0;
-  padding: 0;
-  justify-content: space-between;
-}
-
-/* Column styles for all screens */
-footer .col-lg-3 {
-  flex: 1;
-  min-width: 150px; /* Ensure proper wrapping */
-  box-sizing: border-box;
-}
-
-/* 4 columns layout for screens ≥ 992px */
-@media (min-width: 992px) {
-  footer .col-lg-3 {
-    flex: 0 0 25%; /* Four columns per row */
-  }
-  footer h6 {
-    font-size: 1rem; /* Base font size */
-  }
-  footer p, footer a {
-    font-size: 0.8rem; /* Base font size */
-  }
-  footer {
-    padding-top: 1.5rem; /* Base padding */
-  }
-}
-
-/* 4 columns layout for screens between 768px and 991px */
-@media (min-width: 768px) and (max-width: 991px) {
-  footer .col-lg-3 {
-    flex: 0 0 25%; /* Four columns per row */
-  }
-  footer h6 {
-    font-size: 0.9rem; /* Slightly smaller font size */
-  }
-  footer p, footer a {
-    font-size: 0.7rem; /* Slightly smaller font size */
-  }
-  footer {
-    padding-top: 1.5rem; /* Base padding */
-  }
-}
-
-/* 1 column layout for screens < 768px */
-@media (max-width: 767px) {
-  footer .col-lg-3 {
-    flex: 0 0 100%; /* One column per row */
-  }
-  footer h6 {
-    font-size: 0.8rem; /* Smaller font size */
-  }
-  footer p, footer a {
-    font-size: 0.65rem; /* Smaller font size */
-  }
-  footer {
-    padding-top: 1.5rem; /* Base padding */
-  }
-}
-
-/* Remove unwanted margins for footer columns */
-footer .row > .col-lg-3:first-child {
-  padding-right: 8%; /* Adjust as needed */
-}
-
-/* Adjust margin of the second column in the footer row */
-footer .row > .col-lg-3:nth-child(2) {
-  padding-right: 0; /* Adjust as needed */
-}
-
-footer .row > .col-lg-3:nth-child(4) p {
-  margin-bottom: 3px; /* Adjust margin-bottom as needed */
-}
-
-.mb-4, .my-4 {
-  margin-bottom: 0.9rem !important;
-}
-
-.mr-3, .mx-3 {
-  margin-right: 0.3rem !important;
-}
-
-.text-right {
-  margin-right: 40px;
-}
-
-.text-left a {
-  margin-top: 3%; /* Adjust this value as needed */
-  display: inline-block; /* Ensure the margin-top applies properly */
-}
-
-/* Footer section titles */
-footer h6 {
-  font-weight: bold;
-  margin-top: 12px;
-}
-
-/* Footer paragraphs */
-footer p {
-  margin-bottom: 12px;
-  line-height: 1.5;
-}
-
-footer a {
-  color: #ffffff;
+.footer-column .nav-item .nav-link-footer{
+  padding: 0.1rem 0;
+  color: #b4b4b4;
   text-decoration: none;
+}
+.footer-column .nav-item .navlink-footer {
+  padding: 0.1rem 0;
+  color: #d5d5d5;
+  text-decoration: none;
+}
+.footer-column .nav-item .nav-link-footer:hover {
+  color: #e3e3e3;
+  text-decoration: underline;
+}
+
+.footer-column .nav-item span.nav-link-footer {
+  color: #b4b4b4;
+}
+.footer-column .nav-item span.footer-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #ffffff;
+  text-transform: uppercase;
+}
+.footer-column .nav-item .fas {
+  margin-right: 0.5rem;
+}
+.footer-column ul {
+  display: inline-block;
+}
+@media (min-width: 768px) {
+  .footer-column ul {
+    text-align: left;
+  }
+}
+
+ul.social-buttons {
+  margin-top: 20px !important;
+  margin-bottom: 0 !important;
+}
+
+.login-page ul.social-buttons {
+  margin-top: 20px; /* Example of what might be on the login page */
+}
+
+ul.social-buttons li a:active,
+ul.social-buttons li a:focus,
+ul.social-buttons li a:hover {
+  background-color: #0b58a5;
+  text-shadow: 0 0 8px rgba(64, 189, 238, 0.6);
+  transform: scale(1.1);
+}
+
+ul.social-buttons li a {
+  font-size: 15px;
+  line-height: 40px;
   display: block;
-  margin-bottom: 10px;
-  line-height: 0.7;
-  transition: background-color 0.3s ease;
-}
-
-/* Social media icons */
-footer .btn-outline-light {
-  border-color: #ffffff;
+  width: 38px;
+  height: 38px;
+  -webkit-transition: all 0.3s;
+  -moz-transition: all 0.3s;
+  transition: all 0.3s;
   color: #ffffff;
-  font-size: 1rem; /* Default font size */
-  margin: 0 5px;
+  border-radius: 100%;
+  outline: 0;
+  background-color: #303030;
 }
 
-footer .btn-outline-light:hover {
-  background-color: #ffffff37;
-  border-color: #ffffff;
-  color: #ffffff;
+footer .quick-links {
+  font-size: 50%;
+  line-height: 40px;
+  margin-bottom: 0;
+  text-transform: none;
+  font-family: Montserrat, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  margin: auto;
+  margin-right: 18%;
 }
 
-/* Adjust social media icons for different screen sizes */
-@media (max-width: 1199px) {
-  footer .btn-outline-light {
-    font-size: 0.9rem;
-    margin: 0 4px;
+.copyright {
+  color: white;
+}
+
+.fa-ellipsis-h {
+  color: white;
+  padding: 2rem 0;
+}
+
+
+
+
+@media (max-width: 1200px) {
+
+
+  .footer-column .nav-item span.footer-title {
+    font-size: 15px; /* Decrease font size */
+  }
+
+  ul.social-buttons li a {
+    font-size: 14px; /* Decrease social media icon size */
+    line-height: 35px;
+    width: 30px; /* Smaller width for social buttons */
+    height: 30px; /* Smaller height for social buttons */
+  }
+
+  .nav-link-footer {
+    font-size: 13px;
   }
 }
 
-@media (max-width: 991px) {
-  footer .btn-outline-light {
-    font-size: 0.7rem;
-    margin: 0 2px;
+@media (max-width: 992px) {
+
+
+  footer {
+    padding: 1.5rem 0; /* Reduce padding */
+  }
+
+  .footer-column .nav-item span.footer-title {
+    font-size: 12px; /* Further decrease font size */
+  }
+
+  ul.social-buttons li a {
+    font-size: 10px; /* Decrease social media icon size */
+    line-height: 30px;
+    width: 28px; /* Smaller width for social buttons */
+    height: 28px; /* Smaller height for social buttons */
+  }
+
+  .nav-link-footer {
+    font-size: 11px;
   }
 }
 
-@media (max-width: 767px) {
-  footer .btn-outline-light {
-    font-size: 0.5rem;
-    margin: 0 1px;
+@media (max-width: 768px) {
+
+  .footer-column .nav-item span.footer-title {
+    font-size: 14px; /* Further decrease font size */
+
   }
 
-  .text-left a {
-    margin-top: 10%; /* Adjust this value as needed */
-    display: inline-block; /* Ensure the margin-top applies properly */
+  ul.social-buttons li a {
+    font-size: 13px; /* Further decrease social media icon size */
+    line-height: 25px;
+    width: 25px; /* Smaller width for social buttons */
+    height: 25px; /* Smaller height for social buttons */
+  }
+
+  .footer-column {
+    text-align: left; /* Align text to left for smaller screens */
+  }
+
+  /* Align social buttons to the left */
+  .social-buttons {
+    text-align: center; /* Align to the left */
+    margin-right: 57%;
+  }
+
+  .nav-link-footer {
+    font-size: 12px;
+  }
+
+  ul.social-buttons li a {
+    font-size: 14px; /* Decrease social media icon size */
+    line-height: 30px;
+    width: 30px; /* Smaller width for social buttons */
+    height: 30px; /* Smaller height for social buttons */
+    margin-top: 30px;
+  }
+
+  .footer-column {
+    text-align: left; /* Align text to left for smaller screens */
+  }
+}
+
+@media (max-width: 576px) {
+  
+  .footer-column .nav-item .nav-link-footer {
+    font-size: 12px; /* Decrease link font size */
+  }
+
+  .footer-column {
+    text-align: left; /* Align text to left for smaller screens */
+    margin-left: 9px;
+  }
+
+  /* Align social buttons to the left */
+  .social-buttons {
+    text-align: center; /* Align to the left */
+    margin-right: 50%;
+  }
+
+  .nav-link-footer {
+    font-size: 10px;
+  }
+
+  ul.social-buttons li a {
+    font-size: 14px; /* Decrease social media icon size */
+    line-height: 30px;
+    width: 30px; /* Smaller width for social buttons */
+    height: 30px; /* Smaller height for social buttons */
+    margin-top: 30px;
   }
 }

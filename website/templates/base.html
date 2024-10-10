@@ -21,6 +21,8 @@
 </head>
 <body>
 
+
+  <!--
   <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
     <div class="container">
       <a class="navbar-brand d-flex align-items-center" href="/">
@@ -53,16 +55,60 @@
       </div>
     </div>
   </nav>
+  -->
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <div class="nav-logo">
+        <img src="/static/images/nav-logo.png" alt="Logo">
+      </div>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon" id="hamburger-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" id="home" href="/">Home</a></li>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="logout" href="/profile">Profile</a></li>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="logout" href="/sponsorlist">Sponsors</a></li>
+          </li>
+        </ul>
+        <li class="nav-item">
+          <a class="nav-link" id="follow" href="/follow">
+              <i class="fas fa-bookmark"></i>
+            </a>
+          </li>
+          <a class="nav-link" id="logout" href="/logout">Logout</a></li>
+      </div>
+    </div>
+  </nav>
   
+
+  <script>
+  document.querySelectorAll('.dropdown-toggle').forEach(item => {
+    item.addEventListener('click', event => {
+   
+      if(event.target.classList.contains('dropdown-toggle') ){
+        event.target.classList.toggle('toggle-change');
+      }
+      else if(event.target.parentElement.classList.contains('dropdown-toggle')){
+        event.target.parentElement.classList.toggle('toggle-change');
+      }
+    })
+  });
+</script>
+
   
   
   <div class="container">
     {% block content %} {% endblock %}
   </div>
 
-  <footer>
-    <div class="container-fluid">
-      <!-- Section: Links -->
+  <!-- 
       <section>
         <div class="row">
           <div class="col-lg-3 col-md-6">
@@ -92,8 +138,7 @@
           </div>
         </div>
       </section>
-    
-      <!-- Section: Copyright -->
+
       <section class="p-3 pt-0">
         <div class="row">
           <div class="text-left">
@@ -109,6 +154,103 @@
       </section>
     </div>
   </footer>
+</footer>
+-->
+
+<footer>
+  <div class="container">
+    <div class="row">
+      <!-- Existing columns for About, Help, and Contact & Support -->
+      <div class="col-md-4 footer-column">
+        <!-- About Section -->
+        <ul class="nav flex-column">
+          <li class="nav-item">
+            <span class="footer-title">About</span>
+          </li>
+          <li class="footer nav-item">
+            <a class="nav-link-footer" href="#">ScholarGo</a>
+          </li>
+          <li class="footer nav-item">
+            <a class="nav-link-footer" href="#">Donation</a>
+          </li>
+          <li class="footer nav-item">
+            <a class="nav-link-footer" href="#">Partnership Programs</a>
+          </li>
+          <li class="footer nav-item">
+            <a class="nav-link-footer" href="#">Report an Issue</a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="col-md-4 footer-column">
+        <!-- Need Help Section -->
+        <ul class="nav flex-column">
+          <li class="nav-item">
+            <span class="footer-title">Need Help?</span>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link-footer" href="#">Terms and Conditions</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link-footer" href="#">Privacy Policy</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link-footer" href="#">Help</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link-footer" href="#">FAQ</a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="col-md-4 footer-column">
+        <!-- Contact & Support Section -->
+        <ul class="nav flex-column">
+          <li class="nav-item">
+            <span class="footer-title">Contact & Support</span>
+          </li>
+          <li class="nav-item">
+            <span class="navlink-footer"><i class="fas fa-home"></i> San Fernando, Pampanga, Ph.</span>
+          </li>
+          <li class="nav-item">
+            <span class="navlink-footer"><i class="fas fa-phone"></i> 0919 657 2351</span>
+          </li>
+          <li class="nav-item">
+            <span class="navlink-footer"><i class="fas fa-envelope"></i> scholargo@gmail.com</span>
+          </li>
+          <li class="nav-item">
+            <span class="navlink-footer"><i class="fas fa-star"></i> Give feedback</span>
+          </li>
+        </ul>
+      </div>
+      
+      
+
+    <!-- Social Media Links Row -->
+<div class="row icons">
+<div class="col-12 text-center">
+  <ul class="list-inline social-buttons">
+    <li class="list-inline-item">
+      <a href="#"><i class="fab fa-twitter"></i></a>
+    </li>
+    <li class="list-inline-item">
+      <a href="#"><i class="fab fa-facebook-f"></i></a>
+    </li>
+    <li class="list-inline-item">
+      <a href="#"><i class="fab fa-linkedin-in"></i></a>
+    </li>
+    <li class="list-inline-item">
+      <a href="#"><i class="fab fa-instagram"></i></a> <!-- Added Instagram -->
+    </li>
+    <li class="list-inline-item">
+      <a href="#"><i class="fab fa-youtube"></i></a> <!-- Added YouTube -->
+    </li>
+  </ul>
+</div>
+</div>
+
+
+  </div>
 </footer>
 
   
