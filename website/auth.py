@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for, current_app
 from flask_socketio import emit
-from .models import User, Sponsorship_data, user_sponsorship, Comment
+from .models import User, Sponsorship_data, user_sponsorship, Comment, TriggerWord
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from . import db, socketio  # Import socketio here
@@ -305,23 +305,21 @@ def like_sponsorship(sponsor_id):
 def add_comment(sponsor_id):
     content = request.form.get('content')
 
-    # Check if content is empty
-    if not content:
-        flash('Comment cannot be empty.', 'danger')
-        return redirect(request.referrer or url_for('views.home'))
+    # Fetch all trigger words from the database
+    trigger_words = TriggerWord.query.all()
+    trigger_word_list = [tw.word.lower() for tw in trigger_words]
 
+    # Check if the comment contains any trigger words
+    if any(word in content.lower() for word in trigger_word_list):
+        flash('Your comment contains inappropriate words. Please remove them before submitting.', 'error')
+        return redirect(url_for('views.view_sponsorship', sponsor_id=sponsor_id))
+
+    # Add the comment if no trigger words are found
     new_comment = Comment(content=content, user_id=current_user.id, sponsorship_id=sponsor_id)
-
-    try:
-        db.session.add(new_comment)
-        db.session.commit()
-        flash('Comment added successfully!', 'success')
-    except Exception as e:
-        db.session.rollback()
-        flash('An error occurred. Please try again.', 'danger')
-
-    return redirect(request.referrer or url_for('views.home'))
-
+    db.session.add(new_comment)
+    db.session.commit()
+    
+    return redirect(url_for('views.view_sponsorship', sponsor_id=sponsor_id))
 
 
 @auth.route('/update_profile', methods=['POST'])

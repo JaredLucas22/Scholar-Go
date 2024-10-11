@@ -64,6 +64,10 @@ class User(db.Model, UserMixin):
 
 from sqlalchemy.sql import func
 
+class TriggerWord(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    word = db.Column(db.String(100), nullable=False)
+
 class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.Text, nullable=False)
