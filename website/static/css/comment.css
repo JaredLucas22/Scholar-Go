@@ -1,0 +1,135 @@
+#comments-section {
+    margin-top: 20px;
+    color: black;
+}
+
+.comment-container {
+    background-color: white;
+    border-radius: 20px;
+    padding: 50px;
+    padding-bottom: 10px;
+    margin-bottom: 40px;
+}
+
+textarea {
+    resize: none;
+    border: none;
+    border-bottom: 1px solid #ddd;
+    border-radius: 0;
+    width: 100%;
+    padding: 10px !important; /* Force padding with !important */
+}
+
+@media (max-width: 768px) {
+    textarea {
+        width: 100%;
+        padding: 15px !important; /* Force padding with !important for small screens */
+    }
+}
+
+
+button[type="submit"] {
+    float: right;
+}
+
+h4 {
+    font-size: 3vh;
+}
+
+.comment {
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.comment-title {
+    color: black;
+}
+
+.comment img {
+    margin-right: 10px;
+}
+
+.name-comment {
+    margin-left: 1%;
+}
+
+.name-comment p {
+    margin-bottom: 0;
+    font-size: 16px;
+}
+
+/* Media Query for smaller screens */
+@media (max-width: 768px) {
+    textarea {
+        width: 100%;
+    }
+    
+    /* Adjust button width and size on smaller screens */
+    .comment-submit {
+        width: 100%; /* Full width on small screens */
+        padding: 15px; /* Increase padding for better touch size */
+        font-size: 2vh; /* Adjust font size */
+    }
+
+    /* Adjust margins and font sizes for comments */
+    .name-comment {
+        margin-left: 2%;
+    }
+
+    .name-comment p {
+        font-size: 14px; /* Smaller font on mobile */
+    }
+
+    h4 {
+        font-size: 2.5vh; /* Reduce the heading size */
+    }
+}
+
+/* Default button styles */
+.comment-submit {
+    background-color: #757575; 
+    color: white;
+    border: none; 
+    width: 13%; /* Default width */
+    padding: 10px;
+    font-size: 1.5vh; 
+    cursor: pointer;
+    border-radius: 10px;
+    transition: background-color 0.3s;
+}
+  
+.comment-submit:hover {
+    background-color: #646464;
+}
+
+/* Media queries for responsiveness */
+@media (max-width: 1024px) {
+    .comment-submit {
+        width: 25%; /* Increase width further on smaller screens */
+        font-size: 1.4vh; /* Adjust font size */
+        padding: 8px; /* Adjust padding */
+    }
+}
+
+@media (max-width: 768px) {
+    .comment-submit {
+        width: 30%; /* Increase width further on smaller screens */
+        font-size: 1.3vh; /* Adjust font size */
+        padding: 8px; /* Adjust padding */
+    }
+
+    .comment-container {
+        margin-bottom: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        background-color: rgb(0, 104, 0);
+    }
+    .comment-submit {
+        width: 60%; /* Make the button wider on very small screens */
+        font-size: 2vh; /* Increase font size for readability */
+        padding: 15px; /* Increase padding for better tap targets on mobile */
+    }
+}

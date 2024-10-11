@@ -1,0 +1,121 @@
+body {
+    color: black;
+}
+
+.profile-left {
+    background-color: #f5f5f5;
+    color: white;
+}
+
+.text-white {
+    font-size: 17px;
+    font-style: italic;
+}
+
+.text-white-em, .text-white-un {
+    color: #3d3d3d;
+}
+
+.text-white-name {
+    font-size: 25px;
+    font-weight: bold;
+    margin-top: 5%;
+    color: black;
+}
+
+.contact-text {
+    color: rgb(53, 53, 53);
+    font-style: italic;
+    font-size: 15px;
+}
+
+.profile-button {
+    width: 22%;
+}
+
+/* Media queries */
+@media (min-width: 1200px) {
+    .text-white { font-size: 20px; }
+    .text-white-em, .text-white-un { font-size: 16px; }
+    .text-white-name { font-size: 30px; }
+    .contact-text { font-size: 18px; }
+}
+
+@media (min-width: 768px) and (max-width: 1199px) {
+    .profile-picture {
+        width: 130px;
+        height: auto;
+    }
+    .text-white-em, .text-white-un { font-size: 12px; }
+    .text-white-name { font-size: 20px; }
+    .contact-text { font-size: 13px; }
+    .bg-white { width: 80%; }
+    .profile-button { width: 27%; font-size: 13px;}
+}
+
+@media (max-width: 768px) {
+    .text-white-em, .text-white-un { font-size: 14px; }
+    .text-white-name { font-size: 23px; margin-top: 0; }
+    .contact-text { font-size: 14px; }
+    .bg-white { width: 80%; }
+    .profile-button { width: 28%; font-size: 14px;}
+    .profile-picture { margin-right: 20px;}
+}
+
+@media (max-width: 576px) {
+    .text-white-em, .text-white-un { font-size: 13px; }
+    .text-white-name { font-size: 23px; margin-top: 8px; }
+    .contact-text { font-size: 14px; }
+    .profile-button { width: 28%; font-size: 14px;}
+    .profile-left {margin: 0;}
+}
+
+/* Base styles for labels and input boxes */
+.labels {
+    font-size: 16px;
+    font-weight: bold;
+    color: #000000;
+    margin-bottom: 5px;
+}
+
+.form-control,
+.form-select {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 14px;
+    transition: border-color 0.3s;
+    margin-top: 0;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Adjustments for various screen sizes */
+@media (min-width: 768px) {
+    .labels { font-size: 15px; }
+    .form-control, .form-select { font-size: 14px; }
+}
+
+@media (min-width: 1200px) {
+    .labels { font-size: 15px; }
+    .form-control, .form-select { font-size: 13px; padding: 8px; }
+}
+
+@media (min-width: 768px) and (max-width: 1199px) {
+    .labels { font-size: 12px; }
+    .form-control, .form-select { font-size: 11px; padding: 6px; }
+}
+
+@media (max-width: 768px) {
+    .labels { font-size: 12px; }
+    .form-control, .form-select { font-size: 12px; padding: 8px; }
+}
+
+@media (max-width: 576px) {
+    .labels { font-size: 10px; }
+    .form-control, .form-select { font-size: 10px; padding: 8px; }
+}
