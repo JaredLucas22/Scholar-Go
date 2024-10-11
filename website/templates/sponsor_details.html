@@ -15,9 +15,15 @@
                         {% endif %}
                     </button>
                 </form>
-                <a href="#" class="bookmark-button">
-                    <i class="fas fa-bookmark"></i>
-                </a>
+                <form action="{{ url_for('auth.follow_sponsorship', sponsorship_id=sponsor.id) }}" method="POST" style="display: inline;">
+                    <button class="like-button" id="like-button" style="border: none; background-color: transparent;">
+                        {% if is_following %}
+                            <i class="fa-solid fa-bookmark"></i>
+                        {% else %}
+                            <i class="fa-regular fa-bookmark"></i>
+                        {% endif %}
+                    </button>
+                </form>                
             </div>
             <div class="verified-check">
                 <i class="fas fa-check-circle" aria-hidden="true"></i> <!-- Checkmark icon -->
@@ -83,10 +89,7 @@
                       <p>{{ comment.content }}</p>
                   </div>
               </div>
-              
-              </div>
-              
-              </div>              
+            </div>                      
                 {% endfor %}
             {% else %}
                 <p>No comments yet. Be the first to comment!</p>
@@ -95,11 +98,6 @@
     </div>
 </div>
 
-<script>
-    document.getElementById('like-form').onsubmit = function() {
-        const button = document.getElementById('like-button');
-        button.disabled = true; // Disable button to prevent multiple clicks
-    };
-</script>
+
 
 {% endblock %}

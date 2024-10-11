@@ -19,6 +19,7 @@ def view_sponsorship(sponsor_id):
 
     # Fetch comments for the sponsor
     comments = Comment.query.filter_by(sponsorship_id=sponsor.id).all()
+    is_following = current_user.is_following(sponsor_id)
     
     # Calculate relative time for comments
     for comment in comments:
@@ -27,7 +28,8 @@ def view_sponsorship(sponsor_id):
     return render_template('sponsor_details.html', 
                            sponsor=sponsor, 
                            comments=comments, 
-                           is_liked=is_liked, 
+                           is_liked=is_liked,
+                           is_following= is_following, 
                            user=current_user)
 
 @views.route('/sponsorlist', methods=['GET'])
@@ -87,12 +89,6 @@ def follow():
     followed_sponsorships = current_user.followed_sponsorships  # Assuming this relationship is set up in your User model
     return render_template("follow.html", followed_sponsorships=followed_sponsorships, user=current_user)
 
-@views.route('/my_bookmarks')
-@login_required
-def my_bookmarks():
-    # Fetch followed sponsorships
-    bookmarks = current_user.followed_sponsorships
-    return render_template('follow.html', bookmarks=bookmarks)
 
 
 @views.route("/profile")

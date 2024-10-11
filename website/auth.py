@@ -9,6 +9,12 @@ from datetime import datetime
 import os
 
 auth = Blueprint('auth', __name__)
+# Define the path to the 'uploads' folder
+UPLOAD_FOLDER = os.path.join(os.getcwd(), 'static', 'uploads')
+
+# Ensure the uploads folder exists
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
 
 import os
 from flask import current_app
@@ -336,16 +342,23 @@ def update_profile():
     province = request.form.get('province')
     gender = request.form.get('gender')
     postalcode = request.form.get('postalcode')
-    education_level = request.form.get('educationlevel')
+    education_level = request.form.get('education_level')
     gpa = request.form.get('gpa')
     course = request.form.get('course')
 
-    # Validate required fields (you can customize this validation as per your needs)
-    if not first_name or not last_name or not username or not email:
-        flash('Please fill out all required fields.', category='error')
-        return redirect(url_for('profile_settings'))
+    # Check if a new profile picture was uploaded
+    if 'profile_picture' in request.files:
+        profile_picture = request.files['profile_picture']
+        if profile_picture:
+            # Save the new picture
+            filename = secure_filename(profile_picture.filename)
+            picture_path = os.path.join('static/uploads', filename)
+            profile_picture.save(picture_path)
 
-    # Update the current user's details
+            # Update user's profile picture path
+            current_user.picture_path = filename
+
+    # Update the rest of the user's details
     current_user.first_name = first_name
     current_user.last_name = last_name
     current_user.username = username
@@ -368,4 +381,28 @@ def update_profile():
         db.session.rollback()
         flash('An error occurred while updating your profile. Please try again.', category='error')
 
+    return redirect(url_for('views.profile'))
+
+@auth.route('/upload_profile_picture', methods=['POST'])
+@login_required
+def upload_profile_picture():
+    # Check if the form contains a file
+    if 'profile_picture' in request.files:
+        profile_picture = request.files['profile_picture']
+
+        if profile_picture.filename != '':
+            # Secure the filename and save the file
+            filename = secure_filename(profile_picture.filename)
+            picture_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+            profile_picture.save(picture_path)
+
+            # Update the current user's profile picture path in the database
+            current_user.picture_path = filename
+
+            try:
+                db.session.commit()
+            except Exception as e:
+                db.session.rollback()
+                flash('An error occurred while updating your profile picture. Please try again.', category='error')
+    
     return redirect(url_for('views.profile'))

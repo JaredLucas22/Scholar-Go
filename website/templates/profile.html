@@ -10,12 +10,20 @@
                 <!-- Display profile picture with pencil icon -->
                 <div class="profile-image-wrapper position-relative">
                     <img class="rounded-circle me-2 profile-picture"
-                        style="width: 167px; height: 167px;"
-                        src="{{ url_for('static', filename='uploads/' ~ current_user.picture_path) }}" 
-                        alt="Profile Picture">
-                    <!-- Pencil icon to show on hover -->
+                         style="width: 167px; height: 167px; cursor: pointer;" 
+                         src="{{ url_for('static', filename='uploads/' ~ current_user.picture_path) }}" 
+                         alt="Profile Picture"
+                         onclick="document.getElementById('profilePictureInput').click();">
+                
+                    <!-- Pencil icon -->
                     <i class="fas fa-pencil-alt pencil-icon"></i>
+                
+                    <!-- Separate form for profile picture upload -->
+                    <form id="uploadForm" method="POST" enctype="multipart/form-data" action="{{ url_for('auth.upload_profile_picture') }}">
+                        <input type="file" id="profilePictureInput" name="profile_picture" style="display: none;" onchange="document.getElementById('uploadForm').submit();">
+                    </form>
                 </div>
+                
                 <!-- Display user's name -->
                 <span class="text-white-name">{{ current_user.first_name }} {{ current_user.last_name }}</span>
                 <!-- Display username -->
@@ -131,7 +139,6 @@
         </div>
     </div>
 </div>
-
 <script>
 
 document.getElementById('profilePictureInput').addEventListener('change', function(event) {

@@ -1,6 +1,12 @@
 {% extends "base.html" %}
 {% block content %}
+<style>
+    body{
+        color: black;
+    }
+</style>
 <!-- Button to Open the Modal -->
+ 
 <div class="container mt-5 text-center">
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#profileModal">
         Open Sign Up Form
@@ -202,6 +208,8 @@
             reader.readAsDataURL(file);
         }
     }
+
 </script>
+
 
 {% endblock %}
