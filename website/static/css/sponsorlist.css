@@ -2,7 +2,10 @@
 .list {
     height: auto; /* Fixed height for the entire column */
     background-color: #0738a8;
-    border-radius: 20px;
+    border-top-left-radius: 20px;  /* Top-left corner */
+    border-top-right-radius: 20px; /* Top-right corner */
+    border-bottom-left-radius: 0;  /* No radius on the bottom-left */
+    border-bottom-right-radius: 0; /* No radius on the bottom-right */
     overflow-x: hidden; /* Add this to prevent horizontal scrolling */
     padding: 0 20px; /* Add some padding to ensure content is not cut off */
     display: flex;
@@ -58,26 +61,6 @@
     white-space: wrap;
 }
 
-/* Media query for small screens */
-@media (max-width: 768px) {
-    .content-between {
-        margin-top: 5%; /* Adjust margin-top for small screens */
-    }
-}
-
-/* Media query for medium screens */
-@media (min-width: 769px) and (max-width: 1024px) {
-    .content-between {
-        margin-top: 10%; /* Adjust margin-top for medium screens */
-    }
-}
-
-/* Media query for large screens */
-@media (min-width: 1025px) {
-    .content-between {
-        margin-top: 15%; /* Adjust margin-top for large screens */
-    }
-}
 
 
 .content-between p {
@@ -385,10 +368,7 @@ a {
 /* Media Query for Small Screens */
 /* Styles for smaller screens */
 @media (max-width: 768px) { 
-    body {
-        background-color: #98c8fc;
-    }
-    
+  
     .col-12 {
         padding: 20px; /* Add some padding on smaller screens */
         overflow-y: hidden; /* Remove scrollbar */

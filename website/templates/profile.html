@@ -6,12 +6,16 @@
     <div class="row">
         <!-- Profile Section (Left) -->
         <div class="col-md-3 border-right profile-left">
-            <div class="d-flex flex-column align-items-center text-center p-3 py-5">
-                <!-- Display profile picture -->
-                <img class="rounded-circle me-2"
-                     style="width: 167px; height: 167px;"
-                     src="{{ url_for('static', filename='uploads/' ~ current_user.picture_path) }}" 
-                     alt="Profile Picture">
+            <div class="d-flex flex-column align-items-center text-center p-3 py-5 position-relative">
+                <!-- Display profile picture with pencil icon -->
+                <div class="profile-image-wrapper position-relative">
+                    <img class="rounded-circle me-2 profile-picture"
+                        style="width: 167px; height: 167px;"
+                        src="{{ url_for('static', filename='uploads/' ~ current_user.picture_path) }}" 
+                        alt="Profile Picture">
+                    <!-- Pencil icon to show on hover -->
+                    <i class="fas fa-pencil-alt pencil-icon"></i>
+                </div>
                 <!-- Display user's name -->
                 <span class="text-white-name">{{ current_user.first_name }} {{ current_user.last_name }}</span>
                 <!-- Display username -->
@@ -22,6 +26,7 @@
                 <span class="contact-text">{{ current_user.phone_number if current_user.phone_number else 'No contact provided' }}</span>
             </div>
         </div>
+
 
         <!-- Profile Settings Form (Right) -->
         <div class="col-md-9 border-right">
@@ -126,5 +131,19 @@
         </div>
     </div>
 </div>
+
+<script>
+
+document.getElementById('profilePictureInput').addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.querySelector('.profile-image-wrapper img').src = e.target.result; // Update the image source
+        };
+        reader.readAsDataURL(file);
+    }
+});
+</script>
 
 {% endblock %}

@@ -2,64 +2,86 @@
 {% block title %}Followed Sponsorships{% endblock %}
 {% block content %}
 <link rel="stylesheet" href="/static/css/sponsorlist.css"/>
-<h3>Your Followed Sponsorships</h3>
+<link rel="stylesheet" href="/static/css/follow.css"/>
 
-<div class="container">
+
+<div class="container-list mt-4">
+    <div class="bookmarks-title">
+        <h3>Your Bookmarks</h3>
+    </div>
     <div class="row">
         {% if followed_sponsorships %}
             {% for item in followed_sponsorships %}
-            <div class="col-12 mb-4">
-            <div class="card position-relative">
-                <a href="{{ url_for('views.view_sponsorship', sponsor_id=item.id) }}">
-                    <div class="logo me-3">
-                        <img src="{{ url_for('static', filename='uploads/' ~ item.picture_path) }}" alt="Logo" class="img-fluid" style="max-width: 100px;">
+            <div class="col-12 mb-4 list position-relative">
+                <!-- Entire Card Link -->
+                <a href="{{ url_for('views.view_sponsorship', sponsor_id=item.id) }}" class="stretched-link" style="z-index: 1;"></a>
+                
+                <div class="d-flex flex-column flex-sm-row align-items-stretch position-relative">
+                    
+                    <!-- Sponsorship details -->
+                    <div class="logo">
+                        <img src="{{ url_for('static', filename='uploads/' ~ item.picture_path) }}" alt="Logo" class="img-fluid logo-img">
                     </div>
-                    <div class="content flex-grow-1">
-                        <h5 class="title mb-1">{{ item.sponsor_name }}</h5>
+
+                    <div class="content flex-grow-1 ms-3"> 
+                        <h5 class="title mb-1 me-2">{{ item.sponsor_name }}</h5>
                         <p class="description mb-1">{{ item.description | safe }}</p>
-                        <p class="likes mb-1">Likes: {{ item.likes | length  }} | Deadline on {{ item.deadline_date.strftime('%B %d, %Y') }}</p>
-                        <div class="d-flex justify-content-between align-items-center">
+                        <p class="likes mb-1">Likes: {{ item.likes | length }} | Deadline on {{ item.deadline_date.strftime('%B %d, %Y') }}</p>
+                        <!--Bookmarked date here-->
+                        <p> Date bookmarked: October 11,2024 </p>
+                    
+                        <div class="d-flex content-between mt-auto">
                             <span class="badge bg-success">Active Program</span>
                             <p class="mb-0"><strong>Scholarship Program:</strong> {{ item.course }}</p>
                             <p class="mb-0"><strong>Amount per Semester:</strong> P{{ item.amount_per_semester | round(2) }}</p>
                         </div>
                     </div>
-                </a>
-                 <!-- Ellipses Icon -->
-                 <div class="position-absolute top-0 end-0 p-2">
-                    <button class="btn btn-link dropdown-toggle" type="button" id="optionsMenu-{{ item.id }}" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fas fa-ellipsis-v"></i>
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="optionsMenu-{{ item.id }}">
-                        <li>
-                            <form action="{{ url_for('auth.follow_sponsorship', sponsorship_id=item.id) }}" method="POST" style="display: inline;">
-                                <button type="submit" class="dropdown-item" style="border: none; background: none; cursor: pointer;">
-                                    {% if current_user.is_following(item.id) %}
-                                    <i class="fa-solid fa-bookmark" style="color: rgb(24, 47, 195);"></i> Remove from Bookmark
-                                    {% else %}
-                                    <i class="fa-regular fa-bookmark" style="color: gray;"></i> Add to Bookmark
-                                    {% endif %}
-                                </button>
-                            </form>
-                        </li>
-                        <li><a class="dropdown-item" href="#">Share</a></li>
-                    </ul>
+                    
+
+                    <!-- Dropdown for additional options -->
+                    <div class="dropdown-top-right position-relative ms-auto" style="z-index: 3;">
+                        <button class="btn btn-link ellipsis-button" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+
+                        <div class="dropdown-menu-container dropdown-menu-end">
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <form action="{{ url_for('auth.follow_sponsorship', sponsorship_id=item.id) }}" method="POST" style="display: inline;">
+                                        <button type="submit" class="dropdown-item">
+                                            {% if current_user.is_following(item.id) %}
+                                                <i class="fa-solid fa-bookmark"></i> <span>Remove Bookmark</span>
+                                            {% else %}
+                                                <i class="fa-regular fa-bookmark"></i> <span>Add Bookmark</span>
+                                            {% endif %}
+                                        </button>
+                                    </form>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="#"><i class="fa-solid fa-share"></i> <span>Share</span></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
+
+                <div class="button-group d-flex flex-column flex-sm-row">
+                    <button class="btn btn-warning btn-sm flex-grow-1"><i class="fa-solid fa-bell"></i> Add Alarm</button>
+                    <a href="{{ url_for('views.view_sponsorship', sponsor_id=item.id) }}" class="btn btn-primary btn-sm flex-grow-1"><i class="fa-solid fa-eye"></i> Visit Program</a>
+                    <button class="btn btn-danger btn-sm flex-grow-1"><i class="fa-solid fa-archive"></i> Archive</button>
+                    <button class="btn btn-dark btn-sm flex-grow-1"><i class="fa-solid fa-share"></i> Share</button>
+                </div>
+                
             </div>
-        </div>
             {% endfor %}
         {% else %}
             <div class="col-12">
-                <p>You are not following any sponsorships yet.</p>
+                <p style="color: black;">You are not following any sponsorships yet.</p>
             </div>
         {% endif %}
     </div>
 </div>
 
 {% block scripts %}
-
-
-
 {% endblock %}
-
 {% endblock %}

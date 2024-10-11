@@ -1,0 +1,189 @@
+/* Ensure buttons take the full width without padding or spacing */
+.button-group {
+    display: flex; /* Use flexbox for horizontal layout */
+    margin: 0; /* Remove margin */
+    margin-top: 10px;
+}
+
+.button-group button,
+.button-group a {
+    flex-grow: 1; /* Make buttons take equal space */
+    border: none; /* Remove button borders */
+    border-radius: 0; /* Remove rounded corners */
+}
+
+.button-group button:first-child,
+.button-group a:first-child {
+    border-bottom-right-radius: 0; /* No radius on the bottom-right */
+}
+
+.button-group button:last-child,
+.button-group a:last-child {
+    border-bottom-right-radius: 0; /* No radius on the bottom-right */
+}
+
+/* Optional: Remove default button margin */
+.btn {
+    margin: 0; /* Remove margin from buttons */
+}
+
+.button-group {
+    margin-left: -20px;  /* Adjust this value to match the container's padding */
+    margin-right: -20px; /* Adjust this value to match the container's padding */
+}
+
+.button-group .btn {
+    width: calc(100% + 30px);  /* Ensure buttons fill the width, compensating for negative margin */
+}
+
+.button-group .btn {
+    font-size: 1.6vh;  /* Adjust font size of the button text */
+    padding: 6px;    /* Adjust button padding for better sizing */
+}
+
+.button-group .btn i {
+    font-size: 17px;  /* Adjust the size of the icon */
+    margin-right: 5px; /* Optional: Adds space between the icon and text */
+}
+
+/* Make sure transition is applied smoothly */
+.button-group .btn {
+    transition: background-color 0.3s ease;
+    z-index: 1000;
+}
+
+/* More specific targeting for hover states */
+.button-group .btn-warning:hover,
+.button-group .btn-primary:hover,
+.button-group .btn-danger:hover,
+.button-group .btn-dark:hover {
+    background-color: darken(#ffd34e, 10%); /* Warning Button Darkened */
+    background-color: darken(#006fe6, 10%); /* Primary Button Darkened */
+    background-color: darken(#d62738, 10%); /* Danger Button Darkened */
+    background-color: darken(#24282c, 10%); /* Dark Button Darkened */
+}
+
+
+
+/* Media Queries for Responsive Design */
+@media (max-width: 1200px) {
+
+    .button-group .btn {
+        font-size: 1.4vh;  /* Smaller font size for medium screens */
+        padding: 5px;      /* Adjust padding */
+    }
+}
+
+@media (max-width: 992px) {
+    
+    .button-group .btn {
+        font-size: 1.2vh;  /* Smaller font size for smaller screens */
+        padding: 4px;      /* Adjust padding */
+    }
+
+    .button-group {
+        margin-top: 5%;
+    }
+
+    .list {
+        height: 50%;
+    }
+}
+
+@media (max-width: 768px) {
+    .button-group {
+        flex-direction: column; /* Change to column layout */
+    }
+
+    .list {
+        height: 100%;
+        padding-bottom: 0;
+    }
+
+    .button-group .btn {
+        width: 100%;  /* Make buttons full width in column layout */
+        font-size: 1.0vh;  /* Smaller font size for mobile screens */
+        padding: 3px;      /* Adjust padding */
+    }
+}
+
+@media (max-width: 576px) {
+    .button-group .btn {
+        font-size: 1.3vh;  /* Even smaller font size for very small screens */
+        padding: 5px;      /* Adjust padding */
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+.bookmarks-title {
+    margin: 0 20%;
+    margin: auto;
+}
+
+.bookmarks-title h3 {
+    font-size: 2.3vh;
+    color: rgb(14, 14, 14);
+    border-radius: 10px;
+    padding: 10px;
+    width: 100%;
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+
+/* For screens 768px and below */
+@media (max-width: 768px) {
+    .bookmarks-title h3 {
+        font-size: 1.8vh;
+        padding: 1vh;
+        margin: 0 5%;
+        width: 90%;
+        margin-bottom: 20px;
+    }
+}
+
+/* For screens 576px and below */
+@media (max-width: 576px) {
+    .bookmarks-title h3 {
+        font-size: 1.8vh;
+        padding: 1vh;
+        margin: 0 5%;
+        width: 90%;
+        margin-bottom: 20px;
+    }
+}
+
+
+
+
+/* Media query for small screens */
+@media (max-width: 768px) {
+    .content-between {
+        margin-top: 5%; /* Adjust margin-top for small screens */
+    }
+}
+
+/* Media query for medium screens */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .content-between {
+        margin-top: 10%; /* Adjust margin-top for medium screens */
+    }
+}
+
+/* Media query for large screens */
+@media (min-width: 1025px) {
+    .content-between {
+        margin-top: 15%; /* Adjust margin-top for large screens */
+    }
+}
