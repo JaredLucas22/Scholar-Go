@@ -7,7 +7,8 @@
         <div class="col-md-3 border-right profile-left">
             <div class="d-flex flex-column align-items-center text-center p-3 py-5">
                 <!-- Display profile picture -->
-                <img class="profile-picture mt-5" width="150px"
+                <img class="rounded-circle me-2"
+                     style="width: 167px; height: 167px;"
                      src="{{ url_for('static', filename='uploads/' ~ current_user.picture_path) }}" 
                      alt="Profile Picture">
                 <!-- Display user's name -->

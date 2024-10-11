@@ -4,6 +4,9 @@ from .models import Note, Sponsorship_data, Comment
 from . import db
 import json
 from scoring import calculate_compatibility_score
+from flask import render_template
+from .utils import time_since
+
 
 views = Blueprint('views', __name__)
 
@@ -17,6 +20,10 @@ def view_sponsorship(sponsor_id):
     # Fetch comments for the sponsor
     comments = Comment.query.filter_by(sponsorship_id=sponsor.id).all()
     
+    # Calculate relative time for comments
+    for comment in comments:
+        comment.relative_time = time_since(comment.created_at)
+
     return render_template('sponsor_details.html', 
                            sponsor=sponsor, 
                            comments=comments, 
@@ -86,6 +93,7 @@ def my_bookmarks():
     # Fetch followed sponsorships
     bookmarks = current_user.followed_sponsorships
     return render_template('follow.html', bookmarks=bookmarks)
+
 
 @views.route("/profile")
 @login_required
