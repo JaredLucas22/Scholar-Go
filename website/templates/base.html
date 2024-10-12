@@ -65,47 +65,47 @@
 
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-      <div class="nav-logo">
-        <img src="/static/images/nav-logo.png" alt="Logo">
-      </div>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon" id="hamburger-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link" id="home" href="/">Home</a></li>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" id="logout" href="/profile">Profile</a></li>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" id="logout" href="/sponsorlist">Sponsors</a></li>
-          </li>
-        </ul>
-        <li class="nav-item">
-          <a class="nav-link" id="follow" href="/follow">
-              <i class="fas fa-bookmark"></i>
-            </a>
-          </li>
-          <a class="nav-link" id="logout" href="/logout">Logout</a></li>
-      </div>
+        <div class="nav-logo">
+            <img src="/static/images/nav-logo.png" alt="Logo">
+        </div>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon" id="hamburger-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            {% if current_user.is_authenticated %}
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" id="home" href="/">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="profile" href="/profile">Profile</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="sponsors" href="/sponsorlist">Sponsors</a>
+                </li>
+            </ul>
+            <li class="nav-item">
+                <a class="nav-link" id="follow" href="/follow">
+                    <i class="fas fa-bookmark"></i>
+                </a>
+            </li>
+            <a class="nav-link" id="logout" href="/logout">Logout</a>
+            {% else %}
+            {% endif %}
+        </div>
     </div>
-  </nav>
-  {% with messages = get_flashed_messages(with_categories=True) %}
-  {% if messages %}
-      <div class="alert-container">
-          {% for category, message in messages %}
-              <div class="alert alert-custom {{ 'alert-danger' if category == 'error' else 'alert-success' }}" role="alert">
-                  {{ message }}
-                  <button type="button" class="close" data-dismiss="alert">
-                      <span aria-hidden="true">&times;</span>
-                  </button>
-              </div>
-          {% endfor %}
-      </div>
-  {% endif %}
+</nav>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="flash-message flash-{{ category }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
 {% endwith %}
+
 
 
 
@@ -122,6 +122,33 @@
     })
   });
 </script>
+
+<script>
+  // Wait for the DOM to fully load
+  document.addEventListener('DOMContentLoaded', function () {
+      // Get the flash message element
+      var flashMessage = document.querySelector('.flash-message');
+
+      // If flash message exists, animate its appearance
+      if (flashMessage) {
+          // Add the class that shows the flash message
+          flashMessage.classList.add('flash-show');
+
+          // After 5 seconds, hide the flash message with animation
+          setTimeout(function () {
+              flashMessage.classList.add('flash-hide');
+          }, 5000);  // Adjust time (5000ms = 5s)
+
+          // Remove the flash message element after the animation completes
+          flashMessage.addEventListener('transitionend', function () {
+              if (flashMessage.classList.contains('flash-hide')) {
+                  flashMessage.remove();
+              }
+          });
+      }
+  });
+</script>
+
 
   
   

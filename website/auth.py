@@ -23,7 +23,8 @@ from flask import current_app
 @auth.route('/sponsor_details/<int:sponsor_id>', methods=['GET'])
 def view_sponsorship(sponsor_id):
     sponsor = Sponsorship_data.query.get_or_404(sponsor_id)
-    comments = Comment.query.filter_by(sponsor_id=sponsor_id).all()  # Assuming you have a Comment model
+
+    comments = Comment.query.filter_by(sponsor_id=sponsor_id).order_by(Comment.created_at.desc()).all()
     is_liked = current_user in sponsor.likes
     return render_template('sponsor_details.html', user=current_user, sponsor=sponsor, is_liked=is_liked)
 
@@ -89,7 +90,6 @@ def login():
         user = User.query.filter_by(email=email).first()
         if user:
             if check_password_hash(user.password, password):
-                flash('Logged in successfully!', category='success')
                 login_user(user, remember=True)
                 return redirect(url_for('views.home'))
             else:
@@ -178,6 +178,7 @@ def sign_up():
                 gender=gender,
                 course=course,
                 gpa=gpa,
+                active=True,
                 phone_number = phone_number,
                 educationlevel = educationlevel,
                 birthdate = birthdate,

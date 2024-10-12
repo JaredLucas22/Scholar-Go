@@ -117,6 +117,44 @@ body {
   }
 }
 
+/* Flash message styling */
+.flash-message {
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 5px;
+  font-size: 16px;
+  position: fixed;  /* Fixed position so it doesn't push content */
+  top: 20px;        /* Position it at the top of the page */
+  left: 50%;        /* Center it horizontally */
+  transform: translateX(-50%);  /* Centering trick for fixed position */
+  z-index: 9999;    /* Ensure it appears above other content */
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+/* Animation for showing the flash message */
+.flash-show {
+  opacity: 1;
+}
+
+/* Animation for closing the flash message */
+.flash-hide {
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+/* Optional additional styling for success and error messages */
+.flash-success {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.flash-error {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+
 @media (max-width: 768px) {
 
   .nav-logo img {

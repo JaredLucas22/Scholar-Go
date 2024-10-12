@@ -96,3 +96,8 @@ def follow():
 def profile():
 
     return render_template('profile.html', user=current_user)
+
+from .models import Sponsorship_data  # Import your Sponsorship_data model
+
+
+

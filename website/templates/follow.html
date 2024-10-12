@@ -31,7 +31,7 @@
                         <p>  {{item.deadline_date.strftime('%B %d, %Y') }}</p>
                     
                         <div class="d-flex content-between mt-auto">
-                            {% if item.sponsor_active %}
+                            {% if item.active %}
                             <span class="badge bg-success">Active Program</span>
                             {% else %}
                             <span class="badge bg-danger">Inactive Program</span>
