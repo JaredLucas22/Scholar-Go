@@ -4,6 +4,17 @@ body {
   color: #ffffff;
 }
 
+/* Page Transition Styles */
+.page {
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.page.active {
+  opacity: 1;
+}
+
+
 .navbar {
   background: linear-gradient(90deg, #012cb8, #017cff) !important;
   position: sticky !important;

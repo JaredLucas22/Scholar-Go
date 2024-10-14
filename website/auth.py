@@ -178,7 +178,6 @@ def sign_up():
                 gender=gender,
                 course=course,
                 gpa=gpa,
-                active=True,
                 phone_number = phone_number,
                 educationlevel = educationlevel,
                 birthdate = birthdate,
