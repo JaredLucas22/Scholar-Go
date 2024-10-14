@@ -347,19 +347,7 @@ def update_profile():
     gpa = request.form.get('gpa')
     course = request.form.get('course')
 
-    # Check if a new profile picture was uploaded
-    if 'profile_picture' in request.files:
-        profile_picture = request.files['profile_picture']
-        if profile_picture:
-            # Save the new picture
-            filename = secure_filename(profile_picture.filename)
-            picture_path = os.path.join('static/uploads', filename)
-            profile_picture.save(picture_path)
-
-            # Update user's profile picture path
-            current_user.picture_path = filename
-
-    # Update the rest of the user's details
+    # Update user information
     current_user.first_name = first_name
     current_user.last_name = last_name
     current_user.username = username
@@ -374,8 +362,8 @@ def update_profile():
     current_user.gpa = gpa
     current_user.course = course
 
+    # Commit the changes
     try:
-        # Commit the changes to the database
         db.session.commit()
         flash('Profile updated successfully!', category='success')
     except Exception as e:
@@ -384,26 +372,30 @@ def update_profile():
 
     return redirect(url_for('views.profile'))
 
-@auth.route('/upload_profile_picture', methods=['POST'])
+
+@auth.route('/update_profile_picture', methods=['POST'])
 @login_required
 def upload_profile_picture():
-    # Check if the form contains a file
+    # Check if a new profile picture was uploaded
     if 'profile_picture' in request.files:
         profile_picture = request.files['profile_picture']
-
-        if profile_picture.filename != '':
-            # Secure the filename and save the file
-            filename = secure_filename(profile_picture.filename)
-            picture_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
-            profile_picture.save(picture_path)
-
-            # Update the current user's profile picture path in the database
-            current_user.picture_path = filename
-
+        if profile_picture and profile_picture.filename != '':
             try:
+                # Save the picture
+                picture_path = save_picture(profile_picture)
+                current_user.picture_path = picture_path
+
+                # Commit the changes (optional here if done in update profile)
                 db.session.commit()
-            except Exception as e:
-                db.session.rollback()
-                flash('An error occurred while updating your profile picture. Please try again.', category='error')
-    
-    return redirect(url_for('views.profile'))
+
+                flash('Profile picture updated successfully!', category='success')
+                return redirect(url_for('views.profile'))  # Redirect to profile page
+
+            except ValueError as e:
+                flash(str(e), category='error')
+                return redirect(url_for('views.profile'))  # Redirect on error
+
+    # No picture uploaded, redirect back
+    flash('No picture uploaded.', category='warning')
+    return redirect(url_for('views.profile'))  # Redirect back if no picture was uploaded
+
