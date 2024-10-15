@@ -1,5 +1,3 @@
-{% extends "base.html" %}
-{% block content %}
 <style>
     body{
         color: black;
@@ -7,11 +5,13 @@
 </style>
 <!-- Button to Open the Modal -->
  
+<!-- Button to Open the Modal -->
 <div class="container mt-5 text-center">
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#profileModal">
-        Open Sign Up Form
+    <button type="button" class="nav-link btn-short" data-bs-toggle="modal" data-bs-target="#profileModal">
+        Create a new account
     </button>
 </div>
+
 
 <!-- Modal Structure -->
 <div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
@@ -169,47 +169,87 @@
 </div>
 
 <script>
+    // Function to enable or disable the modal form
+    function setModalFormEnabled(enabled) {
+        const modalContent = document.querySelector('.modal-content');
+        modalContent.classList.toggle('enabled', enabled); // Toggle the enabled class
+        const formFields = modalContent.querySelectorAll('input, select, button');
+        formFields.forEach(field => {
+            field.disabled = !enabled; // Set disabled based on the enabled parameter
+        });
+    }
+
+    // Disable the modal form initially
+    setModalFormEnabled(false);
+
+    // Enable the modal form fields when the modal is shown
+    document.getElementById('profileModal').addEventListener('shown.bs.modal', function () {
+        setModalFormEnabled(true); // Enable modal form
+    });
+
+    // Disable the modal form fields when the modal is hidden
+    document.getElementById('profileModal').addEventListener('hidden.bs.modal', function () {
+        setModalFormEnabled(false); // Disable modal form
+    });
+
+    // The rest of your existing script for form navigation and validation
     let currentStep = 1;
 
+    // Function to move to the next step
+    function goToNextStep(current, next) {
+        const modalForm = document.querySelector('#profileModal form');
+
+        if (modalForm.checkValidity()) { // Ensure form is valid
+            document.getElementById(current).style.display = 'none';
+            document.getElementById(next).style.display = 'block';
+            currentStep++;
+        } else {
+            // Force validation check, this will focus on invalid fields
+            modalForm.reportValidity();
+        }
+    }
+
+    // Function to move to the previous step
+    function goToPreviousStep(current, previous) {
+        document.getElementById(current).style.display = 'none';
+        document.getElementById(previous).style.display = 'block';
+        currentStep--;
+    }
+
+    // Event listener for the first "Next" button
     document.getElementById('nextButton1').onclick = function() {
-        document.getElementById('step1').style.display = 'none';
-        document.getElementById('step2').style.display = 'block';
-        currentStep++;
+        goToNextStep('step1', 'step2');
     };
 
+    // Event listener for the second "Next" button
     document.getElementById('nextButton2').onclick = function() {
-        document.getElementById('step2').style.display = 'none';
-        document.getElementById('step3').style.display = 'block';
-        currentStep++;
+        goToNextStep('step2', 'step3');
     };
 
+    // Event listener for the "Previous" button in Step 2
     document.getElementById('prevButton2').onclick = function() {
-        document.getElementById('step2').style.display = 'none';
-        document.getElementById('step1').style.display = 'block';
-        currentStep--;
+        goToPreviousStep('step2', 'step1');
     };
 
+    // Event listener for the "Previous" button in Step 3
     document.getElementById('prevButton3').onclick = function() {
-        document.getElementById('step3').style.display = 'none';
-        document.getElementById('step2').style.display = 'block';
-        currentStep--;
+        goToPreviousStep('step3', 'step2');
     };
 
+    // Function to preview the selected image
     function previewImage(event) {
         const file = event.target.files[0];
         const reader = new FileReader();
+
         reader.onload = function(e) {
             const imgElement = document.getElementById('profilePicture');
             const pictureNameElement = document.getElementById('pictureName');
             imgElement.src = e.target.result;
-            pictureNameElement.textContent = file.name; // Show the name of the uploaded file
+            pictureNameElement.textContent = file.name; // Display the name of the uploaded file
         };
+
         if (file) {
             reader.readAsDataURL(file);
         }
     }
-
 </script>
-
-
-{% endblock %}
