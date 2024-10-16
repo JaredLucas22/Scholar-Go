@@ -72,27 +72,39 @@
             <span class="navbar-toggler-icon" id="hamburger-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
             {% if current_user.is_authenticated %}
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link" id="home" href="/">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="profile" href="/profile">Profile</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="sponsors" href="/sponsorlist">Sponsors</a>
-                </li>
-            </ul>
-            <li class="nav-item">
-                <a class="nav-link" id="follow" href="/follow">
-                    <i class="fas fa-bookmark"></i>
-                </a>
-            </li>
-            <a class="nav-link" id="logout" href="/logout">Logout</a>
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" id="home" href="/">Home</a>
+                    </li>
+                    {% if session['user_type'] == 'Sponsorship' %}
+                        <!-- If the logged-in user is a sponsor -->
+                        <li class="nav-item">
+                            <a class="nav-link" id="sponsor-dashboard" href="/sponsor-dashboard">Sponsor Dashboard</a>
+                        </li>
+                    {% elif session['user_type'] == 'User' %}
+                        <!-- If the logged-in user is a regular user -->
+                        <li class="nav-item">
+                            <a class="nav-link" id="profile" href="/profile">Profile</a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link" id="sponsor-list" href="/sponsorlist">My Sponsorships</a>
+                      </li>
+                  </ul>
+                  <li class="nav-item">
+                      <a class="nav-link" id="follow" href="/follow">
+                          <i class="fas fa-bookmark"></i>
+                      </a>
+                  </li>
+                    {% endif %}
+                    <!-- Both User and Sponsor can see My Sponsorships -->
+                <a class="nav-link" id="logout" href="/logout">Logout</a>
             {% else %}
+                <a class="nav-link" id="sign-sponsor" href="/sign-sponsor">Sign Up as Sponsor</a>
             {% endif %}
         </div>
+        
     </div>
 </nav>
 

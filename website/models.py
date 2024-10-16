@@ -1,6 +1,7 @@
 from . import db
 from flask_login import UserMixin
 from sqlalchemy.sql import func
+from werkzeug.security import generate_password_hash, check_password_hash
 
 # Association Table for User Sponsorships
 user_sponsorship = db.Table('user_sponsorship',
@@ -23,7 +24,7 @@ class Note(db.Model):
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150), unique=True)
-    image = db.Column(db.String(300), nullable=True) 
+    image = db.Column(db.String(300), nullable=True)
     city = db.Column(db.String(150))
     birthdate = db.Column(db.Date, nullable=False)
     province = db.Column(db.String(150))
@@ -59,6 +60,10 @@ class User(db.Model, UserMixin):
             self.followed_sponsorships.remove(sponsorship)
             db.session.commit()
 
+    def get_user_type(self):
+        print("User Type: User")  # Debug print statement
+        return "User"
+
 class TriggerWord(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     word = db.Column(db.String(100), nullable=False)
@@ -70,24 +75,29 @@ class Comment(db.Model):
     sponsorship_id = db.Column(db.Integer, db.ForeignKey('sponsorship_data.id'), nullable=False)
     created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
 
-class Sponsorship_data(db.Model):
+class Sponsorship_data(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
-    sponsor_name = db.Column(db.String(150))   
+    sponsor_name = db.Column(db.String(150))
     course = db.Column(db.String(150))
     extracurricular_activity = db.Column(db.String(150))
+    email = db.Column(db.String(150), unique=True, nullable=False)
+    password = db.Column(db.String(150), nullable=False)
     weight_fos = db.Column(db.Float)
     weight_gpa = db.Column(db.Float)
     weight_extracurricular_activities = db.Column(db.Float)
     weight_financial_status = db.Column(db.Float)
     passing_requirement = db.Column(db.Float)
     verified = db.Column(db.Boolean, default=False, nullable=False)
-    description = db.Column(db.Text)  
+    description = db.Column(db.Text)
     full_description = db.Column(db.Text, nullable=True)
-    image = db.Column(db.String(300), nullable=True)  # For the uploaded picture
-    deadline_date = db.Column(db.Date, nullable=False)  # Scholarship deadline
-    active = db.Column(db.Boolean, default=True, nullable=False)  # Active or inactive status
-    amount_per_semester = db.Column(db.Float, nullable=False)  # Amount awarded per semester
-    picture_path = db.Column(db.String(255), nullable=False)  # Ensure this line is present
-    likes = db.relationship('User', secondary=user_sponsorship_likes, backref='liked_by')  # User Likes
-    comments = db.relationship('Comment', backref='sponsorship', lazy=True)  # Comments on Sponsorship
+    image = db.Column(db.String(300), nullable=True)
+    deadline_date = db.Column(db.Date, nullable=False)
+    active = db.Column(db.Boolean, default=True, nullable=False)
+    amount_per_semester = db.Column(db.Float, nullable=False)
+    picture_path = db.Column(db.String(255), nullable=False)
+    likes = db.relationship('User', secondary=user_sponsorship_likes, backref='liked_by')
+    comments = db.relationship('Comment', backref='sponsorship', lazy=True)
 
+    def get_user_type(self):
+        print("User Type: Sponsorship")  # Debug print statement
+        return "Sponsorship"

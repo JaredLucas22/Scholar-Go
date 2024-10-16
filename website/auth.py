@@ -7,6 +7,20 @@ from . import db, socketio  # Import socketio here
 from flask_login import login_user, login_required, logout_user, current_user
 from datetime import datetime
 import os
+from flask_login import LoginManager
+from .models import User, Sponsorship_data
+
+login_manager = LoginManager()
+login_manager.login_view = 'auth.login'
+
+# User loader for User
+@login_manager.user_loader
+def load_user(user_id):
+    user = User.query.get(int(user_id))
+    if user:
+        return user
+    # If not found as a User, try loading as Sponsorship_data
+    return Sponsorship_data.query.get(int(user_id))
 
 auth = Blueprint('auth', __name__)
 # Define the path to the 'uploads' folder
@@ -81,23 +95,34 @@ def unfollow_sponsorship(user_id, sponsorship_id):
             return False  # Error occurred during commit
     return False  # Not currently following
 
+from flask_login import current_user, login_user, logout_user
+
+from flask import session
+
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
 
+        # Try to find the email in the User table
         user = User.query.filter_by(email=email).first()
-        if user:
-            if check_password_hash(user.password, password):
-                login_user(user, remember=True)
-                return redirect(url_for('views.home'))
-            else:
-                flash('Incorrect password, try again.', category='error')
-        else:
-            flash('Email does not exist.', category='error')
+        if user and check_password_hash(user.password, password):
+            login_user(user, remember=True)
+            session['user_type'] = user.get_user_type()  # Store user type in the session
+            return redirect(url_for('views.home'))
+        
+        # Try to find the email in the Sponsorship_data table
+        sponsorship = Sponsorship_data.query.filter_by(email=email).first()
+        if sponsorship and check_password_hash(sponsorship.password, password):
+            login_user(sponsorship, remember=True)
+            session['user_type'] = sponsorship.get_user_type()  # Store user type in the session
+            return redirect(url_for('views.home'))
+        
+        flash('Invalid email or password.', category='error')
 
     return render_template("login.html", user=current_user)
+
 
 @auth.route('/logout')
 @login_required
