@@ -48,11 +48,6 @@ body{
     pointer-events: auto; /* Allow interaction when visible */
 }
 
-.text-white {
-    font-size: 17px;
-    font-style: italic;
-}
-
 .text-white-em, .text-white-un {
     color: #3d3d3d;
 }
@@ -76,7 +71,7 @@ body{
 
 /* Media queries */
 @media (min-width: 1200px) {
-    .text-white { font-size: 20px; }
+
     .text-white-em, .text-white-un { font-size: 16px; }
     .text-white-name { font-size: 30px; }
     .contact-text { font-size: 18px; }

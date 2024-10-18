@@ -72,11 +72,6 @@ body {
 .apply-now-btn:hover {
     background-color: rgb(14, 34, 163);
 }
-hr {
-    width: 82%;
-    border: 1px solid rgb(127, 127, 127);
-    margin: 3% auto;
-}
 
 .right-section {
     padding: 50px;
@@ -118,27 +113,15 @@ hr {
 .right-section .btn-secondary {
     margin-top: 0;
     padding: 10px 20px;
-    background-color: rgb(24, 47, 195);
+    background-color: rgb(85, 85, 85);
     color: white;
     border: none;
     font-weight: bold;
     transition: background-color 0.3s ease;
 }
 
-.btn-secondary {
-    margin-top: auto;
-    background-color: rgb(24, 47, 195);
-    padding: 20%;
-    font-weight: bold;
-    border: none;
-    transition: background-color 0.3s ease;
-    white-space: nowrap; /* Prevents text wrapping */
-    display: inline-block; /* Ensures width adjusts to content */
-}
-
-
 .btn-secondary:hover {
-    background-color: rgb(19, 38, 161);
+    background-color: rgb(59, 59, 59);
 }
 
 .mt-4 {
@@ -277,7 +260,6 @@ hr {
     .btn-secondary {
         font-size: 13px;
         padding: 0;
-        width: 160px;
     }
 
     .quote-s {
@@ -294,6 +276,9 @@ hr {
         margin-top: 20px !important;
     }
 }
+
+
+
 
 
 
@@ -339,162 +324,172 @@ hr {
 
 
 
+
+
 .explore {
-    text-align: center;
-    padding: 10px 150px;
-    margin-bottom: 7%;
-    margin-top: 3%;
-    font-size: 30px;
+    color: #0062d1;
     font-weight: bold;
-    color: rgb(68, 68, 68);
+    text-align: left; /* Align text to the left */
+    font-size: 3vh; /* Base font size */
+    margin-top: 5%;
 }
 
 .container-explore {
+    display: flex;
+    flex-wrap: wrap; /* Allow wrapping for responsiveness */
+    align-items: stretch;
+    background-color: #ddf0ff;
     border-radius: 20px;
-    margin-bottom: 7%;
+    margin: 5% 0;
+    padding: 50px; /* Base padding */
 }
 
-
-.container-explore h2 {
-    font-size: 25px;
+.card-title {
+    font-size: 20px; /* Base title font size */
     font-weight: bold;
-    margin-bottom: 30px;
-    color: black;
 }
 
-.container-explore p small {
-    display: inline-block;
-    line-height: 1.5 !important; /* Ensure it overrides any other styles */;
-    color: rgb(109, 109, 109);
-    padding-right: 50px;
-
+.card-body small {
+    font-size: 18px; /* Base small text size */
+    color: #0062d1; /* Ensure text color is consistent */
 }
 
-.container-explore p {
-    font-size: 18px;
+.card {
+    background-color: #ffffff;       
+    color: #0062d1; /* Text color */
+    padding: 20px; /* Base padding */
+    border: none;
+    flex: 1; /* Allow cards to grow equally in the row */
+    margin: 10px; /* Add some margin around each card */
 }
 
-.home-feature {
-    border-radius: 20px;
-    width: 100%;
-    height: 520px;
+hr {
+    border: 1px solid #2785ff; /* Horizontal line color */
+    height: 2px; /* Thickness */
+    margin: auto;
+    margin-bottom: 10px;
+    background-color: #448fff; /* Background color */
+}
+
+.call-to-action {
+    background-color: #002ec7 !important;
+    color: #88c5ff;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
 }
 
 
+/* Responsive adjustments for medium screens */
 @media (max-width: 1200px) {
-    .home-feature {
-        height: 450px; /* Adjust height for medium-large screens */
+    .container-explore {
+        padding: 40px; /* Adjust padding */
+        flex-direction: column; /* Stack content in one column */
+    }
+
+    .row {
+        flex-direction: column; /* Stack the row's items vertically */
+    }
+
+    .col-md-3 {
+        width: 100%; /* Make each card take up the full width */
+        margin-bottom: 20px; /* Add spacing between stacked cards */
+    }
+
+    .explore {
+        font-size: 2.9vh; /* Slightly smaller font size */
+    }
+
+    .card-title {
+        font-size: 23px; /* Larger title font size */
+    }
+
+    .card-body small {
+        font-size: 16px; /* Smaller text size */
     }
 }
-
-@media (max-width: 992px) {
-    .home-feature {
-        height: 400px; /* Adjust height for medium screens */
-    }
-}
-
-@media (max-width: 768px) {
-    .home-feature {
-        height: 350px; /* Adjust height for tablet screens */
-    }
-}
-
-@media (max-width: 576px) {
-    .home-feature {
-        height: 300px; /* Adjust height for small screens */
-        margin-bottom: 8%;
-    }
-}
-
-
 
 /* Responsive adjustments for tablets and smaller screens */
 @media (max-width: 991px) {
-    .explore {
-        padding: 20px 80px;
-        font-size: 26px;
-    }
-
     .container-explore {
-        padding: 0 20px;
+        flex-direction: column; /* Stack cards in one column */
     }
 
-    .container-explore h2 {
-        font-size: 20px;
-        margin-bottom: 40px;
+    .explore {
+        font-size: 2.5vh; /* Smaller font size for medium screens */
     }
 
-    small {
-        padding-right: 30px;
+    .card-title {
+        font-size: 18px; /* Smaller title font size */
     }
 
-    .container-explore p {
-        margin-right: 50px;
+    .card-body small {
+        font-size: 16px; /* Smaller small text size */
     }
+
 }
 
 /* Responsive adjustments for mobile screens */
 @media (max-width: 767px) {
     .explore {
-        padding: 12px 20px;
-        font-size: 20px;
-        margin-bottom: 60px;
-        margin-top: 10px;
+        font-size: 2vh; /* Even smaller font size */
+        margin-top: 3%; /* Further reduced margin */
     }
 
     .container-explore {
-        padding: 0 15px;
+        padding: 20px; /* Further reduced padding */
     }
 
-    .container-explore h2 {
-        font-size: 18px;
-        margin-bottom: 30px;
-        margin-top: 0;
-        text-align: center;
+    .card-title {
+        font-size: 16px; /* Smaller title font size */
     }
 
-    .container-explore p {
-        margin-right: 0;
-        font-size: 15px;
+    .card-body small {
+        font-size: 14px; /* Smaller small text size */
     }
 
-    .container-explore p small {
-        font-size: 14px;
+    .card {
+        padding: 10px; /* Smaller padding for cards */
     }
 
-    .img-fluid {
-        margin-top: 30px;
+    hr {
+        margin-bottom: 5px; /* Less space below the horizontal line */
     }
 }
+
+
+
 
 b, strong {
     color: black;
 }
 
-.features {
-    margin-top: 5%;
-    padding-top: 6%;
-    padding-bottom: 8%;
-    width: 100vw; /* Full viewport width */
-    max-width: 100%; /* Prevents from exceeding viewport width */
-    box-sizing: border-box; /* Includes padding in width calculation */
-    background-color: #6fbaf7;
-    overflow-x: hidden; /* Hide any potential horizontal overflow */
-    background: linear-gradient(
-        to bottom, 
-        rgba(111, 186, 247, 0.4) 0%, 
-        rgba(255, 255, 255, 1) 50%, 
-        rgba(111, 186, 247, 0.4) 100%
-    );
+.partners p {
+    font-size: 1em;
+    color: black;
 }
 
 
 
+
+/* General Styling */
+.features {
+    margin-top: 7%;
+    margin-bottom: 0;
+    padding: 3% 5%;
+    width: calc(100vw + 40px);
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
+    margin-right: -20px;
+    background-color: #ddf0ff;
+    border-radius: 20px;
+}
+
 .features img {
-    width: 100%; /* Responsive width */
-    max-height: 200px; /* Fixed height for consistency */
-    object-fit: cover; /* Ensures the image covers the set dimensions */
-    display: block; /* Prevents extra space below images */
+    width: 100%;
+    max-height: 200px;
+    object-fit: cover;
+    display: block;
 }
 
 .features h2 {
@@ -502,7 +497,7 @@ b, strong {
     font-weight: bold;
     text-align: center;
     padding: 0 50px;
-    color: black;
+    color: #004ea7;
 }
 
 .features p {
@@ -511,122 +506,302 @@ b, strong {
     padding: 0 50px;
 }
 
-.features .py-5 {
-    height: auto;
-}
-
-.partners p {
-    font-size: 1em;
-    color: black;
-}
-
-.partner-logo {
-    flex: 0 0 10%; /* Each logo takes up 10% on larger screens */
-    max-width: 10%; /* Maximum width for logos */
-}
-
-.logo-img {
-    width: auto; /* Maintain aspect ratio */
-    height: 100px; /* Desired height */
-    object-fit: contain; /* Maintain aspect ratio */
-}
-
-/* Responsive Styles */
-@media (max-width: 1024px) {
-    .partner-logo {
-        flex: 0 0 20%; /* Each logo takes up 20% on medium screens */
-        max-width: 20%; /* Maximum width for logos */
-        margin-bottom: 2%;
-    }
-
-    .partners p {
-        font-size: 1em;
-        padding: 0 50px;
-    }
-}
-
-@media (max-width: 767px) {
-    .partner-logo {
-        flex: 0 0 20%; /* Each logo takes up 20% on small screens */
-        max-width: 20%; /* Maximum width for logos */
-        margin: 0; /* Remove margin between logos */
-    }
-
-    .logo-img {
-        height: 60px; /* Reduce height for smaller screens */
-        margin-top: 10px;
-    }
-
-    .partners p {
-        font-size: 13px;
-        padding: 0 30px;
-    }
-}
-
-
-
-
-
-
-
-/* Responsive Styles */
+/* Responsive Styles for max-width 767px (smaller screens) */
 @media (max-width: 767px) {
 
-    .container-explore h2 {
-        margin-bottom: 18%;
+    .partners p {
+        font-size: 0.9em;
+    }
+    
+    .features .row {
+        flex-direction: column; /* Stack columns */
     }
 
-    .features .container {
-        padding: 0 15px; /* Add some padding for smaller screens */
-    }
-
-    .features h2 {
-        font-size: 20px; /* Slightly smaller heading */
-    }
-
-    .features p {
-        padding: 0 14px; /* Reduce padding for smaller screens */
-        font-size: 13px;
-    }
-
-    /* Reverse order for the first row */
-    .row.features .container:nth-of-type(1) {
-        flex-direction: column-reverse; 
-    }
-
-    /* Reverse order for the third row */
-    .row.features .container:nth-of-type(3) {
-        flex-direction: column-reverse; 
+    .features .container:nth-of-type(2) .row,
+    .features .container:nth-of-type(4) .row {
+        flex-direction: column-reverse; /* Reverse order for these rows only */
     }
 
     .features img {
-        width: 95%; /* Responsive width */
+        width: 95%;
+        margin: auto;
+    }
+
+    .features h2 {
+        font-size: 20px;
+    }
+
+    .features p {
+        padding: 0 14px;
+        font-size: 14px;
+    }
+}
+
+
+/* For screens between 768px and 1024px (tablet) */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .col-md-6 {
+        flex: 0 0 100%;
+        width: 100%;
+    }
+
+    .features h2 {
+        margin-top: 3%;
+    }
+
+    .features .row {
+        flex-direction: column; /* Stack the image and text vertically */
+    }
+
+    .features .container:nth-of-type(2) .row,
+    .features .container:nth-of-type(4) .row {
+        flex-direction: column-reverse; /* Reverse order for these rows only */
+    }
+
+    .features img {
+        width: 90%; /* Ensure images take the full width */
         margin: auto;
     }
 }
 
-@media (min-width: 768px) and (max-width: 1024px) {
+/* General stacking and padding adjustments for smaller screens (768px and below) */
+@media (max-width: 768px) {
+    .features .row {
+        flex-direction: column; /* Stack the image and text vertically */
+    }
+
+    .features .col-md-6 {
+        width: 100%;
+        padding: 10px; /* Reduce the padding */
+    }
 
     .features h2 {
-        font-size: 22px; /* Slightly smaller heading */
+        font-size: 20px;
+        margin-top: 10px;
+    }
+
+    .features img {
+        width: 100%; /* Ensure images take the full width */
     }
 
     .features p {
-        padding: 0 14px; /* Reduce padding for smaller screens */
-        font-size: 15px;
+        padding: 0 10px; /* Reduce side padding for paragraphs */
     }
 }
 
+/* For large screens (min-width 1025px) */
 @media (min-width: 1025px) {
-
-    .features h2 {
-        font-size: 25px; /* Reset heading size for desktops */
+    .features .row {
+        display: flex;
+        flex-direction: row; /* Side-by-side layout */
     }
 
-    .features p {
-        padding: 0 50px; /* Maintain original padding for larger screens */
+    .features .col-md-6 {
+        flex: 0 0 50%; /* Make each column take half width */
+        max-width: 50%;
+    }
+
+    .features h2 {
+        font-size: 25px;
     }
 }
 
 
 
+
+
+
+
+
+
+
+/* Call to Action Section */
+
+.carousel-buttons {
+    text-align: center;
+    height: auto; 
+    width: auto; 
+    outline: none;
+    border: none;
+    background-color: #002ec7;
+    padding-bottom: 10px;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+
+.carousel-buttons button {
+    font-size: 36px;
+    font-weight: bold;
+    color: #dddddd;
+    cursor: pointer;
+    margin: 0;
+    padding: 0;
+    height: auto; 
+    width: auto; 
+    outline: none;
+    border: none;
+}
+
+.carousel-buttons button:hover {
+    color: #b6b6b6;
+}
+
+.carousel-buttons button:focus {
+    box-shadow: none;
+}
+
+.carousel-buttons button.active {
+    color: #23527c;
+}
+
+.cta-btn {
+    font-size: 18px;
+    align-self: flex-start;
+    margin-top: auto;
+    background-color: #50b3ff;
+    padding: 10px 20px;
+    font-weight: bold;
+    width: 25%; /* Default width */
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+.cta-btn:hover {
+    background-color: #30a5ff;
+}
+
+.display-4 {
+    color: rgb(255, 255, 255);
+    margin-top: 10px;
+}
+
+.lead {
+    font-size: 22px;
+    margin-bottom: 30px;
+}
+
+
+
+/* Media Queries for Responsive Design */
+@media (max-width: 1200px) {
+    .carousel-inner {
+        height: 250px;
+    }
+
+    .carousel-buttons button {
+        font-size: 30px; /* Slightly smaller font size */
+    }
+
+    .cta-btn {
+        font-size: 15px; /* Smaller font size for buttons */
+        width: 30%; /* Adjust width */
+        padding: 8px 16px; /* Adjust padding */
+    }
+
+    .display-4 {
+        font-size: 30px; /* Reduce font size for larger screens */
+    }
+
+    .lead {
+        font-size: 18px; /* Smaller lead font size */
+    }
+}
+
+@media (max-width: 991px) {
+    .carousel-inner {
+        height: 230px;
+    }
+
+    .carousel-buttons {
+        flex-direction: column; /* Stack buttons vertically */
+    }
+
+    .carousel-buttons button {
+        font-size: 24px; /* Even smaller font size */
+    }
+
+    .cta-btn {
+        font-size: 1.3vh;
+        width: 50%; /* Make the CTA button wider */
+        wrap: nowrap
+    }
+
+    .display-4 {
+        font-size: 25px; /* Further reduce font size */
+    }
+
+    .lead {
+        font-size: 15px; /* Further reduce lead font size */
+    }
+}
+
+
+
+/* General styles for partner logos */
+
+
+
+
+
+
+/* Logo part */
+.logo-slider {
+    overflow: hidden; /* Hide the overflow to create a continuous effect */
+    white-space: nowrap; /* Keep all logos on the same line */
+}
+
+.scroll-container {
+    display: inline-block;
+    white-space: nowrap; /* Ensure all logos stay on one line */
+    animation: scroll-left 30s linear infinite; /* Continuous scrolling */
+}
+
+.partner-logo {
+    display: inline-block;
+    margin-right: 30px; /* Adjust the spacing between logos */
+}
+
+.img-fluid {
+    width: 100px; /* Control logo size */
+    height: auto; /* Maintain aspect ratio */
+}
+
+/* Media queries to adjust logo size */
+@media (max-width: 992px) {
+    .img-fluid {
+        width: 70px; /* logo size for screens up to 992px */
+    }
+}
+
+
+@media (max-width: 576px) {
+    .img-fluid {
+        width: 70px; /* logo size for screens up to 576px */
+    }
+}
+
+
+@keyframes scroll-left {
+    0% {
+        transform: translateX(0); /* Start from the original position */
+    }
+    100% {
+        transform: translateX(-100%); /* Move to the left end of the entire logo row */
+    }
+}
+
+
+
+
+
+/* Fade in effect */
+.fade-in {
+    opacity: 0; /* Start fully transparent */
+    transform: translateY(20px); /* Slightly lower */
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out; /* Animation for opacity and transform */
+}
+
+.fade-in.visible {
+    opacity: 1; /* Fully visible */
+    transform: translateY(0); /* Reset position */
+}

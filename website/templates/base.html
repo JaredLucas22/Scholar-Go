@@ -62,49 +62,61 @@
     </div>
   </nav>
   -->
-
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <nav class="navbar navbar-expand-lg" style="background-color: #1A32D0;">
     <div class="container-fluid">
         <div class="nav-logo">
             <img src="/static/images/nav-logo.png" alt="Logo">
         </div>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon" id="hamburger-icon"></span>
+            <span class="navbar-toggler-icon"></span>
         </button>
+
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            {% if current_user.is_authenticated %}
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <!-- Left-aligned menu items -->
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+                {% if current_user.is_authenticated %}
+                    {% if session['user_type'] == 'User' %}
                     <li class="nav-item">
-                        <a class="nav-link" id="home" href="/">Home</a>
-                    </li>
-                    {% if session['user_type'] == 'Sponsorship' %}
-                        <!-- If the logged-in user is a sponsor -->
-                        <li class="nav-item">
-                            <a class="nav-link" id="sponsor-dashboard" href="/sponsor-dashboard">Sponsor Dashboard</a>
-                        </li>
-                    {% elif session['user_type'] == 'User' %}
-                        <!-- If the logged-in user is a regular user -->
-                        <li class="nav-item">
-                            <a class="nav-link" id="profile" href="/profile">Profile</a>
-                        </li>
-                        <li class="nav-item">
-                          <a class="nav-link" id="sponsor-list" href="/sponsorlist">My Sponsorships</a>
-                      </li>
-                  </ul>
-                  <li class="nav-item">
-                      <a class="nav-link" id="follow" href="/follow">
-                          <i class="fas fa-bookmark"></i>
-                      </a>
+                      <a class="nav-link text-white" id="home" href="/">Home</a>
                   </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" id="profile" href="/profile">Profile</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" id="sponsor-list" href="/sponsorlist">Sponsors</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" id="bookmarks" href="/follow">
+                               Bookmarks
+                            </a>
+                        </li>
+                    {% elif session['user_type'] == 'Sponsorship' %}
+                        <li class="nav-item">
+                            <a class="nav-link text-white" id="sponsor-dashboard" href="/sponsor-dashboard">Sponsor Dashboard</a>
+                        </li>
                     {% endif %}
-                    <!-- Both User and Sponsor can see My Sponsorships -->
-                <a class="nav-link" id="logout" href="/logout">Logout</a>
-            {% else %}
-                <a class="nav-link" id="sign-sponsor" href="/sign-sponsor">Sign Up as Sponsor</a>
-            {% endif %}
+                {% endif %}
+            </ul>
+
+            <!-- Right-aligned items (notifications and logout) -->
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                {% if current_user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/notifications">
+                            <i class="fas fa-bell"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" id="logout" href="/logout">Log out</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link text-white" id="sign-sponsor" href="/sign-sponsor">Sign Up as Sponsor</a>
+                    </li>
+                {% endif %}
+            </ul>
         </div>
-        
     </div>
 </nav>
 

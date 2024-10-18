@@ -1,8 +1,10 @@
-{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
-%}
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOM4fO6eHqL4G7B67GvZg3jvn+0tboh1bU0g3f" crossorigin="anonymous">
 <link rel="stylesheet" href="/static/css/home.css">
 <link rel="stylesheet" href="/static/css/base.css">
 </head>
@@ -11,7 +13,7 @@
 <div class="container-fluid-home p-0">
     <!-- Left Section -->
     <div class="background-image">
-        <div class="overlay">
+        <div class="overlay fade-in">
             <div>
                 <h1>Access local scholarships easily. <br> Anytime & anywhere.</h1>
                 <h3>Now it’s easy to find scholarship programs, <br> just add your location and search!</h3>
@@ -20,9 +22,9 @@
         </div>
     </div>
     <!-- Right Section -->
-    <div class="right-section">
+    <div class="right-section fade-in">
         <h1>Scholarship Programs</h1>
-        <a href="#sponsor" class="btn btn-secondary">Become a Sponsor</a>
+        <a href="#sponsor" class="btn btn-secondary ">Become a Sponsor</a>
         <div class="quote mt-4">
             <p class="quote-s">“Everyone can be great because everyone can serve.”</p>
             <p class="author">Martin Luther King Jr.</p>
@@ -30,133 +32,262 @@
     </div>
 </div>
 
-<div class="container-explore py-5">
-    <div class="row">
-      <h1 class="explore">Explore ScholarGo’s features that simplify scholarship searches and enhance student success.</h1>
-      <!-- Left Section (Description) -->
-      <div class="col-md-6">
-        <h2>Personalized Recommendations</h2>
-        <p><strong>Notifications</strong><br><small> Never miss an application deadline with timely reminders about new scholarships and important dates.</small></p><br> 
-        <p><strong>Comprehensive Database</strong><br><small> Access a vast, up-to-date database of scholarships from various sources, all conveniently gathered in one place.</small></p><br> 
-        <p><strong>User-Friendly Interface</strong><br><small> Enjoy a seamless and intuitive user experience designed to make finding and applying for scholarships simple and stress-free.</small></p><br> 
-        <p><strong>Analytics for Providers</strong><br><small> Scholarship providers can track application trends and engagement effectively, refining their offerings to reach the right students.</small></p>
-      </div>
-      <!-- Right Section (Image) -->
-      <div class="col-md-6">
-        <img src="/static/images/home-feature.jpg" alt="Personalized Recommendations" class="img-fluid home-feature">
-      </div>
-    </div>
-  </div>
+<div class="container-explore py-5 fade-in">
+    <div class="row justify-content-center">
+        <h1 class="explore text-center">Personalized Recommendations</h1>
+        <hr class="personalized-recommendations" style="border: 1px solid #007BFF; height: 2px; background-color: #007BFF; margin: 10px 0;">
 
-  <!-- Features-->
+        <!-- Four Cards in One Line (Centered) -->
+        <div class="col-md-3">
+            <div class="card h-100 text-center fade-in">
+                <div class="card-body">
+                    <i class="fas fa-bullseye fa-3x mb-3"></i>
+                    <h5 class="card-title">Personalized Recommendations</h5>
+                    <hr class="personalized-recommendations">
+                    <small>Never miss an application deadline with timely reminders about new scholarships and important dates.</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card h-100 text-center fade-in">
+                <div class="card-body">
+                    <i class="fas fa-database fa-3x mb-3"></i>
+                    <h5 class="card-title">Comprehensive Database</h5>
+                    <hr>
+                    <small>Access a vast, up-to-date database of scholarships from various sources, all conveniently gathered in one place.</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card h-100 text-center fade-in">
+                <div class="card-body">
+                    <i class="fas fa-desktop fa-3x mb-3"></i>
+                    <h5 class="card-title">User -Friendly Interface</h5>
+                    <hr>
+                    <small>Enjoy a seamless and intuitive user experience designed to make finding and applying for scholarships simple and stress-free.</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card h-100 text-center fade-in">
+                <div class="card-body">
+                    <i class="fas fa-chart-line fa-3x mb-3"></i>
+                    <h5 class="card-title">Analytics for Providers</h5>
+                    <hr>
+                    <small>Scholarship providers can track application trends and engagement effectively, refining their offerings to reach the right students.</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="ctaCarousel" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner fade-in">
+        <!-- Slide 1 -->
+        <div class="carousel-item active">
+            <div class="call-to-action text-center py-5">
+                <div class="container">
+                    <h1 class="display-4">Your Future Awaits</h1>
+                    <p class="lead">Don't miss out on life-changing scholarship opportunities. Start your journey to success with ScholarGo today.</p>
+                    <a href="/sponsorlist" class="btn btn-lg btn-primary cta-btn">Find Scholarship Today</a>
+                </div>
+            </div>
+        </div>
+        <!-- Slide 2 -->
+        <div class="carousel-item">
+            <div class="call-to-action text-center py-5">
+                <div class="container">
+                    <h1 class="display-4">Unlock New Possibilities</h1>
+                    <p class="lead">Discover a world of scholarships tailored just for you. ScholarGo helps you find the perfect match.</p>
+                    <a href="#explore" class="btn btn-lg btn-primary cta-btn">Recommended For You</a>
+                </div>
+            </div>
+        </div>
+        <!-- Slide 3 -->
+        <div class="carousel-item">
+            <div class="call-to-action text-center py-5">
+                <div class="container">
+                    <h1 class="display-4">Our Newest Feature Coming Soon!</h1>
+                    <p class="lead">Save possible scholarships and add alarms with our new feature through the bookmarks page.</p>
+                    <a href="/follow" class="btn btn-lg btn-primary cta-btn">Visit Now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Buttons -->
+    <div class="carousel-buttons">
+        <button class="btn btn-lg" data-bs-target="#ctaCarousel" data-bs-slide-to="0">•</button>
+        <button class="btn btn-lg" data-bs-target="#ctaCarousel" data-bs-slide-to="1">•</button>
+        <button class="btn btn-lg" data-bs-target="#ctaCarousel" data-bs-slide-to="2">•</button>
+    </div>
+</div>
+
 <!-- Features -->
-<div class="features">
+<div class="features fade-in">
     <div class="container py-5">
-      <div class="row align-items-center">
-        <!-- Left Section (Image) -->
-        <div class="col-md-6">
-          <img src="/static/images/succeed.jpg" alt="Image Description" class="img-fluid">
-        </div>
-    
-        <!-- Right Section (Description) -->
-        <div class="col-md-6">
-          <h2>Features to help students succeed</h2>
-          <hr>
-          <p>ScholarGo’s intuitive features empower students to efficiently find and apply for scholarships, making higher education more accessible. Our platform streamlines the process, from personalized recommendations to deadline notifications, ensuring every student has the best chance to secure financial aid.</p>
-        </div>
-      </div>
-    </div>
-  
-    <div class="container py-5">
-      <div class="row align-items-center">
-        <!-- Right Section (Description) -->
-        <div class="col-md-6">
-          <h2>A dynamic platform to begin your journey</h2>
-          <hr>
-          <p>ScholarGo’s personalized recommendations, extensive database, and user-friendly interface make it the ultimate tool for students seeking scholarships. Track your applications, receive timely notifications, and discover opportunities that match your unique profile.</p>
-        </div>
-    
-        <!-- Left Section (Image) -->
-        <div class="col-md-6">
-          <img src="/static/images/journey.jpg" alt="Image Description" class="img-fluid">
-        </div>
-      </div>
-    </div>
-  
-    <div class="container py-5">
-      <div class="row align-items-center">
-        <!-- Left Section (Image) -->
-        <div class="col-md-6">
-          <img src="/static/images/search.jpg" alt="Image Description" class="img-fluid">
-        </div>
-    
-        <!-- Right Section (Description) -->
-        <div class="col-md-6">
-          <h2>Streamline your search</h2>
-          <hr>
-          <p>ScholarGo's advanced data analytics and matching algorithms ensure students find the scholarships that best fit their needs. Our built-in automation system keeps you informed and on track, so you can focus on your academic journey.</p>
-        </div>
-      </div>
-    </div>
-  
-    <div class="container py-5">
-      <div class="row align-items-center">
-        <!-- Right Section (Description) -->
-        <div class="col-md-6">
-          <h2>Connect with scholarship providers</h2>
-          <hr>
-          <p>Easily engage with scholarship providers through our platform. Providers can access valuable insights and analytics to optimize their scholarship offerings and effectively reach deserving students.</p>
-        </div>
-    
-        <!-- Left Section (Image) -->
-        <div class="col-md-6">
-          <img src="/static/images/providers.jpg" alt="Image Description" class="img-fluid">
-        </div>
-      </div>
-    </div>
-  </div>
+        <div class="row align-items-center">
+            <!-- Left Section (Image) -->
+            <div class="col-md-6">
+                <img src="/static/images/succeed.jpg" alt="Image Description" class="img-fluid">
+            </div>
 
-  <div class="partners text-center py-5">
+            <!-- Right Section (Description) -->
+            <div class="col-md-6 fade-in">
+                <h2>Features to help students succeed</h2>
+                <hr>
+                <p>ScholarGo’s intuitive features empower students to efficiently find and apply for scholarships, making higher education more accessible. Our platform streamlines the process, from personalized recommendations to deadline notifications, ensuring every student has the best chance to secure financial aid.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="container py-5">
+        <div class="row align-items-center fade-in">
+            <!-- Right Section (Description) -->
+            <div class="col-md-6">
+                <h2>A dynamic platform to begin your journey</h2>
+                <hr>
+                <p>ScholarGo’s personalized recommendations, extensive database, and user-friendly interface make it the ultimate tool for students seeking scholarships. Track your applications, receive timely notifications, and discover opportunities that match your unique profile.</p>
+            </div>
+
+            <!-- Left Section (Image) -->
+            <div class="col-md-6">
+                <img src="/static/images/journey.jpg" alt="Image Description" class="img-fluid">
+            </div>
+        </div>
+    </div>
+
+    <div class="container py-5">
+        <div class="row align-items-center fade-in">
+            <!-- Left Section (Image) -->
+            <div class="col-md-6">
+                <img src="/static/images/search.jpg" alt="Image Description" class="img-fluid">
+            </div>
+
+            <!-- Right Section (Description) -->
+            <div class="col-md-6">
+                <h2>Streamline your search</h2>
+                <hr>
+                <p>ScholarGo's advanced data analytics and matching algorithms ensure students find the scholarships that best fit their needs. Our built-in automation system keeps you informed and on track, so you can focus on your academic journey.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="container py-5">
+        <div class="row align-items-center fade-in">
+            <!-- Right Section (Description) -->
+            <div class="col-md-6">
+                <h2>Connect with scholarship providers</h2>
+                <hr>
+                <p>Easily engage with scholarship providers through our platform. Providers can access valuable insights and analytics to optimize their scholarship offerings and effectively reach deserving students.</p>
+            </div>
+
+            <!-- Left Section (Image) -->
+            <div class="col-md-6">
+                <img src="/static/images/providers.jpg" alt="Image Description" class="img-fluid">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="partners text-center py-5 fade-in" style="padding-bottom: 1rem !important;">
     <p>Join thousands of scholarship providers in the Philippines who use ScholarGo to connect with students.</p>
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-6 col-sm-4 col-md-2 partner-logo">
+    <div class="logo-slider">
+        <div class="scroll-container">
+            <!-- First set of logos -->
+            <div class="partner-logo">
                 <img src="/static/images/ua.png" alt="Logo 1" class="img-fluid logo-img">
             </div>
-            <div class="col-6 col-sm-4 col-md-2 partner-logo">
+            <div class="partner-logo">
                 <img src="/static/images/angeles.png" alt="Logo 2" class="img-fluid logo-img">
             </div>
-            <div class="col-6 col-sm-4 col-md-2 partner-logo">
+            <div class="partner-logo">
                 <img src="/static/images/robinson.png" alt="Logo 3" class="img-fluid logo-img">
             </div>
-            <div class="col-6 col-sm-4 col-md-2 partner-logo">
+            <div class="partner-logo">
                 <img src="/static/images/sm.png" alt="Logo 4" class="img-fluid logo-img">
             </div>
-            <div class="col-6 col-sm-4 col-md-2 partner-logo">
+            <div class="partner-logo">
                 <img src="/static/images/sanmiguel.jpeg" alt="Logo 5" class="img-fluid logo-img">
             </div>
-            <div class="col-6 col-sm-4 col-md-2 partner-logo">
+            <div class="partner-logo">
                 <img src="/static/images/Deped.png" alt="Logo 6" class="img-fluid logo-img">
             </div>
-            <div class="col-6 col-sm-4 col-md-2 partner-logo">
+            <div class="partner-logo">
                 <img src="/static/images/ched.png" alt="Logo 7" class="img-fluid logo-img">
             </div>
-            <div class="col-6 col-sm-4 col-md-2 partner-logo">
+            <div class="partner-logo">
                 <img src="/static/images/nspa.png" alt="Logo 8" class="img-fluid logo-img">
             </div>
-            <div class="col-6 col-sm-4 col-md-2 partner-logo">
+            <div class="partner-logo">
                 <img src="/static/images/snfdo.png" alt="Logo 9" class="img-fluid logo-img">
             </div>
-            <div class="col-6 col-sm-4 col-md-2 partner-logo">
+            <div class="partner-logo">
+                <img src="/static/images/rotary.png" alt="Logo 10" class="img-fluid logo-img">
+            </div>
+            <!-- Duplicate set of logos for seamless scrolling -->
+            <div class="partner-logo">
+                <img src="/static/images/ua.png" alt="Logo 1" class="img-fluid logo-img">
+            </div>
+            <div class="partner-logo">
+                <img src="/static/images/angeles.png" alt="Logo 2" class="img-fluid logo-img">
+            </div>
+            <div class="partner-logo">
+                <img src="/static/images/robinson.png" alt="Logo 3" class="img-fluid logo-img">
+            </div>
+            <div class="partner-logo">
+                <img src="/static/images/sm.png" alt="Logo 4" class="img-fluid logo-img">
+            </div>
+            <div class="partner-logo">
+                <img src="/static/images/sanmiguel.jpeg" alt="Logo 5" class="img-fluid logo-img">
+            </div>
+            <div class="partner-logo">
+                <img src="/static/images/Deped.png" alt="Logo 6" class="img-fluid logo-img">
+            </div>
+            <div class="partner-logo">
+                <img src="/static/images/ched.png" alt="Logo 7" class="img-fluid logo-img">
+            </div>
+            <div class="partner-logo">
+                <img src="/static/images/nspa.png" alt="Logo 8" class="img-fluid logo-img">
+            </div>
+            <div class="partner-logo">
+                <img src="/static/images/snfdo.png" alt="Logo 9" class="img-fluid logo-img">
+            </div>
+            <div class="partner-logo">
                 <img src="/static/images/rotary.png" alt="Logo 10" class="img-fluid logo-img">
             </div>
         </div>
     </div>
 </div>
 
-  
 
   
-  
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const fadeElements = document.querySelectorAll('.fade-in');
+
+        const checkVisibility = () => {
+            const triggerBottom = window.innerHeight * 0.8; // Trigger when 80% of the viewport is visible
+            
+            fadeElements.forEach((element) => {
+                const box = element.getBoundingClientRect();
+                const boxTop = box.top;
+
+                if (boxTop < triggerBottom) {
+                    element.classList.add('visible');
+                }
+            });
+        };
+
+        window.addEventListener('scroll', checkVisibility);
+        checkVisibility(); // Initial check on page load
+    });
+</script>
+
 {% endblock %}
