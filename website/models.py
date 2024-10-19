@@ -28,6 +28,7 @@ class User(db.Model, UserMixin):
     city = db.Column(db.String(150))
     birthdate = db.Column(db.Date, nullable=False)
     province = db.Column(db.String(150))
+    notifications = db.relationship('Notification', backref='user', lazy=True)
     postalcode = db.Column(db.String(150))
     picture_path = db.Column(db.String(255), nullable=False)
     educationlevel = db.Column(db.String(150))
@@ -67,6 +68,18 @@ class User(db.Model, UserMixin):
 class TriggerWord(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     word = db.Column(db.String(100), nullable=False)
+
+class Notification(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    message = db.Column(db.String(255), nullable=False)
+    is_read = db.Column(db.Boolean, default=False, nullable=False)
+    created_at = db.Column(db.DateTime(timezone=True), default=func.now())
+    
+    def __init__(self, user_id, message):
+        self.user_id = user_id
+        self.message = message
+
 
 class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)

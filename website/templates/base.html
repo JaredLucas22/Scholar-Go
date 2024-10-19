@@ -91,6 +91,37 @@
                                Bookmarks
                             </a>
                         </li>
+                        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                          <!-- Notifications Dropdown -->
+                          <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-white" href="#" id="notificationsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-bell"></i>
+                                {% if current_user.notifications|selectattr("is_read", "equalto", False)|list|length > 0 %}
+                                    <span class="badge bg-danger">{{ current_user.notifications|selectattr("is_read", "equalto", False)|list|length }}</span>
+                                {% endif %}
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationsDropdown">
+                                {% if current_user.notifications|length > 0 %}
+                                    {% for notification in current_user.notifications|slice(0, 10) %}
+                                        <li>
+                                            <a class="dropdown-item {% if not notification.is_read %}fw-bold{% endif %}" href="/notifications/read/{{ notification.id }}">
+                                                {{ notification.message }}
+                                                <small class="text-muted d-block">{{ notification.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
+                                            </a>
+                                        </li>
+                                    {% endfor %}
+                                    <li>
+                                        <a class="dropdown-item text-center" href="/notifications">View all notifications</a>
+                                    </li>
+                                {% else %}
+                                    <li>
+                                        <span class="dropdown-item text-muted">No notifications</span>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                          </li>
+
+                      </ul>
                     {% elif session['user_type'] == 'Sponsorship' %}
                         <li class="nav-item">
                             <a class="nav-link text-white" id="sponsor-dashboard" href="/sponsor-dashboard">Sponsor Dashboard</a>
@@ -102,11 +133,6 @@
             <!-- Right-aligned items (notifications and logout) -->
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                 {% if current_user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="/notifications">
-                            <i class="fas fa-bell"></i>
-                        </a>
-                    </li>
                     <li class="nav-item">
                         <a class="nav-link text-white" id="logout" href="/logout">Log out</a>
                     </li>
@@ -334,8 +360,14 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
   
   
-
-  
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var notificationDropdown = document.getElementById('notificationsDropdown');
+        notificationDropdown.addEventListener('click', function (event) {
+            event.stopPropagation();
+        });
+    });
+</script>
 
   {% block javascript %}
   <script type="text/javascript">

@@ -9,11 +9,16 @@ from datetime import datetime
 import os
 from flask_login import LoginManager
 from .models import User, Sponsorship_data
+import smtplib
+from email.message import EmailMessage
+from datetime import timedelta
+import logging
 
 login_manager = LoginManager()
 login_manager.login_view = 'auth.login'
 
-# User loader for User
+email_user = ('jjclucas.student@ua.edu.ph') 
+email_password = ('yfxm ejor oqhs phet') 
 @login_manager.user_loader
 def load_user(user_id):
     user = User.query.get(int(user_id))
@@ -122,6 +127,138 @@ def login():
         flash('Invalid email or password.', category='error')
 
     return render_template("login.html", user=current_user)
+
+
+from flask import current_app
+from itsdangerous import URLSafeTimedSerializer
+import os
+from datetime import timedelta
+
+from flask_login import current_user
+
+@auth.route('/forgot-password', methods=['GET', 'POST'])
+def forgot_password():
+    if request.method == 'POST':
+        email = request.form.get('email')
+
+        # Try to find the email in the User or Sponsorship_data table
+        user = User.query.filter_by(email=email).first()
+        sponsorship = Sponsorship_data.query.filter_by(email=email).first()
+
+        # Select the correct user
+        account = user if user else sponsorship
+
+        if account:
+            # Generate a password reset token
+            token = generate_reset_token(email)
+
+            # Send password reset email
+            subject = "Password Reset Request"
+            reset_link = url_for('auth.reset_password', token=token, _external=True)
+            body = f"""
+            Hello,
+
+            You requested to reset your password. Click the link below to reset your password:
+            
+            {reset_link}
+            
+            This link will expire in 24 hours. If you did not make this request, please ignore this email.
+
+            Thank you.
+            """
+            send_email(subject, body, email)
+            flash('Password reset link has been sent to your email.', category='success')
+            return redirect(url_for('auth.login'))
+        else:
+            flash('Email does not exist in the system.', category='error')
+
+    return render_template("forgot_password.html", user=current_user)
+
+
+@auth.route('/reset_password/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    # Redirect authenticated users away from the reset password page
+    if current_user.is_authenticated:
+        flash('You are already logged in. Please log out to reset your password.', category='error')
+        return redirect(url_for('views.home'))
+
+    try:
+        # Verify the token and get the email
+        email = verify_reset_token(token)
+    except Exception as e:
+        logging.error(f"Token verification failed: {e}")
+        flash('The token is invalid or has expired.', category='error')
+        return redirect(url_for('auth.forgot_password'))
+
+    if request.method == 'POST':
+        new_password = request.form.get('new_password')  # Get the new password from the form
+
+        # Check if the new password is valid
+        if not new_password or new_password.strip() == "":
+            flash('Please provide a new password.', category='error')
+            return render_template('reset_password.html', user=current_user, token=token)
+
+        # Update the user's password
+        user = User.query.filter_by(email=email).first()  # Look up the user in the database
+        if user:
+            user.password = generate_password_hash(new_password, method='pbkdf2:sha256')
+            db.session.commit()
+
+            flash('Your password has been reset successfully.', category='success')
+            return redirect(url_for('auth.login'))
+        else:
+            logging.warning(f"User not found for email: {email}")  # Log the warning
+            flash('User not found. Please check your email.', category='error')
+
+    return render_template('reset_password.html', user=current_user, token=token)
+
+
+def generate_reset_token(email):
+    """Generates a token for resetting password."""
+    serializer = URLSafeTimedSerializer(current_app.config['SECRET_KEY'])
+    return serializer.dumps(email, salt=current_app.config['SECURITY_PASSWORD_SALT'])
+
+
+def verify_reset_token(token, expiration=86400):
+    """Verifies the token and returns the email if valid, otherwise raises an error."""
+    serializer = URLSafeTimedSerializer(current_app.config['SECRET_KEY'])
+    return serializer.loads(token, salt=current_app.config['SECURITY_PASSWORD_SALT'], max_age=expiration)
+
+
+def send_email(subject, body, recipient_email):
+    if not recipient_email:
+        print("Recipient email cannot be None.")
+        return
+    if not subject:
+        print("Email subject cannot be None.")
+        return
+    if not body:
+        print("Email body cannot be None.")
+        return
+    if not email_user:
+        print("Email user cannot be None.")
+        return
+    if not email_password:
+        print("Email password cannot be None.")
+        return
+
+    # Set up the email message
+    msg = EmailMessage()
+    msg.set_content(body)
+    msg['Subject'] = subject
+    msg['From'] = email_user  # Your email address
+    msg['To'] = recipient_email
+
+    # Send the email using SMTP
+    try:
+        server = smtplib.SMTP("smtp.gmail.com", 587)
+        server.starttls()
+        server.login(email_user, email_password)
+        server.send_message(msg)
+        server.quit()
+        print("Email sent successfully.")
+    except Exception as e:
+        print(f"Failed to send email: {e}")
 
 
 @auth.route('/logout')
