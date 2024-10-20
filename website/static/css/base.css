@@ -129,10 +129,7 @@ body {
 }
 
 /* Flash message styling */
-.flash-message {
-  padding: 10px;
-  margin: 10px 0;
-  border-radius: 5px;
+.flash-messages {
   font-size: 16px;
   position: fixed;  /* Fixed position so it doesn't push content */
   top: 20px;        /* Position it at the top of the page */

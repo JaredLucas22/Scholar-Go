@@ -1,29 +1,35 @@
 {% extends "base.html" %}
 {% block title %}{{ sponsor.sponsor_name }}{% endblock %}
 {% block content %}
+<div id="flash-messages" class="flash-messages"></div>
 <link rel="stylesheet" href="/static/css/sponsor_details.css"/>
+
+
+
 <div class="container mt-4">
     <div class="sponsor-card">
         <div class="sponsor-header">
             <div class="icon-container">
                 <form id="like-form" action="{{ url_for('auth.like_sponsorship', sponsor_id=sponsor.id) }}" method="POST" style="display:inline;">
-                    <button type="submit" class="like-button" id="like-button" style="border: none; background-color: transparent;">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="like-button" style="border: none; background-color: transparent;" data-sponsorship-id="{{ sponsor.id }}">
                         {% if is_liked %}
                             <i class="fas fa-thumbs-up liked"></i>
                         {% else %}
                             <i class="far fa-thumbs-up"></i>
                         {% endif %}
                     </button>
-                </form>
-                <form action="{{ url_for('auth.follow_sponsorship', sponsorship_id=sponsor.id) }}" method="POST" style="display: inline;">
-                    <button class="like-button" id="like-button" style="border: none; background-color: transparent;">
-                        {% if is_following %}
-                            <i class="fa-solid fa-bookmark"></i>
-                        {% else %}
-                            <i class="fa-regular fa-bookmark"></i>
-                        {% endif %}
-                    </button>
                 </form>                
+                <form id="follow-form" action="{{ url_for('auth.toggle_follow_sponsorship', sponsorship_id=sponsor.id) }}" method="POST" style="display: inline;">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="button" class="follow-button" data-sponsorship-id="{{ sponsor.id }}" data-is-following="{{ is_following }}">
+                        {% if is_following %}
+                            <i class="fas fa-bookmark"></i>
+                        {% else %}
+                            <i class="far fa-bookmark"></i>
+                        {% endif %}
+                    </button>                           
+                </form>
             </div>
             <div class="verified-check">
                 <i class="fas fa-check-circle" aria-hidden="true"></i>
@@ -31,7 +37,9 @@
             <img src="{{ url_for('static', filename='uploads/' ~ sponsor.picture_path) }}" alt="Logo" class="sponsor-logo">
             <div>
                 <h2 class="sponsor-name">{{ sponsor.sponsor_name }}</h2>
-                <p class="likes mb-1">Likes: {{ sponsor.likes|length }} | Deadline on {{ sponsor.deadline_date.strftime('%b. %d, %Y') }}</p>
+                <p class="likes mb-1" id="likes-count" data-deadline="{{ sponsor.deadline_date.strftime('%b. %d, %Y') }}">
+                    Likes: {{ sponsor.likes|length }} | Deadline on {{ sponsor.deadline_date.strftime('%b. %d, %Y') }}
+                </p>                              
                 <div class="sponsor-info">
                     <p class="sponsor-details">
                         {% if sponsor.active %}
@@ -44,10 +52,6 @@
                     <p><span class="info-label">Amount per Semester:</span> P{{ sponsor.amount_per_semester }}</p>
                 </div>
             </div>
-        </div>
-
-        <div class="sponsor-description">
-            <p class="description-text">{{ sponsor.description }}</p>
         </div>
 
         <div class="sponsor-requirements">
@@ -64,8 +68,6 @@
     <div class="comment-container mt-5">
         <div class="d-flex justify-content-between align-items-center mb-3 comment-title">
             <h4 style="color: black;">Comments</h4>
-            
-            <!-- Sort Bar with Down Arrow -->
             <div class="d-flex align-items-center">
                 <i id="sortArrow" class="fa-solid fa-arrow-down-wide-short sort-icon" style="color: black;"></i>
                 <select id="sortBar" class="form-select form-select-sm ms-2" style="width: auto;" onchange="sortComments()">
@@ -77,7 +79,8 @@
 
         <div class="d-flex align-items-start mb-3">
             <img src="{{ url_for('static', filename='uploads/' ~ current_user.picture_path) }}" alt="Profile" class="rounded-circle me-2" style="width: 75px; height: 75px;"> 
-            <form action="{{ url_for('auth.add_comment', sponsor_id=sponsor.id) }}" method="POST" class="flex-grow-1">
+            <form id="comment-form" action="{{ url_for('auth.add_comment', sponsor_id=sponsor.id) }}" method="POST" class="flex-grow-1 comment-form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <textarea class="form-control" name="content" required placeholder="Add a comment..."></textarea>
                 <button type="submit" class="btn btn-primary mt-2 comment-submit">Submit</button>
             </form>
@@ -105,27 +108,12 @@
     </div>
 </div>
 
-
+<!-- Include your JS files here -->
+<script src="/static/follow.js"></script>
+<script src="/static/like.js"></script>
+<script src="/static/comment.js"></script>
 <script>
-    function sortComments() {
-        const sortValue = document.getElementById("sortBar").value;
-        const commentsSection = document.getElementById("comments-section");
-        const comments = Array.from(commentsSection.getElementsByClassName("comment-item"));
-
-        // Sort comments based on the selected option
-        comments.sort((a, b) => {
-            const timestampA = parseFloat(a.getAttribute('data-timestamp'));
-            const timestampB = parseFloat(b.getAttribute('data-timestamp'));
-            
-            // Sort oldest first or newest first
-            return sortValue === "oldest" ? timestampA - timestampB : timestampB - timestampA;
-        });
-
-        // Clear current comments and append sorted comments
-        commentsSection.innerHTML = ""; // Clear current comments
-        comments.forEach(comment => commentsSection.appendChild(comment)); // Append sorted comments
-    }
+    const csrfToken = "{{ csrf_token() }}"; 
+    document.cookie = "csrf_token=" + csrfToken; 
 </script>
-
-
 {% endblock %}

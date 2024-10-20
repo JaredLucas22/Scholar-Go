@@ -1,24 +1,25 @@
 {% extends "base.html" %}
 {% block title %}Followed Sponsorships{% endblock %}
 {% block content %}
+
 <link rel="stylesheet" href="/static/css/sponsorlist.css"/>
 <link rel="stylesheet" href="/static/css/follow.css"/>
-
 
 <div class="container-list mt-4">
     <div class="bookmarks-title">
         <h3>Your Bookmarks</h3>
     </div>
+
+    <!-- Flash Messages Section -->
+    <div id="flash-messages"></div>
+
     <div class="row">
         {% if followed_sponsorships %}
             {% for item in followed_sponsorships %}
             <div class="col-12 mb-4 list position-relative">
-                <!-- Entire Card Link -->
                 <a href="{{ url_for('views.view_sponsorship', sponsor_id=item.id) }}" class="stretched-link" style="z-index: 1;"></a>
                 
                 <div class="d-flex flex-column flex-sm-row align-items-stretch position-relative">
-                    
-                    <!-- Sponsorship details -->
                     <div class="logo">
                         <img src="{{ url_for('static', filename='uploads/' ~ item.picture_path) }}" alt="Logo" class="img-fluid logo-img">
                     </div>
@@ -27,8 +28,7 @@
                         <h5 class="title mb-1 me-2">{{ item.sponsor_name }}</h5>
                         <p class="description mb-1">{{ item.description | safe }}</p>
                         <p class="likes mb-1">Likes: {{ item.likes | length }} | Deadline on {{ item.deadline_date.strftime('%B %d, %Y') }}</p>
-                        <!--Bookmarked date here-->
-                        <p>  {{item.deadline_date.strftime('%B %d, %Y') }}</p>
+                        <p>{{ item.deadline_date.strftime('%B %d, %Y') }}</p>
                     
                         <div class="d-flex content-between mt-auto">
                             {% if item.active %}
@@ -37,35 +37,18 @@
                             <span class="badge bg-danger">Inactive Program</span>
                             {% endif %}
                             <p class="mb-0"><strong>Scholarship Program:</strong> {{ item.course }}</p>
-                            <p class="mb-0"><strong>Amount per Semester:</strong> P{{ item.amount_per_semester | round(2) }}</p>
+                            <p class="mb-0"><strong>Amount per Semester:</strong> P{{ "{:,.2f}".format(item.amount_per_semester) }}</p>
                         </div>
                     </div>
-                    
 
-                    <!-- Dropdown for additional options -->
+                    <!-- Replace ellipsis with Share and Close buttons -->
                     <div class="dropdown-top-right position-relative ms-auto" style="z-index: 3;">
-                        <button class="btn btn-link ellipsis-button" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-ellipsis-v"></i>
+                        <button class="btn btn-link share-button" type="button" data-sponsorship-id="{{ item.id }}">
+                            <i class="fas fa-share"></i> 
                         </button>
-
-                        <div class="dropdown-menu-container dropdown-menu-end">
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <form action="{{ url_for('auth.follow_sponsorship', sponsorship_id=item.id) }}" method="POST" style="display: inline;">
-                                        <button type="submit" class="dropdown-item">
-                                            {% if current_user.is_following(item.id) %}
-                                                <i class="fa-solid fa-bookmark"></i> <span>Remove Bookmark</span>
-                                            {% else %}
-                                                <i class="fa-regular fa-bookmark"></i> <span>Add Bookmark</span>
-                                            {% endif %}
-                                        </button>
-                                    </form>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href="#"><i class="fa-solid fa-share"></i> <span>Share</span></a>
-                                </li>
-                            </ul>
-                        </div>
+                        <button class="btn btn-link close-button" type="button" data-sponsorship-id="{{ item.id }}">
+                            <i class="fas fa-times"></i> 
+                        </button>
                     </div>
                 </div>
 
@@ -87,5 +70,77 @@
 </div>
 
 {% block scripts %}
+<script>
+// Function to get CSRF token from meta tag
+function getCSRFToken() {
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    console.log("CSRF Token:", csrfToken); // Log the CSRF token to the console
+    return csrfToken;
+}
+
+// Function to display flash messages
+function displayFlashMessage(message, type = 'success') {
+    const flashContainer = document.getElementById('flash-messages');
+    if (flashContainer && message) {
+        const flashMessageDiv = document.createElement('div');
+        flashMessageDiv.className = `alert alert-${type}`; // Add appropriate class based on type
+        flashMessageDiv.textContent = message;
+        flashContainer.appendChild(flashMessageDiv);
+
+        // Remove the flash message after a few seconds
+        setTimeout(() => {
+            flashContainer.removeChild(flashMessageDiv);
+        }, 3000);
+    }
+}
+
+// Share button functionality
+document.querySelectorAll('.share-button').forEach(button => {
+    button.addEventListener('click', function() {
+        const sponsorshipId = this.dataset.sponsorshipId;
+        // Implement share functionality (e.g., open a modal, share on social media, etc.)
+        alert(`Sharing sponsorship ID: ${sponsorshipId}`);
+    });
+});
+
+// Close button functionality
+document.querySelectorAll('.close-button').forEach(button => {
+    button.addEventListener('click', function() {
+        const sponsorshipId = this.dataset.sponsorshipId;
+        const sponsorshipCard = this.closest('.list');
+
+        if (sponsorshipCard) {
+            fetch(`/unfollow/${sponsorshipId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCSRFToken() // Use the function to get the CSRF token
+                },
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.text().then(text => {
+                        throw new Error(text); // Log the response text for debugging
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    sponsorshipCard.remove();
+                    displayFlashMessage(data.message);
+                } else {
+                    displayFlashMessage('Failed to remove sponsorship.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                displayFlashMessage('An error occurred while trying to remove sponsorship.'); 
+            });
+        }
+    });
+});
+
+</script>
 {% endblock %}
 {% endblock %}

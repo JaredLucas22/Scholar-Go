@@ -116,7 +116,7 @@ width: 40px;
 }
 
 .like-button, 
-.bookmark-button {
+.follow-button {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -132,9 +132,9 @@ width: 40px;
   transition: background-color 0.3s ease; /* Smooth transition for background color */
 }
 
-/* Hover effect specifically for the bookmark icon */
-.bookmark-button:hover i {
-color: rgb(255, 238, 140); /* Change the color of the bookmark icon on hover */
+/* Hover effect specifically for the follow icon */
+.follow-button:hover i {
+color: rgb(255, 255, 255); /* Change the color of the follow icon on hover */
 transition: color 0.3s ease; /* Smooth transition for the color change */
 }
 
@@ -257,6 +257,17 @@ margin-left: 3%;
 .requirements-title {
   font-size: 2.1vh;
 }
+/* Define the animation for the comment entry */
+.comment-item {
+  opacity: 0;  /* Start with the comment invisible */
+  transform: translateY(10px);  /* Slightly move it down */
+  transition: opacity 0.5s ease, transform 0.5s ease;  /* Animation effect */
+}
+
+.comment-item.show {
+  opacity: 1;  /* Fade in the comment */
+  transform: translateY(0);  /* Move it back to original position */
+}
 
 .requirement-item {
   font-size: 1.6vh;
@@ -271,7 +282,7 @@ margin-left: 3%;
 }
 
 .like-button, 
-.bookmark-button {
+.follow-button {
   font-size: 19px; /* Adjust font size for icons */
 }
 
@@ -367,7 +378,7 @@ margin-left: 3%;
 }
 
 .like-button, 
-.bookmark-button {
+.follow-button {
   font-size: 16px; /* Adjust font size for icons */
 }
 

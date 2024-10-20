@@ -1,0 +1,25 @@
+<!-- templates/notifications.html -->
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="container mt-5">
+        <h2>Your Notifications</h2>
+        <ul class="list-group mt-3" id="notification-list">
+            {% if notifications %}
+                {% for notification in notifications %}
+                    <li class="list-group-item {% if not notification.is_read %}list-group-item-info{% endif %}">
+                        {{ notification.message }}
+                        {% if not notification.is_read %}
+                            <a href="{{ url_for('auth.read_notification', notification_id=notification.id) }}" class="btn btn-sm btn-primary float-right">
+                                Mark as Read
+                            </a>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            {% else %}
+                <li class="list-group-item">You have no notifications.</li>
+            {% endif %}
+        </ul>
+    </div>
+<script src="{{ url_for('static', filename='notifcations.js') }}"></script>
+{% endblock %}

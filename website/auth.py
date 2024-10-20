@@ -1,6 +1,6 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for, current_app
+from flask import Blueprint, render_template, request, flash, redirect, url_for, current_app, jsonify
 from flask_socketio import emit
-from .models import User, Sponsorship_data, user_sponsorship, Comment, TriggerWord
+from .models import User, Sponsorship_data, user_sponsorship, Comment, TriggerWord, Notification
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from . import db, socketio  # Import socketio here
@@ -63,42 +63,56 @@ def save_picture(form_picture):
 
 @auth.route('/follow/<int:sponsorship_id>', methods=['POST'])
 @login_required
-def follow_sponsorship(sponsorship_id):
+def toggle_follow_sponsorship(sponsorship_id):
     sponsorship = Sponsorship_data.query.get(sponsorship_id)
     if not sponsorship:
-        flash('Sponsorship not found.', category='error')
-        return redirect(url_for('views.home'))
+        return jsonify({"success": False, "message": "Sponsorship not found."}), 404
 
+    # Toggle follow state
     if current_user.is_following(sponsorship_id):
         current_user.remove_follow(sponsorship)
-        flash('You have unfollowed this sponsorship!', category='success')
+        message = 'You have unfollowed this sponsorship!'
+        is_following = False
     else:
         current_user.add_follow(sponsorship)
-        flash('You are now following this sponsorship!', category='success')
+        message = 'You are now following this sponsorship!'
+        is_following = True
 
-    return redirect(request.referrer or url_for('views.home'))
+    # Prepare the response data
+    return jsonify({
+        "success": True,
+        "message": message,
+        "is_following": is_following
+    })
 
 
 
-
-@auth.route('/follow/<int:sponsorship_id>', methods=['POST'])
+@auth.route('/unfollow/<int:sponsorship_id>', methods=['POST'])
 @login_required
-def unfollow_sponsorship(user_id, sponsorship_id):
-    user = User.query.get(user_id)
+def unfollow_sponsorship(sponsorship_id):
+    print(f"Attempting to unfollow sponsorship ID: {sponsorship_id}")
+
+    # Retrieve the sponsorship data
     sponsorship = Sponsorship_data.query.get(sponsorship_id)
+    if not sponsorship:
+        print("Sponsorship not found.")
+        return jsonify({'success': False, 'message': 'Sponsorship not found.'}), 404
 
-    if not user or not sponsorship:
-        return False  # User or sponsorship not found
+    # Check if the current user is following the sponsorship
+    if not current_user.is_following(sponsorship_id):
+        print("User is not following this sponsorship.")
+        return jsonify({'success': False, 'message': 'You are not following this sponsorship.'}), 400
 
-    if sponsorship in user.followed_sponsorships:
-        user.followed_sponsorships.remove(sponsorship)
-        try:
-            db.session.commit()
-            return True  # Successfully unfollowed
-        except Exception as e:
-            db.session.rollback()
-            return False  # Error occurred during commit
-    return False  # Not currently following
+    try:
+        # Attempt to remove the follow
+        current_user.remove_follow(sponsorship)
+        print("Sponsorship unfollowed successfully.")
+        return jsonify({'success': True, 'message': 'Sponsorship removed successfully.'})
+    except Exception as e:
+        db.session.rollback()  # Rollback in case of error
+        print(f"Error while unfollowing sponsorship: {e}")
+        return jsonify({'success': False, 'message': 'An unexpected error occurred.'}), 500
+
 
 from flask_login import current_user, login_user, logout_user
 
@@ -121,12 +135,14 @@ def login():
         sponsorship = Sponsorship_data.query.filter_by(email=email).first()
         if sponsorship and check_password_hash(sponsorship.password, password):
             login_user(sponsorship, remember=True)
-            session['user_type'] = sponsorship.get_user_type()  # Store user type in the session
+            session['user_type'] = 'Sponsorship'  # Store user type as 'Sponsorship' in the session
             return redirect(url_for('views.home'))
         
+        # If no match found in both tables
         flash('Invalid email or password.', category='error')
 
     return render_template("login.html", user=current_user)
+
 
 
 from flask import current_app
@@ -135,6 +151,19 @@ import os
 from datetime import timedelta
 
 from flask_login import current_user
+
+@auth.route('/test-notification')
+@login_required
+def test_notification():
+    # Manually add a notification for the current user
+    add_notification(current_user, "Almost there.")
+    
+    # Debug print statement
+    print(f"Test Notification added for User {current_user.id}: This is a test notification.")
+    
+    # Return a response confirming the test
+    return render_template ("views.home", user=current_user)
+
 
 @auth.route('/forgot-password', methods=['GET', 'POST'])
 def forgot_password():
@@ -173,6 +202,70 @@ def forgot_password():
             flash('Email does not exist in the system.', category='error')
 
     return render_template("forgot_password.html", user=current_user)
+
+@auth.route('/notifications')
+@login_required
+def notifications():
+    # Get all notifications for the current user
+    user_notifications = Notification.query.filter_by(user_id=current_user.id).order_by(Notification.created_at.desc()).all()
+
+    # Mark all unread notifications as read
+    Notification.query.filter_by(user_id=current_user.id, is_read=False).update({'is_read': True})
+    
+    # Get the count of unread notifications
+    unread_count = Notification.query.filter_by(user_id=current_user.id, is_read=False).count()
+    
+    # Commit the session to save changes
+    db.session.commit()
+
+    # Render the notifications template and pass unread_count
+    return render_template("notifications.html", notifications=user_notifications, unread_count=unread_count, user=current_user)
+
+@auth.route('/notifications/read/<int:notification_id>')
+@login_required
+def read_notification(notification_id):
+        # Get all notifications for the current user
+    user_notifications = Notification.query.filter_by(user_id=current_user.id).order_by(Notification.created_at.desc()).all()
+
+    notification = Notification.query.get(notification_id)
+    if notification and notification.user_id == current_user.id:
+        notification.is_read = True
+        db.session.commit()
+    return render_template("notifications.html", user=current_user, notifications=user_notifications)
+@auth.route('/notifications/latest')
+@login_required
+def latest_notifications():
+    # Fetch the 5 most recent notifications for the current user
+    user_notifications = Notification.query.filter_by(user_id=current_user.id).order_by(Notification.created_at.desc()).limit(5).all()
+    notifications_list = [{'id': n.id, 'message': n.message, 'is_read': n.is_read} for n in user_notifications]
+    return jsonify(notifications_list)
+
+
+def add_notification(user, message):
+    notification = Notification(message=message, user_id=user.id)  # Save the user_id, not the user object
+    db.session.add(notification)
+    db.session.commit()
+    # Debug output
+    print(f"Notification added: {notification.message} for user {user.id}")
+
+
+@auth.route('/api/notifications')
+@login_required
+def api_notifications():
+    # Get notifications for the current user
+    user_notifications = Notification.query.filter_by(user_id=current_user.id).order_by(Notification.created_at.desc()).all()
+    
+    # Count unread notifications
+    unread_count = Notification.query.filter_by(user_id=current_user.id, is_read=False).count()
+    
+    notifications_data = [{
+        'id': notification.id,
+        'message': notification.message,
+        'is_read': notification.is_read
+    } for notification in user_notifications]
+    
+    return jsonify({'notifications': notifications_data, 'unread_count': unread_count})
+
 
 
 @auth.route('/reset_password/<token>', methods=['GET', 'POST'])
@@ -362,6 +455,9 @@ def sign_sponsor():
     if request.method == 'POST':
         # Retrieve form data
         sponsor_name = request.form.get('sponsor-name')
+        email = request.form.get('email')
+        password1 = request.form.get('password1')
+        password2 = request.form.get('password2')
         course = request.form.get('course')
         weight_fos = request.form.get('weight_fos', type=float)
         weight_gpa = request.form.get('weightgpa', type=float)
@@ -371,26 +467,48 @@ def sign_sponsor():
         description = request.form.get('description')
         full_description = request.form.get('fulldescription')
         extracurricular_activity = request.form.get('extracurricularActivities')
-        amount_per_semester = request.form.get('amount_per_semester', type=float)
         deadline_date_str = request.form.get('deadline_date')  # Get the date input from the form
+        
+        # Get the amount_per_semester and format it
+        amount_per_semester_str = request.form.get('amount_per_semester')
+        try:
+            amount_per_semester = float(amount_per_semester_str.replace(',', '').strip())  # Remove commas for conversion
+            formatted_amount_per_semester = f"{amount_per_semester:,.2f}"  # Format with commas and 2 decimal places
+        except (ValueError, TypeError):
+            flash('Invalid amount per semester.', category='error')
+            return redirect(url_for('auth.sign_sponsor'))
 
         # Convert it directly into a date object
         deadline_date = datetime.strptime(deadline_date_str, '%Y-%m-%d').date() if deadline_date_str else None
-        
-        # Check if the deadline_date is None or invalid before proceeding
-        if not deadline_date:
+
+        # Validation checks
+        sponsorship = Sponsorship_data.query.filter_by(email=email).first()
+        if sponsorship:
+            flash('Email already exists.', category='error')
+        elif len(email) < 4:
+            flash('Email must be greater than 3 characters.', category='error')
+        elif len(sponsor_name) < 2:
+            flash('Sponsor name must be greater than 1 character.', category='error')
+        elif password1 != password2:
+            flash('Passwords do not match.', category='error')
+        elif len(password1) < 7:
+            flash('Password must be at least 7 characters.', category='error')
+        elif not deadline_date:
             flash('Deadline date is required.', category='error')
             return redirect(url_for('auth.sign_sponsor'))
 
+        # Save the picture and get its path
         try:
             picture_path = save_picture(request.files.get('picture'))
         except ValueError as e:
             flash(str(e), category='error')
             return redirect(url_for('auth.sign_sponsor'))
 
-        # Create new Sponsorship_data object without additional validation
+        # Create a new Sponsorship_data object
         new_sponsor = Sponsorship_data(
             sponsor_name=sponsor_name,
+            email=email,
+            password=generate_password_hash(password1, method='pbkdf2:sha256'),
             course=course,
             weight_fos=weight_fos,
             weight_gpa=weight_gpa,
@@ -401,15 +519,16 @@ def sign_sponsor():
             full_description=full_description,
             extracurricular_activity=extracurricular_activity,
             verified=False,
-            amount_per_semester=amount_per_semester,
+            amount_per_semester=amount_per_semester,  # Use the raw float value for DB
             deadline_date=deadline_date,  # Ensure this is a valid date
-            picture_path=picture_path  # Save the picture path here
+            picture_path=picture_path,  # Save the picture path here
         )
 
+        # Add the new sponsor to the database
         try:
             db.session.add(new_sponsor)
             db.session.commit()
-            flash('Sponsor added successfully!')
+            flash('Sponsor added successfully!', category='success')
             return redirect(url_for('auth.login'))
         except Exception as e:
             db.session.rollback()  # Roll back the session on error
@@ -430,28 +549,27 @@ def follow(sponsorship_id):
     # Check if the user is currently following the sponsorship
     if current_user.is_following(sponsorship_id):
         # Unfollow the sponsorship
-        if unfollow_sponsorship(current_user.id, sponsorship_id):
-            flash('You have unfollowed this sponsorship!', category='success')
-            socketio.emit('unfollow_notification', {
-                'message': f"You unfollowed {sponsorship.sponsor_name}.",
-                'user_id': current_user.id,
-                'sponsorship_id': sponsorship.id
-            })
-        else:
-            flash('Error unfollowing sponsorship. Please try again.', category='error')
+        current_user.remove_follow(sponsorship)
+        flash('You have unfollowed this sponsorship!', category='success')
+        socketio.emit('unfollow_notification', {
+            'message': f"You unfollowed {sponsorship.sponsor_name}.",
+            'user_id': current_user.id,
+            'sponsorship_id': sponsorship.id
+        })
     else:
         # Follow the sponsorship
-        if follow_sponsorship(current_user.id, sponsorship_id):
-            flash('You are now following this sponsorship!', category='success')
-            socketio.emit('follow_notification', {
-                'message': f"You are now following {sponsorship.sponsor_name}.",
-                'user_id': current_user.id,
-                'sponsorship_id': sponsorship.id
-            })
-        else:
-            flash('Error following sponsorship. Please try again.', category='error')
+        current_user.add_follow(sponsorship)
+        flash('You are now following this sponsorship!', category='success')
+        socketio.emit('follow_notification', {
+            'message': f"You are now following {sponsorship.sponsor_name}.",
+            'user_id': current_user.id,
+            'sponsorship_id': sponsorship.id
+        })
 
     return redirect(request.referrer or url_for('views.home'))
+
+
+
 
 
 @auth.route('/like/<int:sponsor_id>', methods=['POST'])
@@ -463,10 +581,23 @@ def like_sponsorship(sponsor_id):
         if sponsorship:
             if current_user in sponsorship.likes:  # Assuming likes is a relationship
                 sponsorship.likes.remove(current_user)
+                liked = False  # User unliked the sponsorship
             else:
                 sponsorship.likes.append(current_user)
+                liked = True  # User liked the sponsorship
+            
             db.session.commit()
-    return redirect(request.referrer or url_for('views.home'))
+
+            # Return a JSON response with success status and new likes count
+            return jsonify({
+                'success': True,
+                'is_liked': liked,
+                'likes_count': len(sponsorship.likes),
+                'message': 'Like status updated successfully!'
+            })
+
+    # If sponsorship not found or user is not authenticated, return an error message
+    return jsonify({'success': False, 'message': 'An error occurred.'}), 400
 
 @auth.route('/add_comment/<int:sponsor_id>', methods=['POST'])
 @login_required
@@ -479,15 +610,25 @@ def add_comment(sponsor_id):
 
     # Check if the comment contains any trigger words
     if any(word in content.lower() for word in trigger_word_list):
-        flash('Your comment contains inappropriate words. Please remove them before submitting.', 'error')
-        return redirect(url_for('views.view_sponsorship', sponsor_id=sponsor_id))
+        return jsonify({"success": False, "message": "Your comment contains inappropriate words."}), 400
 
     # Add the comment if no trigger words are found
     new_comment = Comment(content=content, user_id=current_user.id, sponsorship_id=sponsor_id)
     db.session.add(new_comment)
     db.session.commit()
-    
-    return redirect(url_for('views.view_sponsorship', sponsor_id=sponsor_id))
+
+    # Prepare the data to send back in the JSON response
+    comment_data = {
+        "id": new_comment.id,
+        "content": new_comment.content,
+        "user_username": current_user.username,
+        "user_picture_path": current_user.picture_path,
+        "relative_time": "just now",  # Replace with actual calculation if needed
+        "timestamp": new_comment.created_at.timestamp()
+    }
+
+    # Return a JSON response indicating success and including the comment data
+    return jsonify({"success": True, "comment": comment_data}), 200
 
 
 @auth.route('/update_profile', methods=['POST'])
