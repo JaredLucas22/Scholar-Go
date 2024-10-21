@@ -8,6 +8,7 @@
     }
 </style>
 <form method="POST" enctype="multipart/form-data" onsubmit="return validateWeights()">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
     <h3 align="center">Sign your Sponsor</h3>
     <div class="form-group">
         <label for="sponsor-name">Sponsor Name</label>
