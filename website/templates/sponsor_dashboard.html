@@ -202,13 +202,13 @@
     <!-- Analytics -->
     <div class="analytics">
         <div class="container">
-            <h1 class="text-center">Your program got 193 visits in 2025</h1>
+            <h1 class="text-center">Your program got <span id="visit-count">{{visit_count}}</span> visits in {{ current_year }}</h1>
             <div class="row mt-5">
                 <div class="col-md-4">
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Visits</h5>
-                            <h1 class="card-text">193 <i class="fas fa-arrow-circle-up"></i></h1>
+                            <h1 class="card-text"><span id="visit-count-card">{{ visit_count}}</span><i class="fas fa-arrow-circle-up"></i></h1>
                             <p class="card-text-description">107% more than Jan 1 - Dec 31 2024</p>
                         </div>
                     </div>
@@ -217,7 +217,7 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Likes</h5>
-                            <h1 class="card-text">123 <i class="fas fa-arrow-circle-up"></i></h1>
+                            <h1 class="card-text" id="likes-count">{{ total_likes }}<i class="fas fa-arrow-circle-up"></i></h1>
                             <p class="card-text-description">105% more than Jan 1 - Dec 31 2024</p>
                         </div>
                     </div>
@@ -226,7 +226,7 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Bookmarks</h5>
-                            <h1 class="card-text">456 <i class="fas fa-arrow-circle-up"></i></h1>
+                            <h1 class="card-text" id="follower-count-{{ sponsorship_data.id }}">{{ follower_count }}<i class="fas fa-arrow-circle-up"></i></h1>
                             <p class="card-text-description">110% more than Jan 1 - Dec 31 2024</p>
                         </div>
                     </div>
@@ -244,10 +244,10 @@
                                 <i class="fas fa-edit edit-icon"></i> 
                             </div>
                             <div class="applicant-info-container mt-2"> 
-                                <p class="applicant-info">Number of matched applicants: <strong>152</strong></p>
-                                <p class="applicant-info">Number of Available Applicants: <strong>31</strong></p>
+                                <p class="applicant-info">Number of matched applicants: <strong>{{matched_applicants_count}}</strong></p>
+                                <p class="applicant-info">Number of Available Applicants: <strong>{{ total_applicants_count }}</strong></p>
                                 <div class="d-flex justify-content-between align-items-center"> 
-                                    <p class="applicant-info mb-0 rate"><strong>Acceptance rate: 39.5%</strong></p>
+                                    <p class="applicant-info mb-0 rate"><strong>Acceptance rate: {{acceptance_rating | round(2)}}%</strong></p>
                                     <button class="btn btn-success ml-3">Active Program</button> 
                                 </div>
                             </div>
@@ -265,7 +265,165 @@
 </div>
 
 
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
-    {% endif %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+<script>
+    const socket = io();  // Connect to the SocketIO server
+
+    // Listen for visit count updates
+    socket.on('update_visit_count', function(data) {
+        const visitCountTextElement = document.getElementById('visit-count-text');
+        const visitCountCardElement = document.getElementById('visit-count-card');
+        if (visitCountTextElement && visitCountCardElement) {
+            visitCountTextElement.textContent = data.visit_count; // Update main display
+            visitCountCardElement.textContent = data.visit_count; // Update card display
+        } else {
+            console.error("Visit count elements not found");
+        }
+    });
+
+  // Listen for likes count updates
+socket.on('update_likes', function(data) {
+    const likesCountElement = document.getElementById('likes-count');
+    if (likesCountElement) {
+        // Update the likes count in the <h1> element
+        likesCountElement.innerHTML = `${data.likes_count} <i class="fas fa-arrow-circle-up"></i>`;
+    } else {
+        console.error("Likes count element not found");
+    }
+});
+
+    // Fetch the initial visit count and likes count on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        const sponsorshipId = "{{ sponsorship_data.id }}"; // Ensure this ID is set correctly in your template
+        fetchVisitCount(sponsorshipId); // Make sure this function is defined
+        fetchLikesCount(sponsorshipId);
+        fetchFollowerCount(sponsorshipId);
+
+        // Optionally set interval to fetch data every 5 seconds
+        setInterval(() => {
+            fetchVisitCount(sponsorshipId);
+            fetchLikesCount(sponsorshipId);
+            fetchFollowerCount(sponsorshipId);
+        }, 5000);
+    });
+
+    async function fetchLikesCount(sponsorshipId) {
+    try {
+        const response = await fetch(`/get_likes/${sponsorshipId}`);
+        if (!response.ok) {
+            throw new Error('Failed to fetch likes count: ' + response.statusText);
+        }
+        const data = await response.json();
+        if (data.success) {
+            const likesCountElement = document.getElementById('likes-count');
+
+            if (likesCountElement) {
+                likesCountElement.innerHTML = `${data.likes_count} <i class="fas fa-arrow-circle-up"></i>`;
+            } else {
+                console.error("Likes count element not found");
+            }
+        } else {
+            console.error("Error fetching likes count:", data.error);
+        }
+    } catch (error) {
+        console.error("Failed to fetch likes count:", error.message);
+    }
+}
+
+    async function fetchVisitCount(sponsorshipId) {
+        try {
+            const response = await fetch(`/visit_count/${sponsorshipId}`);
+            if (!response.ok) {
+                throw new Error('Failed to fetch visit count: ' + response.statusText);
+            }
+            const data = await response.json();
+            if (data.success) {
+                const visitCountElement = document.getElementById('visit-count');
+                const visitCountCardElement = document.getElementById('visit-count-card');
+
+                if (visitCountElement) {
+                    visitCountElement.textContent = data.visit_count; // Display visit count
+                } else {
+                    console.error("Visit count element not found");
+                }
+
+                if (visitCountCardElement) {
+                    visitCountCardElement.textContent = data.visit_count; // Display visit count on card
+                } else {
+                    console.error("Visit count card element not found");
+                }
+            } else {
+                console.error("Error fetching visit count:", data.error);
+            }
+        } catch (error) {
+            console.error("Failed to fetch visit count:", error.message);
+        }
+    }
+
+    // Helper function to get CSRF token from cookies
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+// Fetch follower count function
+async function fetchFollowerCount(sponsorshipId) {
+    try {
+        const response = await fetch(`/follower_count/${sponsorshipId}`);
+        if (!response.ok) {
+            throw new Error('Failed to fetch follower count: ' + response.statusText);
+        }
+        const data = await response.json();
+        if (data.success) {
+            const followerCountElement = document.getElementById(`follower-count-${sponsorshipId}`);
+
+            if (followerCountElement) {
+                followerCountElement.innerHTML = `${data.follower_count} <i class="fas fa-arrow-circle-up"></i>`;
+            } else {
+                console.error("Follower count element not found");
+            }
+
+        } else {
+            console.error("Error fetching follower count:", data.error);
+        }
+    } catch (error) {
+        console.error("Failed to fetch follower count:", error.message);
+    }
+}
+
+// Socket.IO listener for real-time updates for follower count
+socket.on('update_follower_count', function(data) {
+    const { sponsorship_id, follower_count } = data;
+    const followerCountElement = document.getElementById(`follower-count-${sponsorship_id}`);
+    const followerCountCardElement = document.getElementById(`follower-count-card-${sponsorship_id}`);
+    
+    if (followerCountElement) {
+        followerCountElement.textContent = `Followers: ${follower_count}`;
+    } else {
+        console.error(`Follower count element not found for sponsorship ID ${sponsorship_id}`);
+    }
+    
+    if (followerCountCardElement) {
+        followerCountCardElement.textContent = `Followers: ${follower_count}`;
+    } else {
+        console.error(`Follower count card element not found for sponsorship ID ${sponsorship_id}`);
+    }
+});
+
+</script>
+
+
+
+
+{% endif %}
 {% endblock %}

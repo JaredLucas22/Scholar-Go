@@ -1,5 +1,13 @@
 from datetime import datetime
 
+def get_current_time():
+    """Returns the current UTC date and time."""
+    return datetime.utcnow()
+
+def get_current_year():
+    """Returns the current year."""
+    return datetime.utcnow().year
+
 def time_since(dt):
     """Returns a string representing how long ago a date was."""
     now = datetime.utcnow()

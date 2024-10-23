@@ -5,13 +5,12 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from . import db, socketio  # Import socketio here
 from flask_login import login_user, login_required, logout_user, current_user
-from datetime import datetime
+from datetime import datetime, timedelta
 import os
 from flask_login import LoginManager
 from .models import User, Sponsorship_data
 import smtplib
 from email.message import EmailMessage
-from datetime import timedelta
 import logging
 
 login_manager = LoginManager()
@@ -48,20 +47,9 @@ def view_sponsorship(sponsor_id):
     comments = Comment.query.filter_by(sponsor_id=sponsor_id).order_by(Comment.created_at.desc()).all()
     is_liked = current_user in sponsor.likes
     
-    # Check if the user has visited this sponsorship
-    is_visited = db.session.query(user_sponsorship_visits).filter_by(
-        user_id=current_user.id,
-        sponsorship_id=sponsor_id
-    ).count() > 0  # Returns True if the user has visited, otherwise False
 
-    return render_template('sponsor_details.html', user=current_user, sponsor=sponsor, is_liked=is_liked, is_visited=is_visited)
 
-def has_visited_sponsorship(user_id, sponsorship_id):
-    """Check if the user has visited the sponsorship."""
-    return db.session.query(user_sponsorship_visits).filter_by(
-        user_id=user_id,
-        sponsorship_id=sponsorship_id
-    ).first() is not None
+    return render_template('sponsor_details.html', user=current_user, sponsor=sponsor, is_liked=is_liked)
 
 @auth.route('/visit_sponsorship/<int:sponsorship_id>', methods=['POST'])
 @login_required
@@ -69,24 +57,27 @@ def visit_sponsorship(sponsorship_id):
     print(f"Visit sponsorship called with ID: {sponsorship_id}")  # Debug statement
     user_id = current_user.id
     
-    # Check if the visit already exists
-    existing_visit = db.session.query(user_sponsorship_visits).filter_by(user_id=user_id, sponsorship_id=sponsorship_id).first()
-
-    if existing_visit:
-        return jsonify({'success': True, 'url': existing_visit.sponsorship.url}), 200
-
-    # Insert a new visit record
-    visit_entry = {
+    # Insert a new visit record with the current timestamp
+    new_visit = {
         'user_id': user_id,
         'sponsorship_id': sponsorship_id,
-        'visited_at': datetime.utcnow()
+        'created_at': datetime.utcnow()  # Set the current timestamp
     }
     
-    db.session.execute(user_sponsorship_visits.insert().values(visit_entry))
-    db.session.commit()
+    try:
+        db.session.execute(user_sponsorship_visits.insert().values(new_visit))
+        db.session.commit()
+        print("New visit logged.")
+    except Exception as e:
+        db.session.rollback()  # Rollback the session on error
+        print(f"Error logging visit: {e}")
+        return jsonify({'success': False, 'error': 'Failed to log visit.'}), 500
 
-    sponsor = Sponsorship_data.query.get(sponsorship_id)
+    # Fetch the sponsorship to get the URL
+    sponsor = Sponsorship_data.query.get_or_404(sponsorship_id)
     return jsonify({'success': True, 'url': sponsor.url}), 200
+
+
 
 def save_picture(form_picture):
     # Get the original filename
@@ -189,8 +180,6 @@ def login():
 from flask import current_app
 from itsdangerous import URLSafeTimedSerializer
 import os
-from datetime import timedelta
-
 from flask_login import current_user
 
 @auth.route('/test-notification')
@@ -495,11 +484,19 @@ def sign_up():
     return render_template("sign_up.html", user=current_user)
 
 
+from flask import render_template, flash, redirect, url_for, request, session
+from flask_login import login_user, current_user
+from werkzeug.security import generate_password_hash
+from datetime import datetime
+from .models import Sponsorship_data
+from . import db
+
 @auth.route('/sign-sponsor', methods=['GET', 'POST'])
 def sign_sponsor():
     if request.method == 'POST':
         # Retrieve form data
         sponsor_name = request.form.get('sponsor-name')
+        persontocontact	= request.form.get('persontocontact	')
         email = request.form.get('email')
         password1 = request.form.get('password1')
         password2 = request.form.get('password2')
@@ -520,7 +517,6 @@ def sign_sponsor():
         amount_per_semester_str = request.form.get('amount_per_semester')
         try:
             amount_per_semester = float(amount_per_semester_str.replace(',', '').strip())  # Remove commas for conversion
-            formatted_amount_per_semester = f"{amount_per_semester:,.2f}"  # Format with commas and 2 decimal places
         except (ValueError, TypeError):
             flash('Invalid amount per semester.', category='error')
             return redirect(url_for('auth.sign_sponsor'))
@@ -558,7 +554,8 @@ def sign_sponsor():
             password=generate_password_hash(password1, method='pbkdf2:sha256'),
             course=course,
             url=url,
-            contact_information = contact_information,
+            persontocontact=persontocontact,
+            contact_information=contact_information,
             weight_fos=weight_fos,
             weight_gpa=weight_gpa,
             weight_extracurricular_activities=weight_extracurricular,
@@ -587,12 +584,26 @@ def sign_sponsor():
             db.session.rollback()  # Roll back on error
             print(e)  # Log error for debugging
             flash('An error occurred while adding the sponsor. Please try again.', category='error')
-            return redirect(url_for('auth.sign_sponsor'))
+            return redirect(url_for('auth.sign_sponsor'))  # Redirect to the sign sponsor route
+        
+    return render_template('sign_sponsor.html', user=current_user)  # Pass current_user to the template
 
-    return render_template("sign_sponsor.html", user=current_user)
 
 
-    
+@auth.route('/visit_count/<int:sponsorship_id>', methods=['GET'])
+@login_required
+def visit_count(sponsorship_id):
+    current_year = datetime.now().year
+
+    # Count visits for the current year
+    visit_count = db.session.query(user_sponsorship_visits).filter(
+        user_sponsorship_visits.c.sponsorship_id == sponsorship_id,
+        db.func.strftime('%Y', user_sponsorship_visits.c.created_at) == str(current_year)
+    ).count()
+
+    return jsonify({'success': True, 'visit_count': visit_count})
+
+
 @auth.route('/follow/<int:sponsorship_id>', methods=['POST'])
 @login_required
 def follow(sponsorship_id):
@@ -600,6 +611,7 @@ def follow(sponsorship_id):
     if not sponsorship:
         flash('Sponsorship not found.', category='error')
         return redirect(url_for('views.home'))
+    
 
     # Check if the user is currently following the sponsorship
     if current_user.is_following(sponsorship_id):
@@ -623,6 +635,24 @@ def follow(sponsorship_id):
 
     return redirect(request.referrer or url_for('views.home'))
 
+@auth.route('/follower_count/<int:sponsorship_id>', methods=['GET'])
+@login_required
+def follower_count(sponsorship_id):
+    sponsorship = Sponsorship_data.query.get_or_404(sponsorship_id)
+    follower_count = len(sponsorship.followers)
+    return jsonify(success=True, follower_count=follower_count)
+
+
+@auth.route('/get_likes/<int:sponsor_id>', methods=['GET'])
+@login_required
+def get_likes(sponsor_id):
+    sponsorship = Sponsorship_data.query.get(sponsor_id)
+    if sponsorship:
+        return jsonify({
+            'success': True,
+            'likes_count': len(sponsorship.likes)
+        })
+    return jsonify({'success': False, 'message': 'Sponsorship not found.'}), 404
 
 
 
@@ -630,29 +660,33 @@ def follow(sponsorship_id):
 @auth.route('/like/<int:sponsor_id>', methods=['POST'])
 @login_required
 def like_sponsorship(sponsor_id):
-    # Your logic to like/unlike the sponsorship
-    if current_user.is_authenticated:
-        sponsorship = Sponsorship_data.query.get(sponsor_id)
-        if sponsorship:
-            if current_user in sponsorship.likes:  # Assuming likes is a relationship
-                sponsorship.likes.remove(current_user)
-                liked = False  # User unliked the sponsorship
-            else:
-                sponsorship.likes.append(current_user)
-                liked = True  # User liked the sponsorship
-            
-            db.session.commit()
+    # Check if the user is authenticated
+    if not current_user.is_authenticated:
+        return jsonify({'success': False, 'message': 'User is not authenticated.'}), 401
 
-            # Return a JSON response with success status and new likes count
-            return jsonify({
-                'success': True,
-                'is_liked': liked,
-                'likes_count': len(sponsorship.likes),
-                'message': 'Like status updated successfully!'
-            })
+    # Retrieve the sponsorship data
+    sponsorship = Sponsorship_data.query.get(sponsor_id)
+    if not sponsorship:
+        return jsonify({'success': False, 'message': 'Sponsorship not found.'}), 404
 
-    # If sponsorship not found or user is not authenticated, return an error message
-    return jsonify({'success': False, 'message': 'An error occurred.'}), 400
+    # Toggle the like status
+    if current_user in sponsorship.likes:
+        sponsorship.likes.remove(current_user)
+        liked = False
+    else:
+        sponsorship.likes.append(current_user)
+        liked = True
+
+    # Commit the changes to the database
+    db.session.commit()
+
+    return jsonify({
+        'success': True,
+        'is_liked': liked,
+        'likes_count': len(sponsorship.likes),
+        'message': 'Like status updated successfully!'
+    })
+
 
 @auth.route('/add_comment/<int:sponsor_id>', methods=['POST'])
 @login_required

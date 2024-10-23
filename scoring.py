@@ -76,7 +76,8 @@ def match_students_to_sponsorships():
                     print(f"Debug: No match - Student {student.first_name} with Sponsor {sponsor.sponsor_name} (Score: {score})")
 
         print(f"Debug: Total matches found: {len(matches)}")
-        return matches
+        return matches, len(matches), len(students)  # Return matches, matched count, and total count
+
 
 if __name__ == "__main__":
     print("Debug: Starting script.")

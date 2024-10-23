@@ -1,12 +1,13 @@
 from flask import Blueprint, render_template, request, flash, jsonify, session
 from flask_login import login_required, current_user
-from .models import Note, Sponsorship_data, Comment, user_sponsorship_visits
+from .models import Note, Sponsorship_data, Comment, user_sponsorship_visits, User
 from . import db
 import json
-from scoring import calculate_compatibility_score
+from scoring import calculate_compatibility_score, match_students_to_sponsorships
 from flask import render_template
 from .utils import time_since
 from datetime import datetime
+from flask_socketio import  emit
 
 
 views = Blueprint('views', __name__)
@@ -14,10 +15,48 @@ views = Blueprint('views', __name__)
 @views.route('/sponsordashboard')
 @login_required
 def sponsordashboard():
+    current_year = datetime.now().year
     sponsorship_data = None
+    matched_applicants_count = 0
+    total_applicants_count = 0
+    acceptance_rating = 0.0
+    total_likes = 0
+    visit_count = 0
+    follower_count = 0  # Initialize follower_count
+
     if session.get('user_type') == 'Sponsorship':
         sponsorship_data = Sponsorship_data.query.filter_by(id=current_user.id).first()
-    return render_template("sponsor_dashboard.html", user=current_user, sponsorship_data=sponsorship_data)
+
+        if sponsorship_data:
+            # Get total likes for the current sponsorship
+            total_likes = len(sponsorship_data.likes)
+
+            # Get follower count using the new method
+            follower_count = sponsorship_data.get_follower_count()
+
+        # Get matched applicants count and total applicants count
+        matches, matched_applicants_count, total_applicants_count = match_students_to_sponsorships()
+
+        if total_applicants_count > 0:
+            acceptance_rating = (matched_applicants_count / total_applicants_count) * 100
+
+        # Get the visit count for the current sponsorship
+        visit_count = db.session.query(user_sponsorship_visits).filter_by(sponsorship_id=sponsorship_data.id).count() if sponsorship_data else 0
+
+    return render_template("sponsor_dashboard.html",
+                           visit_count=visit_count,
+                           total_likes=total_likes,
+                           total_applicants_count=total_applicants_count,
+                           user=current_user,
+                           sponsorship_data=sponsorship_data,
+                           current_year=current_year,
+                           matched_applicants_count=matched_applicants_count,
+                           acceptance_rating=acceptance_rating,
+                           follower_count=follower_count)  # Pass the follower count
+
+
+
+
 
 @views.route("/profilesponsor")
 @login_required

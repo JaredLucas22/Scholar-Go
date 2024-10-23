@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_socketio import SocketIO
 from flask_wtf.csrf import CSRFProtect
+from flask_socketio import SocketIO
 import os
 
 db = SQLAlchemy()

@@ -2,6 +2,7 @@ from . import db
 from flask_login import UserMixin
 from sqlalchemy.sql import func
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime
 
 # Association Table for User Sponsorships
 user_sponsorship = db.Table('user_sponsorship',
@@ -17,10 +18,13 @@ user_sponsorship_likes = db.Table('user_sponsorship_likes',
 
 # Association Table for User Sponsorship Visits
 user_sponsorship_visits = db.Table('user_sponsorship_visits',
-    db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
-    db.Column('sponsorship_id', db.Integer, db.ForeignKey('sponsorship_data.id'), primary_key=True),
-    db.Column('visited_at', db.DateTime(timezone=True), default=func.now())
+    db.Column('id', db.Integer, primary_key=True, autoincrement=True),  # Auto-incrementing primary key
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id'), nullable=False),
+    db.Column('sponsorship_id', db.Integer, db.ForeignKey('sponsorship_data.id'), nullable=False),
+    db.Column('created_at', db.DateTime, default=datetime.utcnow),
 )
+
+
 
 class Note(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -71,6 +75,8 @@ class User(db.Model, UserMixin):
     def get_user_type(self):
         print("User Type: User")  # Debug print statement
         return "User"
+    
+
 
 class TriggerWord(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -126,3 +132,6 @@ class Sponsorship_data(db.Model, UserMixin):
     def get_user_type(self):
         print("User Type: Sponsorship")  # Debug print statement
         return "Sponsorship"
+
+    def get_follower_count(self):
+        return len(self.followers)
