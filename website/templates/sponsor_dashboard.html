@@ -237,10 +237,10 @@
             <div class="row mt-5">
                 <div class="col-md-12">
                     <div class="d-flex align-items-center"> 
-                        <img src="https://www.ua.edu.ph/wp-content/uploads/2017/07/UA-Logo.png" alt="University of the Assumption Logo" class="logo">
+                        <img src="{{ url_for('static', filename='uploads/' + sponsorship_data.picture_path) }}" alt="University of the Assumption Logo" class="logo">
                         <div class="info" style="flex-grow: 1;"> 
                             <div class="d-flex justify-content-between align-items-center"> 
-                                <span class="university-name">University of the Assumption</span>
+                                <span class="university-name">{{ sponsorship_data.sponsor_name }}</span>
                                 <i class="fas fa-edit edit-icon"></i> 
                             </div>
                             <div class="applicant-info-container mt-2"> 
