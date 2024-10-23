@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block content %}
+{% if session['user_type'] == 'Sponsorship' %}
+<link rel="stylesheet" href="/static/css/profile.css">
+<style>
+    body{
+        color: black;
+    }
+</style>
+    <div class="container right-form rounded bg-white mt-5 mb-5">
+        <div class="row">
+            <!-- Profile Section (Left) -->
+            <div class="col-md-3 border-right profile-left">
+                <div class="d-flex flex-column align-items-center text-center p-3 py-5 position-relative">
+                    <!-- Display profile picture with pencil icon -->
+                    <div class="profile-image-wrapper position-relative">
+                        <img class="rounded-circle me-2 profile-picture"
+                             style="width: 167px; height: 167px; cursor: pointer;"
+                             src="{{ url_for('static', filename='uploads/' + sponsorship_data.picture_path) }}"
+                             alt="Profile Picture"
+                             onclick="document.getElementById('profilePictureInput').click();">
+    
+                        <!-- Pencil icon -->
+                        <i class="fas fa-pencil-alt pencil-icon" onclick="document.getElementById('profilePictureInput').click();"></i>
+    
+                        <!-- Separate form for profile picture upload -->
+                    <form id="uploadProfilePictureForm" method="POST" enctype="multipart/form-data" action="{{ url_for('auth.upload_profile_picture') }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <input type="file" id="profilePictureInput" name="profile_picture" style="display: none;" onchange="document.getElementById('uploadProfilePictureForm').submit();">
+                    </form>
+    </div>
+        <span class="text-white-name">{{ sponsorship_data.sponsor_name }}</span>
+        <span class="text-white-em">{{ sponsorship_data.email}}</span>
+        <span class="contact-text">{{ sponsorship_data.contact_information if sponsorship_data.contact_information else 'No contact provided' }}</span>
+      </div>
+    </div>
+
+    <!-- Profile Settings Form (Right) -->
+    <div class="col-md-9 border-right">
+      <div class="p-3 py-5">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h4 class="text-right">Settings</h4>
+        </div>
+
+        <!-- First Row: GPA and Extracurricular Weights -->
+        <div class="row mt-2">
+          <div class="col-md-6">
+            <label class="labels">Name</label>
+            <input type="text" class="form-control" id="Sponsor_name" value="{{ sponsorship_data.sponsor_name}}">
+          </div>
+          <div class="col-md-6">
+            <label class="labels">Contact Person's Full Name</label>
+            <input type="text" class="form-control" id = "persontocontact" value="{{ sponsorship_data.persontocontact}}">
+          </div>
+        </div>
+
+        <!-- Second Row: Financial and Field of Study Weights -->
+        <div class="row mt-3">
+          <div class="col-md-6">
+            <label class="labels">Email</label>
+            <input type="text" id = "email" class="form-control" value="{{ sponsorship_data.email}}">
+          </div>
+          <div class="col-md-6">
+            <label class="labels">Contact Number</label>
+            <input type="number" id="contact_information" class="form-control" value="{{ sponsorship_data.contact_information}}">
+          </div>
+        </div>
+
+        <!-- Third Row: Extracurricular Activity of Choice and Mobile Number -->
+        <div class="row mt-3">
+          <div class="col-md-6">
+            <label class="labels">Address</label>
+            <input type="text" class="form-control" value="{{ sponsorship_data.address}}">
+          </div>
+          <div class="col-md-6">
+            <label class="labels">Type of Sponsor</label>
+            <input type="text" id= "type_of_sponsor" class="form-control" value="{{ sponsorship_data.type_of_sponsor}}">
+          </div>
+        </div>
+
+        <!-- Save Profile Button -->
+        <div class="mt-5 text-center">
+          <button class="btn btn-primary profile-button" type="button">Save Profile</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+<script>
+document.getElementById('profilePictureInput').addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.querySelector('.profile-image-wrapper img').src = e.target.result; // Update the image source
+        };
+        reader.readAsDataURL(file);
+    }
+});
+</script>
+{% endif %}
+{% endblock %}

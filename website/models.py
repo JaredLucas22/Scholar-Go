@@ -15,6 +15,13 @@ user_sponsorship_likes = db.Table('user_sponsorship_likes',
     db.Column('sponsorship_id', db.Integer, db.ForeignKey('sponsorship_data.id'), primary_key=True)
 )
 
+# Association Table for User Sponsorship Visits
+user_sponsorship_visits = db.Table('user_sponsorship_visits',
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
+    db.Column('sponsorship_id', db.Integer, db.ForeignKey('sponsorship_data.id'), primary_key=True),
+    db.Column('visited_at', db.DateTime(timezone=True), default=func.now())
+)
+
 class Note(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     data = db.Column(db.String(10000))
@@ -91,7 +98,12 @@ class Comment(db.Model):
 class Sponsorship_data(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     sponsor_name = db.Column(db.String(150))
+    persontocontact = db.Column(db.String(150), nullable=True)
     course = db.Column(db.String(150))
+    url = db.Column(db.String(356), unique=True, nullable=True)
+    type_of_sponsor  = db.Column(db.String(150))
+    address = db.Column(db.String(150), nullable=True)
+    contact_information = db.Column(db.String(150), nullable=True)
     extracurricular_activity = db.Column(db.String(150))
     email = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.String(150), nullable=False)

@@ -49,14 +49,14 @@
                         {% endif %}
                     </p>
                     <p><span class="info-label">Scholarship Program:</span> {{ sponsor.course }}</p>
-                    <p><span class="info-label">Amount per Semester:</span> P{{ sponsor.amount_per_semester }}</p>
+                    <p><span class="info-label">Amount per Semester:</span> P{{ "{:,.2f}".format(sponsor.amount_per_semester) }}</p>
                 </div>
             </div>
         </div>
 
         <div class="sponsor-requirements">
             {{ sponsor.full_description |safe }}
-            <button class="blue-button">Visit Page</button>
+            <a class="blue-button" data-sponsorship-id="{{ sponsor.id }}" href="{{ sponsor.url }}">Visit Page</a>
         </div>
 
         <div class="sponsor-footer">
@@ -107,6 +107,58 @@
         </div>
     </div>
 </div>
+<script>
+    console.log("Sponsorship visit script loaded");
+
+    // Get isVisited directly from the template context
+    const isVisited = "{{ is_visited | tojson }}"; // Ensure isVisited is a boolean
+
+    document.querySelector('.blue-button').addEventListener('click', async function(event) {
+
+        const sponsorshipId = "{{ sponsor.id }}"; // Get the sponsorship ID from the template
+        const csrfToken = "{{ csrf_token() }}"; // Get the CSRF token from the template
+
+        if (isVisited) {
+            console.log(`Already visited sponsorship ID: ${sponsorshipId}`);
+            return; // Exit the function if already visited
+        }
+
+        try {
+            console.log(`Sending visit request for sponsorship ID: ${sponsorshipId}`);
+
+            // Send a POST request to the visit_sponsorship endpoint
+            const response = await fetch(`/auth/visit_sponsorship/${sponsorshipId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken  // Include CSRF token in headers for security
+                },
+                credentials: 'include'  // Include cookies for session authentication
+            });
+
+            // Check if the response is not OK (status code outside of 200-299 range)
+            if (!response.ok) {
+                const errorText = await response.text(); // Get the response text for debugging
+                console.error("Server responded with an error:", errorText);
+                throw new Error(`Error: ${response.status} ${response.statusText}`);
+            }
+
+            // Parse the JSON response
+            const result = await response.json();
+
+            if (result.success) {
+                // If the visit was logged successfully, redirect to the sponsor's URL
+                window.location.href = result.url; 
+            } else {
+                console.error("Error logging visit:", result.error);
+            }
+        } catch (error) {
+            // Log any errors that occurred during the fetch process
+            console.error("Failed to send visit request:", error);
+        }
+    });
+</script>
+
 
 <!-- Include your JS files here -->
 <script src="/static/follow.js"></script>

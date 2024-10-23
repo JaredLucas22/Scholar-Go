@@ -104,11 +104,21 @@
                           </ul>
                       </li>                   
                       </ul>
-                    {% elif session['user_type'] == 'Sponsorship' %}
-                        <li class="nav-item">
-                            <a class="nav-link text-white" id="sponsor-dashboard" href="/sponsor-dashboard">Sponsor Dashboard</a>
-                        </li>
-                    {% endif %}
+                      {% elif session['user_type'] == 'Sponsorship' %}
+                      <li class="nav-item">
+                          <a class="nav-link text-white" id="sponsordashboard" href="/sponsordashboard">Sponsor Dashboard</a>
+                      </li>
+                      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                          <li class="nav-item">
+                              <a href="/profilesponsor">
+                                  <img class="rounded-circle me-2 profile-picture"
+                                       style="width: 37px; height: 37px; cursor: pointer;"
+                                       src="{{ url_for('static', filename='uploads/' + sponsorship_data.picture_path) }}"
+                                       alt="Profile Picture">
+                              </a>                               
+                          </li>
+                      </ul>             
+                      {% endif %}                      
                 {% endif %}
             </ul>
 

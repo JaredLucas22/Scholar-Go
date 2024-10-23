@@ -2,6 +2,7 @@
 {% block title %}Sign Up{% endblock %}
 {% block content %}
 
+
 <style>
     body{
         color: black;
@@ -9,6 +10,8 @@
 </style>
 <form method="POST" enctype="multipart/form-data" onsubmit="return validateWeights()">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    
+
     <h3 align="center">Sign your Sponsor</h3>
     <div class="form-group">
         <label for="sponsor-name">Sponsor Name</label>
@@ -33,6 +36,27 @@
             required
         />
     </div>
+        <!-- New Email Field -->
+        <div class="form-group">
+            <label for="persontocontact">Contact Person</label>
+            <input
+                class="form-control"
+                id="persontocontact"
+                name="persontocontact"
+                placeholder="Enter the person to contact"
+                required
+            />
+        </div>
+        <div class="form-group">
+            <label for="address">Address</label>
+            <input
+                class="form-control"
+                id="address"
+                name="address"
+                placeholder="Enter the person to contact"
+                required
+            />
+        </div>
     <!-- New Password Field -->
     <div class="form-group">
         <label for="password">Password</label>
@@ -55,6 +79,14 @@
             placeholder="Enter password"
             required
         />
+    </div>
+    <div class="form-group">
+        <label for="url">Enter your URL website(optional)</label>
+        <textarea class="form-control" id="url" name="url" rows="2"></textarea>
+    </div>
+    <div class="form-group">
+        <label for="contact_information">Enter your contact Information(optional)</label>
+        <textarea class="form-control" id="contact_information" name="contact_information"></textarea>
     </div>
     <div class="form-group">
         <label for="weight_fos">Field of Study (FOS) Weight</label>

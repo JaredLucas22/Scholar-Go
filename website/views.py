@@ -1,20 +1,54 @@
-from flask import Blueprint, render_template, request, flash, jsonify
+from flask import Blueprint, render_template, request, flash, jsonify, session
 from flask_login import login_required, current_user
-from .models import Note, Sponsorship_data, Comment
+from .models import Note, Sponsorship_data, Comment, user_sponsorship_visits
 from . import db
 import json
 from scoring import calculate_compatibility_score
 from flask import render_template
 from .utils import time_since
+from datetime import datetime
 
 
 views = Blueprint('views', __name__)
 
+@views.route('/sponsordashboard')
+@login_required
+def sponsordashboard():
+    sponsorship_data = None
+    if session.get('user_type') == 'Sponsorship':
+        sponsorship_data = Sponsorship_data.query.filter_by(id=current_user.id).first()
+    return render_template("sponsor_dashboard.html", user=current_user, sponsorship_data=sponsorship_data)
+
+@views.route("/profilesponsor")
+@login_required
+def profile_sponsor():
+    sponsorship_data = None
+    if session.get('user_type') == 'Sponsorship':
+        sponsorship_data = Sponsorship_data.query.filter_by(id=current_user.id).first()
+        print("Sponsorship data:", sponsorship_data)  # Debug statement
+    else:
+        print("User type is not Sponsorship.")  # Debug statement
+    return render_template('profile_sponsor.html', user=current_user, sponsorship_data=sponsorship_data)
+
+
+
 @views.route('/sponsor/<int:sponsor_id>', methods=['GET'])
 @login_required
 def view_sponsorship(sponsor_id):
-    print("Sponsor route hit")  # Check if this prints in the logs
     sponsor = Sponsorship_data.query.get_or_404(sponsor_id)
+
+    # Check if the user has visited this sponsorship
+    visit_record = db.session.query(user_sponsorship_visits).filter_by(
+        user_id=current_user.id,
+        sponsorship_id=sponsor_id
+    ).first()
+    
+    is_visited = visit_record is not None
+    visit_count = db.session.query(user_sponsorship_visits).filter_by(
+        user_id=current_user.id,
+        sponsorship_id=sponsor_id
+    ).count()  # Get the count of visits
+
     is_liked = current_user in sponsor.likes
 
     # Fetch comments for the sponsor
@@ -26,7 +60,7 @@ def view_sponsorship(sponsor_id):
         comment.relative_time = time_since(comment.created_at)
 
     # Get the likes count
-    likes_count = len(sponsor.likes)  # Assuming sponsor.likes is a list of users who liked it
+    likes_count = len(sponsor.likes)
 
     return render_template('sponsor_details.html', 
                            sponsor=sponsor, 
@@ -34,7 +68,9 @@ def view_sponsorship(sponsor_id):
                            is_liked=is_liked,
                            is_following=is_following, 
                            user=current_user,
-                           likes_count=likes_count)  # Pass the likes count to the template
+                           likes_count=likes_count,
+                           is_visited=is_visited,  # Pass whether it was visited
+                           visit_count=visit_count)  # Pass the visit count
 
 
 @views.route('/sponsorlist', methods=['GET'])
@@ -100,6 +136,7 @@ def follow():
 def profile():
 
     return render_template('profile.html', user=current_user)
+
 
 from .models import Sponsorship_data  # Import your Sponsorship_data model
 

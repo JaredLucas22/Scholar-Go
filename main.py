@@ -1,9 +1,11 @@
 
 from website import create_app, socketio
 from scoring import match_students_to_sponsorships
+from website.auth import auth as auth_blueprint
 
 
 app = create_app()
+app.register_blueprint(auth_blueprint, url_prefix='/auth', name='auth_bp')
 
 @app.cli.command('match')
 def match():

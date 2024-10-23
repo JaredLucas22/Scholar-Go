@@ -27,8 +27,7 @@
                     <div class="content flex-grow-1 ms-3"> 
                         <h5 class="title mb-1 me-2">{{ item.sponsor_name }}</h5>
                         <p class="description mb-1">{{ item.description | safe }}</p>
-                        <p class="likes mb-1">Likes: {{ item.likes | length }} | Deadline on {{ item.deadline_date.strftime('%B %d, %Y') }}</p>
-                        <p>{{ item.deadline_date.strftime('%B %d, %Y') }}</p>
+                        <b><p class="likes mb-1">Likes: {{ item.likes | length }} | Deadline on {{ item.deadline_date.strftime('%B %d, %Y') }}</p></b>
                     
                         <div class="d-flex content-between mt-auto">
                             {% if item.active %}
@@ -54,7 +53,13 @@
 
                 <div class="button-group d-flex flex-column flex-sm-row">
                     <button class="btn btn-warning btn-sm flex-grow-1"><i class="fa-solid fa-bell"></i> Add Alarm</button>
-                    <a href="{{ url_for('views.view_sponsorship', sponsor_id=item.id) }}" class="btn btn-primary btn-sm flex-grow-1"><i class="fa-solid fa-eye"></i> Visit Program</a>
+                    <a class="btn btn-primary btn-sm flex-grow-1 visit-button" 
+                    data-sponsorship-id="{{ item.id }}" 
+                    href="{{ item.url }}">
+                    <i class="fa-solid fa-eye"></i> Visit Program
+                 </a>
+                 
+                            
                     <button class="btn btn-danger btn-sm flex-grow-1"><i class="fa-solid fa-archive"></i> Archive</button>
                     <button class="btn btn-dark btn-sm flex-grow-1"><i class="fa-solid fa-share"></i> Share</button>
                 </div>
@@ -140,6 +145,38 @@ document.querySelectorAll('.close-button').forEach(button => {
         }
     });
 });
+
+document.querySelectorAll('.visit-button').forEach(button => {
+    button.addEventListener('click', async function(event) {
+        const sponsorshipId = this.getAttribute('data-sponsorship-id');
+        const redirectUrl = this.getAttribute('data-url'); // Get the redirect URL
+        const csrfToken = "{{ csrf_token() }}"; // Get CSRF token from your context
+
+        console.log("Sponsorship ID to visit:", sponsorshipId); // Debug: Log sponsorship ID
+
+        // Log the visit
+        try {
+            const response = await fetch(`/auth/visit_sponsorship/${sponsorshipId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                credentials: 'include'
+            });
+
+
+            // Parse the JSON response
+            const result = await response.json();
+            console.log("Visit logged successfully:", result); // Debug: Log the successful result
+
+            // Redirect to the sponsorship URL
+            window.location.href = redirectUrl; // Redirect to the URL
+        } catch (error) {
+        }
+    });
+});
+
 
 </script>
 {% endblock %}

@@ -1,6 +1,6 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for, current_app, jsonify
+from flask import Blueprint, render_template, request, flash, redirect, url_for, current_app, jsonify, session
 from flask_socketio import emit
-from .models import User, Sponsorship_data, user_sponsorship, Comment, TriggerWord, Notification
+from .models import User, Sponsorship_data, user_sponsorship, Comment, TriggerWord, Notification, user_sponsorship_visits
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from . import db, socketio  # Import socketio here
@@ -38,6 +38,8 @@ if not os.path.exists(UPLOAD_FOLDER):
 import os
 from flask import current_app
 
+
+
 @login_required
 @auth.route('/sponsor_details/<int:sponsor_id>', methods=['GET'])
 def view_sponsorship(sponsor_id):
@@ -45,8 +47,46 @@ def view_sponsorship(sponsor_id):
 
     comments = Comment.query.filter_by(sponsor_id=sponsor_id).order_by(Comment.created_at.desc()).all()
     is_liked = current_user in sponsor.likes
-    return render_template('sponsor_details.html', user=current_user, sponsor=sponsor, is_liked=is_liked)
+    
+    # Check if the user has visited this sponsorship
+    is_visited = db.session.query(user_sponsorship_visits).filter_by(
+        user_id=current_user.id,
+        sponsorship_id=sponsor_id
+    ).count() > 0  # Returns True if the user has visited, otherwise False
 
+    return render_template('sponsor_details.html', user=current_user, sponsor=sponsor, is_liked=is_liked, is_visited=is_visited)
+
+def has_visited_sponsorship(user_id, sponsorship_id):
+    """Check if the user has visited the sponsorship."""
+    return db.session.query(user_sponsorship_visits).filter_by(
+        user_id=user_id,
+        sponsorship_id=sponsorship_id
+    ).first() is not None
+
+@auth.route('/visit_sponsorship/<int:sponsorship_id>', methods=['POST'])
+@login_required
+def visit_sponsorship(sponsorship_id):
+    print(f"Visit sponsorship called with ID: {sponsorship_id}")  # Debug statement
+    user_id = current_user.id
+    
+    # Check if the visit already exists
+    existing_visit = db.session.query(user_sponsorship_visits).filter_by(user_id=user_id, sponsorship_id=sponsorship_id).first()
+
+    if existing_visit:
+        return jsonify({'success': True, 'url': existing_visit.sponsorship.url}), 200
+
+    # Insert a new visit record
+    visit_entry = {
+        'user_id': user_id,
+        'sponsorship_id': sponsorship_id,
+        'visited_at': datetime.utcnow()
+    }
+    
+    db.session.execute(user_sponsorship_visits.insert().values(visit_entry))
+    db.session.commit()
+
+    sponsor = Sponsorship_data.query.get(sponsorship_id)
+    return jsonify({'success': True, 'url': sponsor.url}), 200
 
 def save_picture(form_picture):
     # Get the original filename
@@ -114,9 +154,6 @@ def unfollow_sponsorship(sponsorship_id):
         return jsonify({'success': False, 'message': 'An unexpected error occurred.'}), 500
 
 
-from flask_login import current_user, login_user, logout_user
-
-from flask import session
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
@@ -136,12 +173,16 @@ def login():
         if sponsorship and check_password_hash(sponsorship.password, password):
             login_user(sponsorship, remember=True)
             session['user_type'] = 'Sponsorship'  # Store user type as 'Sponsorship' in the session
-            return redirect(url_for('views.home'))
+            
+            # Fetch sponsorship data if needed for the dashboard
+            sponsorship_data = Sponsorship_data.query.filter_by(id=sponsorship.id).first()
+            return redirect(url_for('views.sponsordashboard', sponsorship_data=sponsorship_data))
         
         # If no match found in both tables
         flash('Invalid email or password.', category='error')
 
     return render_template("login.html", user=current_user)
+
 
 
 
@@ -443,7 +484,11 @@ def sign_up():
             )
             db.session.add(new_user)
             db.session.commit()
-            login_user(new_user, remember=True)
+            
+            # Log in the new user
+            login_user(new_user, remember=True)  # Use new_user instead of user
+            session['user_type'] = new_user.get_user_type()  # Ensure the user type is set in the session
+            
             flash('Account created!', category='success')
             return redirect(url_for('views.home'))
 
@@ -458,6 +503,8 @@ def sign_sponsor():
         email = request.form.get('email')
         password1 = request.form.get('password1')
         password2 = request.form.get('password2')
+        url = request.form.get('url')
+        contact_information = request.form.get('contact_information')
         course = request.form.get('course')
         weight_fos = request.form.get('weight_fos', type=float)
         weight_gpa = request.form.get('weightgpa', type=float)
@@ -510,6 +557,8 @@ def sign_sponsor():
             email=email,
             password=generate_password_hash(password1, method='pbkdf2:sha256'),
             course=course,
+            url=url,
+            contact_information = contact_information,
             weight_fos=weight_fos,
             weight_gpa=weight_gpa,
             weight_extracurricular_activities=weight_extracurricular,
@@ -528,16 +577,22 @@ def sign_sponsor():
         try:
             db.session.add(new_sponsor)
             db.session.commit()
+            
+            # Log in the new sponsor
+            login_user(new_sponsor, remember=True)  # Use new_sponsor to log in
+            session['user_type'] = 'Sponsorship'  # Store user type as 'Sponsorship' in the session
             flash('Sponsor added successfully!', category='success')
-            return redirect(url_for('auth.login'))
+            return redirect(url_for('views.sponsordashboard'))  # Redirect to the sponsor dashboard
         except Exception as e:
-            db.session.rollback()  # Roll back the session on error
-            print(e)  # Log the error for debugging
+            db.session.rollback()  # Roll back on error
+            print(e)  # Log error for debugging
             flash('An error occurred while adding the sponsor. Please try again.', category='error')
             return redirect(url_for('auth.sign_sponsor'))
 
     return render_template("sign_sponsor.html", user=current_user)
 
+
+    
 @auth.route('/follow/<int:sponsorship_id>', methods=['POST'])
 @login_required
 def follow(sponsorship_id):
@@ -685,19 +740,68 @@ def upload_profile_picture():
             try:
                 # Save the picture
                 picture_path = save_picture(profile_picture)
-                current_user.picture_path = picture_path
 
-                # Commit the changes (optional here if done in update profile)
+                # Update the profile picture based on user type
+                if session.get('user_type') == 'Sponsorship':
+                    sponsorship_data = Sponsorship_data.query.filter_by(id=current_user.id).first()
+                    sponsorship_data.picture_path = picture_path
+                else:  # Assuming it's a regular User
+                    current_user.picture_path = picture_path
+
+                # Commit the changes
                 db.session.commit()
 
                 flash('Profile picture updated successfully!', category='success')
-                return redirect(url_for('views.profile'))  # Redirect to profile page
+                return redirect(request.referrer)  # Redirect to profile page
 
             except ValueError as e:
                 flash(str(e), category='error')
-                return redirect(url_for('views.profile'))  # Redirect on error
+                return redirect(request.referrer)  # Redirect on error
 
-    # No picture uploaded, redirect back
-    flash('No picture uploaded.', category='warning')
-    return redirect(url_for('views.profile'))  # Redirect back if no picture was uploaded
+    flash('No file uploaded or file is invalid.', category='error')
+    return redirect(request.referrer)  # Redirect if no valid picture was uploaded
+
+
+@auth.route('/update_sponsor_profile', methods=['POST'])
+@login_required
+def update_sponsor_profile():
+    # Check if the user is of type Sponsorship
+    if session.get('user_type') == 'Sponsorship':
+        # Get form data
+        sponsor_name = request.form.get('sponsor_name')
+        address = request.form.get('address')
+        persontocontact = request.form.get('persontocontact')
+        email = request.form.get('email')
+        contact_information = request.form.get('contact_information')
+        type_of_sponsor = request.form.get('type_of_sponsor')
+        description = request.form.get('description')
+        full_description = request.form.get('full_description')
+        amount_per_semester = request.form.get('amount_per_semester')
+
+        # Update sponsor information
+        sponsorship_data = Sponsorship_data.query.filter_by(id=current_user.id).first()
+        if sponsorship_data:
+            sponsorship_data.sponsor_name = sponsor_name
+            sponsorship_data.email = email
+            address = address
+            persontocontact = persontocontact
+            sponsorship_data.contact_information = contact_information
+            sponsorship_data.type_of_sponsor = type_of_sponsor
+            sponsorship_data.description = description
+            sponsorship_data.full_description = full_description
+            sponsorship_data.amount_per_semester = amount_per_semester
+
+            # Commit the changes
+            try:
+                db.session.commit()
+                flash('Sponsor profile updated successfully!', category='success')
+            except Exception as e:
+                db.session.rollback()
+                flash('An error occurred while updating your sponsor profile. Please try again.', category='error')
+
+    return redirect(url_for('views.profile_sponsor'))  # Redirect to the sponsor profile page
+
+
+
+
 
