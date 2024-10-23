@@ -247,22 +247,25 @@
                                 <p class="applicant-info">Number of matched applicants: <strong>{{matched_applicants_count}}</strong></p>
                                 <p class="applicant-info">Number of Available Applicants: <strong>{{ total_applicants_count }}</strong></p>
                                 <div class="d-flex justify-content-between align-items-center"> 
-                                    <p class="applicant-info mb-0 rate"><strong>Acceptance rate: {{acceptance_rating | round(2)}}%</strong></p>
+                                    <p class="applicant-info mb-0 rate">
+                                        <strong>Acceptance rate: {{ acceptance_rating | round(2) }}%</strong>
+                                    </p>
                                     <button class="btn btn-success ml-3">Active Program</button> 
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                
             </div>
         </div>
+        <div class="sponsor-requirements" style="position: relative;">
+            {{ sponsorship_data.full_description | safe }}
+        </div>
     </div>
+    
 </div>
-</div>
-</div>
-</div>
-</div>
-</div>
+
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
