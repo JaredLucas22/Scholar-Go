@@ -44,15 +44,16 @@ footer {
   padding: 0.1rem 0;
   color: #d5d5d5;
   text-decoration: none;
+  font-size: 1.6vh;
 }
 .footer-column .nav-item .nav-link-footer:hover {
   color: #e3e3e3;
   text-decoration: underline;
 }
-
-.footer-column .nav-item span.nav-link-footer {
+span.nav-link-footer {
   color: #b4b4b4;
 }
+
 .footer-column .nav-item span.footer-title {
   font-size: 14px;
   font-weight: 700;
@@ -127,28 +128,37 @@ footer .quick-links {
 
 @media (max-width: 1200px) {
 
+  footer {
+    padding: 1.5rem 0; /* Reduce padding */
+  }
+
+  .footer-column .nav-item .navlink-footer {
+    font-size: 1.2vh;
+  }
 
   .footer-column .nav-item span.footer-title {
-    font-size: 15px; /* Decrease font size */
+    font-size: 12px; /* Further decrease font size */
   }
 
   ul.social-buttons li a {
-    font-size: 14px; /* Decrease social media icon size */
-    line-height: 35px;
-    width: 30px; /* Smaller width for social buttons */
-    height: 30px; /* Smaller height for social buttons */
+    font-size: 10px; /* Decrease social media icon size */
+    line-height: 30px;
+    width: 28px; /* Smaller width for social buttons */
+    height: 28px; /* Smaller height for social buttons */
   }
 
   .nav-link-footer {
-    font-size: 13px;
+    font-size: 11px;
   }
 }
 
 @media (max-width: 992px) {
-
-
   footer {
     padding: 1.5rem 0; /* Reduce padding */
+  }
+
+  .footer-column .nav-item .navlink-footer {
+    font-size: 1.2vh;
   }
 
   .footer-column .nav-item span.footer-title {
@@ -168,10 +178,8 @@ footer .quick-links {
 }
 
 @media (max-width: 768px) {
-
   .footer-column .nav-item span.footer-title {
     font-size: 14px; /* Further decrease font size */
-
   }
 
   ul.social-buttons li a {
@@ -188,7 +196,6 @@ footer .quick-links {
   /* Align social buttons to the left */
   .social-buttons {
     text-align: center; /* Align to the left */
-    margin-right: 57%;
   }
 
   .nav-link-footer {
@@ -209,7 +216,7 @@ footer .quick-links {
 }
 
 @media (max-width: 576px) {
-  
+
   .footer-column .nav-item .nav-link-footer {
     font-size: 12px; /* Decrease link font size */
   }
@@ -222,7 +229,6 @@ footer .quick-links {
   /* Align social buttons to the left */
   .social-buttons {
     text-align: center; /* Align to the left */
-    margin-right: 50%;
   }
 
   .nav-link-footer {
