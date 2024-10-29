@@ -52,14 +52,14 @@
                 </div>
 
                 <div class="button-group d-flex flex-column flex-sm-row">
-                    <button class="btn btn-warning btn-sm flex-grow-1"><i class="fa-solid fa-bell"></i> Add Alarm</button>
+                    <button class="btn btn-warning btn-sm flex-grow-1 add-alarm-button" data-bs-toggle="modal" data-bs-target="#addAlarmModal" data-sponsorship-id="{{ item.id }}">
+                        <i class="fa-solid fa-bell"></i> Add Alarm
+                    </button>
                     <a class="btn btn-primary btn-sm flex-grow-1 visit-button" 
                     data-sponsorship-id="{{ item.id }}" 
                     href="{{ item.url }}">
                     <i class="fa-solid fa-eye"></i> Visit Program
                  </a>
-                 
-                            
                     <button class="btn btn-danger btn-sm flex-grow-1"><i class="fa-solid fa-archive"></i> Archive</button>
                     <button class="btn btn-dark btn-sm flex-grow-1"><i class="fa-solid fa-share"></i> Share</button>
                 </div>
@@ -74,110 +74,102 @@
     </div>
 </div>
 
+<!-- Add Alarm Modal -->
+<div class="modal fade" id="addAlarmModal" tabindex="-1" aria-labelledby="addAlarmModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addAlarmModalLabel">Add Alarm</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addAlarmForm">
+                    <div class="mb-3">
+                        <label for="alarmDate" class="form-label">Alarm Date & Time</label>
+                        <input type="datetime-local" class="form-control" id="alarmDate" name="alarmDate" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="alarmPriority" class="form-label">Priority</label>
+                        <select class="form-select" id="alarmPriority" name="priority">
+                            <option value="low">Low</option>
+                            <option value="medium">Medium</option>
+                            <option value="high">High</option>
+                        </select>
+                    </div>
+                    <input type="hidden" id="sponsorshipId" name="sponsorshipId">
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Set Alarm</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% block scripts %}
 <script>
-// Function to get CSRF token from meta tag
-function getCSRFToken() {
-    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-    console.log("CSRF Token:", csrfToken); // Log the CSRF token to the console
-    return csrfToken;
-}
 
-// Function to display flash messages
 function displayFlashMessage(message, type = 'success') {
-    const flashContainer = document.getElementById('flash-messages');
-    if (flashContainer && message) {
-        const flashMessageDiv = document.createElement('div');
-        flashMessageDiv.className = `alert alert-${type}`; // Add appropriate class based on type
-        flashMessageDiv.textContent = message;
-        flashContainer.appendChild(flashMessageDiv);
-
-        // Remove the flash message after a few seconds
-        setTimeout(() => {
-            flashContainer.removeChild(flashMessageDiv);
-        }, 3000);
-    }
+    const flashMessagesDiv = document.getElementById('flash-messages');
+    flashMessagesDiv.innerHTML = `
+        <div class="alert alert-${type}" role="alert">
+            ${message}
+        </div>
+    `;
+    setTimeout(() => {
+        flashMessagesDiv.innerHTML = ''; // Remove the message after a few seconds
+    }, 5000);
 }
-
-// Share button functionality
-document.querySelectorAll('.share-button').forEach(button => {
-    button.addEventListener('click', function() {
-        const sponsorshipId = this.dataset.sponsorshipId;
-        // Implement share functionality (e.g., open a modal, share on social media, etc.)
-        alert(`Sharing sponsorship ID: ${sponsorshipId}`);
-    });
-});
-
-// Close button functionality
-document.querySelectorAll('.close-button').forEach(button => {
-    button.addEventListener('click', function() {
-        const sponsorshipId = this.dataset.sponsorshipId;
-        const sponsorshipCard = this.closest('.list');
-
-        if (sponsorshipCard) {
-            fetch(`/unfollow/${sponsorshipId}`, {
+    document.addEventListener("DOMContentLoaded", () => {
+        // Set sponsorship ID to the form when "Add Alarm" button is clicked
+        document.querySelectorAll('.add-alarm-button').forEach(button => {
+            button.addEventListener('click', () => {
+                const sponsorshipId = button.getAttribute('data-sponsorship-id');
+                document.querySelector('#sponsorshipId').value = sponsorshipId;
+            });
+        });
+    
+        // Handle form submission for setting the alarm
+        document.querySelector('#addAlarmForm').addEventListener('submit', event => {
+            event.preventDefault();
+    
+            const sponsorshipId = document.querySelector('#sponsorshipId').value;
+            const alarmDate = document.querySelector('#alarmDate').value;
+            const alarmPriority = document.querySelector('#alarmPriority').value;
+    
+            fetch(`/set_alarm/${sponsorshipId}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': getCSRFToken() // Use the function to get the CSRF token
+                    'X-CSRFToken': getCSRFToken()  // Ensure getCSRFToken() function is defined
                 },
+                body: JSON.stringify({
+                    alarm_time: alarmDate,
+                    priority: alarmPriority
+                })
             })
             .then(response => {
                 if (!response.ok) {
-                    return response.text().then(text => {
-                        throw new Error(text); // Log the response text for debugging
+                    return response.json().then(data => {
+                        console.error("Server response:", data);
+                        throw new Error(data.message || 'Error adding alarm');
                     });
                 }
                 return response.json();
             })
             .then(data => {
-                if (data.success) {
-                    sponsorshipCard.remove();
-                    displayFlashMessage(data.message);
-                } else {
-                    displayFlashMessage('Failed to remove sponsorship.');
-                }
+                console.log("Alarm set successfully:", data);
+                displayFlashMessage(data.message);
+                document.querySelector('#addAlarmModal').modal('hide'); // Hide modal after setting alarm
             })
             .catch(error => {
-                console.error('Error:', error);
-                displayFlashMessage('An error occurred while trying to remove sponsorship.'); 
+                console.error("Error adding alarm:", error);
+                displayFlashMessage(error.message, 'danger');
             });
-        }
+        });
     });
-});
-
-document.querySelectorAll('.visit-button').forEach(button => {
-    button.addEventListener('click', async function(event) {
-        const sponsorshipId = this.getAttribute('data-sponsorship-id');
-        const redirectUrl = this.getAttribute('data-url'); // Get the redirect URL
-        const csrfToken = "{{ csrf_token() }}"; // Get CSRF token from your context
-
-        console.log("Sponsorship ID to visit:", sponsorshipId); // Debug: Log sponsorship ID
-
-        // Log the visit
-        try {
-            const response = await fetch(`/auth/visit_sponsorship/${sponsorshipId}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': csrfToken
-                },
-                credentials: 'include'
-            });
-
-
-            // Parse the JSON response
-            const result = await response.json();
-            console.log("Visit logged successfully:", result); // Debug: Log the successful result
-
-            // Redirect to the sponsorship URL
-            window.location.href = redirectUrl; // Redirect to the URL
-        } catch (error) {
-        }
-    });
-});
-
-
-</script>
+    </script>
+    
 {% endblock %}
 {% endblock %}

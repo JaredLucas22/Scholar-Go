@@ -1,16 +1,23 @@
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
+
+# Define UTC+8 timezone offset
+utc_plus_8 = timezone(timedelta(hours=8))
+
+def get_local_time():
+    """Returns the current date and time in UTC+8."""
+    return datetime.now(timezone.utc).astimezone(utc_plus_8)
 
 def get_current_time():
-    """Returns the current UTC date and time."""
-    return datetime.utcnow()
+    """Returns the current date and time in UTC+8."""
+    return datetime.now(timezone.utc).astimezone(utc_plus_8)
 
 def get_current_year():
-    """Returns the current year."""
-    return datetime.utcnow().year
+    """Returns the current year in UTC+8."""
+    return get_current_time().year
 
 def time_since(dt):
-    """Returns a string representing how long ago a date was."""
-    now = datetime.utcnow()
+    """Returns a string representing how long ago a date was, using UTC+8 timezone."""
+    now = get_current_time()
     diff = now - dt
 
     seconds = diff.total_seconds()
@@ -31,3 +38,5 @@ def time_since(dt):
     else:
         years = seconds // 31536000
         return f"{int(years)} year{'s' if years != 1 else ''} ago"
+
+

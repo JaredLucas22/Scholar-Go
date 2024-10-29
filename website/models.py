@@ -4,10 +4,23 @@ from sqlalchemy.sql import func
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 
+
+
+
+
 # Association Table for User Sponsorships
 user_sponsorship = db.Table('user_sponsorship',
     db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
     db.Column('sponsorship_id', db.Integer, db.ForeignKey('sponsorship_data.id'), primary_key=True)
+)
+
+# Association Table for User Sponsorship Alarms
+user_sponsorship_alarm = db.Table('user_sponsorship_alarm',
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
+    db.Column('sponsorship_id', db.Integer, db.ForeignKey('sponsorship_data.id'), primary_key=True),
+    db.Column('priority', db.String(50), nullable=True),
+    db.Column('alarm_time', db.DateTime(timezone=True), default=func.now()),
+    db.Column('message', (db.String(256)))
 )
 
 # Association Table for User Likes
@@ -21,15 +34,13 @@ user_sponsorship_visits = db.Table('user_sponsorship_visits',
     db.Column('id', db.Integer, primary_key=True, autoincrement=True),  # Auto-incrementing primary key
     db.Column('user_id', db.Integer, db.ForeignKey('user.id'), nullable=False),
     db.Column('sponsorship_id', db.Integer, db.ForeignKey('sponsorship_data.id'), nullable=False),
-    db.Column('created_at', db.DateTime, default=datetime.utcnow),
+    db.Column('created_at', db.DateTime(timezone=True), default=func.now()),
 )
-
-
 
 class Note(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     data = db.Column(db.String(10000))
-    date = db.Column(db.DateTime(timezone=True), default=func.now())
+    date = db.Column(db.DateTime(timezone=True), default=func.now())  # Ensure this is timezone-aware
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
 class User(db.Model, UserMixin):
@@ -75,8 +86,6 @@ class User(db.Model, UserMixin):
     def get_user_type(self):
         print("User Type: User")  # Debug print statement
         return "User"
-    
-
 
 class TriggerWord(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -85,21 +94,30 @@ class TriggerWord(db.Model):
 class Notification(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    sponsorship_id = db.Column(db.Integer, db.ForeignKey('sponsorship_data.id'), nullable=False)  # Add this line
     message = db.Column(db.String(255), nullable=False)
-    is_read = db.Column(db.Boolean, default=False, nullable=False)
-    created_at = db.Column(db.DateTime(timezone=True), default=func.now())
-    
-    def __init__(self, user_id, message):
-        self.user_id = user_id
-        self.message = message
+    is_read = db.Column(db.Boolean, default=False)
+    priority = db.Column(db.String(50), nullable=True)
+    alarm_date = db.Column(db.DateTime(timezone=True), nullable=True)  # Make alarm_date timezone-aware
+    created_at = db.Column(db.DateTime(timezone=True), default=func.now())  # Store in UTC
 
+    def __init__(self, user_id, sponsorship_id, message, is_read=False, priority=None, alarm_date=None):
+        self.user_id = user_id
+        self.sponsorship_id = sponsorship_id  # Add this line
+        self.message = message
+        self.is_read = is_read
+        self.priority = priority
+        self.alarm_date = alarm_date
+
+    def __repr__(self):
+        return f"<Notification(id={self.id}, user_id={self.user_id}, sponsorship_id={self.sponsorship_id}, message='{self.message}', is_read={self.is_read}, priority='{self.priority}', alarm_date={self.alarm_date}, created_at={self.created_at})>"
 
 class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     sponsorship_id = db.Column(db.Integer, db.ForeignKey('sponsorship_data.id'), nullable=False)
-    created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
+    created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())  # Ensure this is timezone-aware
 
 class Sponsorship_data(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)

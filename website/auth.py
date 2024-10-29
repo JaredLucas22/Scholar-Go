@@ -1,20 +1,26 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for, current_app, jsonify, session
 from flask_socketio import emit
-from .models import User, Sponsorship_data, user_sponsorship, Comment, TriggerWord, Notification, user_sponsorship_visits
+from .models import User, Sponsorship_data, user_sponsorship, Comment, TriggerWord, Notification, user_sponsorship_visits, user_sponsorship_alarm
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from . import db, socketio  # Import socketio here
+from sqlalchemy import insert
 from flask_login import login_user, login_required, logout_user, current_user
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import os
+from .utils import utc_plus_8 
+import time
 from flask_login import LoginManager
 from .models import User, Sponsorship_data
 import smtplib
 from email.message import EmailMessage
 import logging
+from threading import Thread
 
 login_manager = LoginManager()
 login_manager.login_view = 'auth.login'
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 email_user = ('jjclucas.student@ua.edu.ph') 
 email_password = ('yfxm ejor oqhs phet') 
@@ -27,6 +33,52 @@ def load_user(user_id):
     return Sponsorship_data.query.get(int(user_id))
 
 auth = Blueprint('auth', __name__)
+
+@auth.route('/api/due_alarms', methods=['GET'])
+def notify_due_alarms():
+    now = datetime.now(timezone.utc).astimezone(utc_plus_8)
+    logger.info(f"Checking alarms at {now}")
+
+    due_alarms = db.session.query(user_sponsorship_alarm).filter(
+        user_sponsorship_alarm.c.alarm_time <= now
+    ).all()
+
+    if not due_alarms:
+        logger.info("No due alarms found.")
+        return jsonify({"message": "No due alarms found.", "success": True, "alarms": []})
+
+    # List to hold the messages for response
+    alarm_messages = []
+
+    for alarm in due_alarms:
+        # Emit real-time notification to the user via Socket.IO
+        socketio.emit('alarm_notification', {
+            'user_id': alarm.user_id,
+            'message': alarm.message,
+            'priority': alarm.priority
+        }, namespace='/notifications')
+
+        # Add the notification to the notifications table using the add_notification function
+        add_notification(user=User.query.get(alarm.user_id), message=alarm.message, sponsorship_id=alarm.sponsorship_id)
+
+        # Collect the message for response
+        alarm_messages.append({
+            'user_id': alarm.user_id,
+            'message': alarm.message,
+            'priority': alarm.priority
+        })
+
+    # Bulk delete the due alarms after notifying
+    db.session.query(user_sponsorship_alarm).filter(
+        user_sponsorship_alarm.c.alarm_time <= now
+    ).delete(synchronize_session='fetch')
+
+    # Commit changes
+    db.session.commit()
+    logger.info("All due alarms have been notified and deleted.")
+
+    return jsonify({"message": "Notifications sent for all due alarms.", "success": True, "alarms": alarm_messages})
+
 # Define the path to the 'uploads' folder
 UPLOAD_FOLDER = os.path.join(os.getcwd(), 'static', 'uploads')
 
@@ -61,7 +113,7 @@ def visit_sponsorship(sponsorship_id):
     new_visit = {
         'user_id': user_id,
         'sponsorship_id': sponsorship_id,
-        'created_at': datetime.utcnow()  # Set the current timestamp
+        'created_at': datetime.now(timezone.utc).astimezone(utc_plus_8)  # Set the current timestamp
     }
     
     try:
@@ -185,14 +237,61 @@ from flask_login import current_user
 @auth.route('/test-notification')
 @login_required
 def test_notification():
-    # Manually add a notification for the current user
-    add_notification(current_user, "Almost there.")
-    
-    # Debug print statement
-    print(f"Test Notification added for User {current_user.id}: This is a test notification.")
-    
-    # Return a response confirming the test
-    return render_template ("views.home", user=current_user)
+    try:
+        # Manually add a notification for the current user
+        add_notification(current_user, "Almost there.")
+        
+        # Debug print statement
+        print(f"Test Notification added for User {current_user.id}: This is a test notification.")
+        
+        # Return a response confirming the test
+        return jsonify({"success": True, "message": "Test notification added successfully."}), 200
+    except Exception as e:
+        print(f"Error adding test notification: {str(e)}")
+        return jsonify({"success": False, "message": "Failed to add test notification."}), 500
+
+@auth.route('/notify_alarms', methods=['GET'])
+@login_required
+def notify_alarm():
+    try:
+        now = datetime.now(timezone.utc).astimezone(utc_plus_8)
+        logger.info(f"Current UTC time: {now}")
+
+        # Get all alarms that are due for all users
+        alarms = db.session.query(user_sponsorship_alarm).filter(
+            user_sponsorship_alarm.c.alarm_time <= now
+        ).all()
+
+        # Log retrieved alarms for debugging
+        logger.debug(f"Retrieved alarms: {alarms}")
+
+        if not alarms:
+            logger.info("No alarms to notify for any users.")
+            return jsonify({"success": True, "message": "No alarms to notify."})
+
+        # Notify for each alarm
+        for alarm in alarms:
+            user_id = alarm.user_id  # Ensure user_id exists in the alarm record
+            message = f"Alarm for Sponsorship {alarm.sponsorship_id} is due."
+            user = db.session.query(User).filter_by(id=user_id).first()  # Fetch the user based on user_id
+            
+            if user:
+                add_notification(user, message)  # Send notification to the user
+                logger.info(f"Notification sent for Alarm: {message} to User ID: {user_id}")
+
+                # Delete the alarm after notifying
+                db.session.delete(alarm)
+
+        db.session.commit()  # Commit the changes if you modified the alarms
+        logger.info("All due alarms have been notified and deleted successfully.")
+
+        return jsonify({"success": True, "message": "Notifications sent for all due alarms."})
+
+    except Exception as e:
+        db.session.rollback()  # Rollback on error
+        logger.error(f"Error notifying alarms: {str(e)}")  # Log the error
+        return jsonify({"success": False, "message": "An error occurred while notifying alarms."}), 500
+
 
 
 @auth.route('/forgot-password', methods=['GET', 'POST'])
@@ -262,6 +361,7 @@ def read_notification(notification_id):
         notification.is_read = True
         db.session.commit()
     return render_template("notifications.html", user=current_user, notifications=user_notifications)
+
 @auth.route('/notifications/latest')
 @login_required
 def latest_notifications():
@@ -271,12 +371,162 @@ def latest_notifications():
     return jsonify(notifications_list)
 
 
-def add_notification(user, message):
-    notification = Notification(message=message, user_id=user.id)  # Save the user_id, not the user object
+def add_notification(user, message, sponsorship_id=1):
+    notification = Notification(
+        user_id=user.id,
+        message=message,
+        sponsorship_id=sponsorship_id  # Include sponsorship_id if provided
+    )
     db.session.add(notification)
     db.session.commit()
     # Debug output
     print(f"Notification added: {notification.message} for user {user.id}")
+
+
+@auth.route('/notify_all_alarms', methods=['GET'])
+@login_required
+def notify_all_alarms():
+    try:
+
+        now = datetime.now(timezone.utc).astimezone(utc_plus_8)
+        logger.info(f"Current time in UTC+8: {now}")
+
+        # Get all alarms that are due for all users
+        alarms = db.session.query(user_sponsorship_alarm).filter(
+            user_sponsorship_alarm.c.alarm_time <= now
+        ).all()
+
+        # Log all retrieved alarms for debugging
+        logger.debug(f"Retrieved alarms: {alarms}")
+
+        if not alarms:
+            logger.info("No alarms to notify for any users.")
+            return jsonify({"success": True, "message": "No alarms to notify."})
+
+        # Notify for each alarm
+        for alarm in alarms:
+            # Extract user_id and sponsorship_id from the alarm row
+            user_id = alarm.user_id
+            sponsorship_id = alarm.sponsorship_id
+
+            # Fetch the user and sponsorship details
+            user = db.session.query(User).filter_by(id=user_id).first()
+            sponsorship = db.session.query(Sponsorship_data).filter_by(id=sponsorship_id).first()
+
+            if user and sponsorship:
+                message = f"Alarm for Sponsorship {sponsorship.id} is due."
+                add_notification(user, message)  # Notify the actual user
+                logger.info(f"Notification sent for Alarm: {message} to User ID: {user.id}")
+
+                # Delete the alarm after notifying
+                db.session.query(user_sponsorship_alarm).filter_by(user_id=user_id, sponsorship_id=sponsorship_id).delete()
+
+        db.session.commit()  # Commit the changes if you modified the alarms
+        logger.info("All due alarms have been notified and deleted successfully.")
+
+        return jsonify({"success": True, "message": "Notifications sent for all due alarms."})
+
+    except Exception as e:
+        db.session.rollback()  # Rollback on error
+        logger.error(f"Error notifying alarms: {str(e)}")  # Log the error
+        return jsonify({"success": False, "message": "An error occurred while notifying alarms."}), 500
+
+
+
+@auth.route('/set_alarm/<int:sponsorship_id>', methods=['POST'])
+@login_required
+def set_alarm(sponsorship_id):
+    try:
+        # Get data from the request
+        alarm_time_str = request.json.get('alarm_time')
+        priority = request.json.get('priority')
+        user_id = current_user.id
+
+        print(f"Received data: alarm_time={alarm_time_str}, priority={priority}, user_id={user_id}, sponsorship_id={sponsorship_id}")
+
+        # Check if required fields are present
+        if not alarm_time_str or not priority:
+            return jsonify({"success": False, "message": "Missing required fields."}), 400
+
+        # Parse the alarm time
+        try:
+            alarm_time = datetime.strptime(alarm_time_str, '%Y-%m-%dT%H:%M')
+        except ValueError as ve:
+            return jsonify({"success": False, "message": f"Invalid date format: {str(ve)}"}), 400
+
+
+
+        # Check if an alarm already exists for this user and sponsorship
+        existing_alarm = db.session.query(user_sponsorship_alarm).filter_by(
+            user_id=user_id,
+            sponsorship_id=sponsorship_id
+        ).first()
+
+        if existing_alarm:
+            # Update the existing alarm in the database directly
+            db.session.query(user_sponsorship_alarm).filter_by(
+                user_id=user_id,
+                sponsorship_id=sponsorship_id
+            ).update({
+                'alarm_time': alarm_time,
+                'message': f"Alarm updated for Sponsorship {sponsorship_id} with priority {priority}"
+            })
+            db.session.commit()
+            return jsonify({"success": True, "message": "Alarm updated successfully."}), 200
+
+        # If no existing alarm, create a new one
+        stmt = insert(user_sponsorship_alarm).values(
+            user_id=user_id,
+            sponsorship_id=sponsorship_id,
+            alarm_time=alarm_time,
+            message=f"Alarm set for Sponsorship {sponsorship_id} with priority {priority}"
+        )
+
+        # Execute the insert statement
+        db.session.execute(stmt)
+        db.session.commit()
+        print("Alarm added successfully.")
+        return jsonify({"success": True, "message": "Alarm set successfully."})
+
+    except Exception as e:
+        db.session.rollback()  # Rollback on error
+        print(f"Error setting alarm: {str(e)}")
+        return jsonify({"success": False, "message": "An error occurred while setting the alarm."}), 500
+
+
+@auth.route('/test_alarm', methods=['POST'])
+@login_required
+def test_alarm():
+    try:
+        new_alarm = {
+            'user_id': current_user.id,
+            'sponsorship_id': 1,  # Replace with a valid ID for testing
+            'alarm_time': datetime.now(timezone.utc).astimezone(utc_plus_8),
+            'message': "Test alarm"
+        }
+        db.session.execute(insert(user_sponsorship_alarm).values(new_alarm))
+        db.session.commit()
+        print("Alarm added successfully.")
+        return jsonify({"success": True, "message": "Test alarm added successfully."})
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error adding test alarm: {str(e)}")
+        return jsonify({"success": False, "message": "Failed to add test alarm."}), 500
+
+@auth.route('/api/notifications/read/all', methods=['POST'])
+@login_required
+def mark_all_notifications_as_read():
+    # Fetch all notifications for the current user
+    user_notifications = Notification.query.filter_by(user_id=current_user.id, is_read=False).all()
+    
+    if not user_notifications:
+        return '', 204  # No content, already marked as read
+
+    for notification in user_notifications:
+        notification.is_read = True
+    
+    db.session.commit()
+    return '', 200  # Successfully marked as read
 
 
 @auth.route('/api/notifications')
