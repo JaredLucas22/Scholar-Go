@@ -44,11 +44,28 @@
         padding: 0;
     }
 
+
+
+    /* Arrow */
     .fas.fa-arrow-circle-up {
         font-size: 25px;
-        color: #4af350;
+        color: #3bf842;
         margin-left: 3%;
     }
+
+    .custom-arrow-down {
+        font-size: 16px;             /* Sets the size of the arrow */
+        color: #ebebebea;              /* Sets the arrow icon color to white */
+        background-color: #d8000b;   /* Sets the background color for the arrow */
+        border-radius: 50%;          /* Makes the background circular */
+        padding: 5px 8px;            /* Adds padding for better alignment */
+        margin-left: 3%;             /* Spaces the arrow to the left */
+        display: inline-flex;        /* Ensures the icon stays centered */
+        align-items: center;         /* Centers the arrow icon within the circle */
+        justify-content: center;     /* Centers the icon horizontally */
+    }
+    
+
 
     .logo-container {
         position: relative;
