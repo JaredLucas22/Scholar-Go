@@ -65,7 +65,7 @@
     </div>
 
     <!-- Comments Section -->
-    <div class="comment-container mt-5">
+    <div class="comment mt-5">
         <div class="d-flex justify-content-between align-items-center mb-3 comment-title">
             <h4 style="color: black;">Comments</h4>
             <div class="d-flex align-items-center">
@@ -78,11 +78,11 @@
         </div>
 
         <div class="d-flex align-items-start mb-3">
-            <img src="{{ url_for('static', filename='uploads/' ~ current_user.picture_path) }}" alt="Profile" class="rounded-circle me-2" style="width: 75px; height: 75px;"> 
+            <img src="{{ url_for('static', filename='uploads/' ~ current_user.picture_path) }}" alt="Profile" class="rounded-circle me-2" style="width: 65px; height: 65px;"> 
             <form id="comment-form" action="{{ url_for('auth.add_comment', sponsor_id=sponsor.id) }}" method="POST" class="flex-grow-1 comment-form">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <textarea class="form-control" name="content" required placeholder="Add a comment..."></textarea>
-                <button type="submit" class="btn btn-primary mt-2 comment-submit">Submit</button>
+                <button type="submit" class="btn btn-primary mt-2 comment-submit float-right">Submit</button>
             </form>
         </div>
 

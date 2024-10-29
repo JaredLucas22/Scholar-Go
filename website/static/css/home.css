@@ -146,10 +146,6 @@ body {
 
 
 
-
-
-
-
 /* Responsive adjustments */
 @media (max-width: 1200px) {
 
@@ -338,7 +334,7 @@ body {
     display: flex;
     flex-wrap: wrap; /* Allow wrapping for responsiveness */
     align-items: stretch;
-    background-color: #ddf0ff;
+    background-image: url(/static/GIF/background.png);
     border-radius: 20px;
     margin: 5% 0;
     padding: 50px; /* Base padding */
@@ -372,7 +368,7 @@ hr {
 }
 
 .call-to-action {
-    background-color: #002ec7 !important;
+    background-image: url("/static/GIF/carousel.png")!important;
     color: #88c5ff;
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
@@ -384,10 +380,6 @@ hr {
     .container-explore {
         padding: 40px; /* Adjust padding */
         flex-direction: column; /* Stack content in one column */
-    }
-
-    .row {
-        flex-direction: column; /* Stack the row's items vertically */
     }
 
     .col-md-3 {
@@ -487,23 +479,23 @@ b, strong {
 
 .features img {
     width: 100%;
-    max-height: 200px;
     object-fit: cover;
     display: block;
 }
 
 .features h2 {
-    font-size: 25px;
+    font-size: 30px;
     font-weight: bold;
     text-align: center;
     padding: 0 50px;
-    color: #004ea7;
+    color: #0055b5;
 }
 
 .features p {
     text-align: justify;
-    color: rgb(56, 56, 56);
+    color: #1f54a1;
     padding: 0 50px;
+    font-size: 18px;
 }
 
 /* Responsive Styles for max-width 767px (smaller screens) */
@@ -602,7 +594,7 @@ b, strong {
     }
 
     .features h2 {
-        font-size: 25px;
+        font-size: 30px;
     }
 }
 
