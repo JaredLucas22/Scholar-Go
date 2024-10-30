@@ -78,27 +78,51 @@
 <div class="modal fade" id="addAlarmModal" tabindex="-1" aria-labelledby="addAlarmModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addAlarmModalLabel">Add Alarm</h5>
+            <div class="modal-header justify-content-center"> <!-- Center the title -->
+                <h5 class="modal-title d-flex align-items-center" id="addAlarmModalLabel">
+                    <i class="bi bi-alarm me-2"></i> <!-- Alarm icon with a slight right margin -->
+                    Add Alarm
+                </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form id="addAlarmForm">
-                    <div class="mb-3">
-                        <label for="alarmDate" class="form-label">Alarm Date & Time</label>
-                        <input type="datetime-local" class="form-control" id="alarmDate" name="alarmDate" required>
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">    
+                    <!-- Alarm Time Field (24-hour format) -->
+                    <div class="mb-3 text-center">
+                        <div class="d-flex align-items-center justify-content-center">
+                            <input type="number" class="form-control time-input" style="font-size: 50px;" id="alarmHour" name="alarmHour" min="0" max="23" placeholder="00" required>
+                            <div class="mx-2" style="color: #000000; font-size: 70px;">:</div> <!-- Separator between hour and minute -->
+                            <input type="number" class="form-control time-input" style="font-size: 50px;" id="alarmMinute" name="alarmMinute" min="0" max="59" placeholder="00" required>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="alarmPriority" class="form-label">Priority</label>
-                        <select class="form-select" id="alarmPriority" name="priority">
-                            <option value="low">Low</option>
-                            <option value="medium">Medium</option>
-                            <option value="high">High</option>
-                        </select>
+                    <!-- Alarm Date and Priority Fields -->
+                    <div class="d-flex justify-content-between align-items-center">
+                        <!-- Alarm Date Field on the Left -->
+                        <div class="mb-3 w-50">
+                            <label for="alarmDate" class="form-label">Date</label>
+                            <input type="date" class="form-control" id="alarmDate" name="alarmDate" required>
+                        </div>
+
+                        <!-- Priority Field on the Right -->
+                        <div class="mb-3 w-50 text-end">
+                            <label for="alarmPriority" class="form-label">Priority</label>
+                            <select class="form-select" id="alarmPriority" name="priority">
+                                <option value="low">Low</option>
+                                <option value="medium">Medium</option>
+                                <option value="high">High</option>
+                            </select>
+                        </div>
                     </div>
+
+                    <!-- Message Field -->
+                    <div class="mb-3">
+                        <label for="alarmMessage" class="form-label">Message</label>
+                        <textarea class="form-control" id="alarmMessage" name="message" rows="3" placeholder="Enter your message here..." required></textarea>
+                    </div>
+
                     <input type="hidden" id="sponsorshipId" name="sponsorshipId">
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-primary">Set Alarm</button>
                     </div>
                 </form>
@@ -107,8 +131,108 @@
     </div>
 </div>
 
+
+<style>
+/* Add Alarm Modal Styling */
+.modal-content {
+  background-color: #FFFFE0; /* Yellow background */
+  border: 1px solid #FFD700; /* Yellow border */
+  border-radius: 10px; /* Rounded corners */
+}
+
+.modal-header {
+  background-color: #FFD700; /* Yellow background */
+  border-top-left-radius: 10px; /* Top left corner rounded */
+  border-top-right-radius: 10px; /* Top right corner rounded */
+}
+
+.modal-title {
+  font-weight: bold;
+  color: #000000; /* Black text */
+}
+
+.btn-close {
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+.btn-close:hover {
+  background-color: #FFD700; /* Yellow on hover */
+}
+
+.modal-body {
+  padding: 20px;
+}
+
+.form-label {
+  font-weight: bold;
+  color: #000000; /* Black text */
+}
+
+.form-control {
+  border: 1px solid #FFD700; /* Yellow border */
+  border-radius: 5px; /* Rounded corners */
+  padding: 10px;
+}
+
+.form-select {
+  border: 1px solid #FFD700; /* Yellow border */
+  border-radius: 5px; /* Rounded corners */
+  padding: 10px;
+}
+
+.btn-secondary {
+  background-color: #FFD700; /* Yellow background */
+  border: none;
+  border-radius: 5px; /* Rounded corners */
+  color: #000000; /* Black text */
+}
+
+.btn-secondary:hover {
+  background-color: #FFFFE0; /* Lighter yellow on hover */
+  color: #000000; /* Black text */
+}
+
+.btn-primary {
+  background-color: #007bff; /* Blue background */
+  border: none;
+  border-radius: 5;
+}
+
+.time-input {
+        width: 120px;
+        height: 120px; /* Set width for a rectangular look */
+        text-align: center;
+        font-weight: bold;
+    }
+</style>
+
 {% block scripts %}
 <script>
+
+document.addEventListener("DOMContentLoaded", function() {
+        const hourInput = document.getElementById("alarmHour");
+        const minuteInput = document.getElementById("alarmMinute");
+
+        // Validate hour input
+        hourInput.addEventListener("input", function() {
+            if (hourInput.value > 23) {
+                hourInput.value = 23;
+            } else if (hourInput.value < 0) {
+                hourInput.value = 0;
+            }
+        });
+
+        // Validate minute input
+        minuteInput.addEventListener("input", function() {
+            if (minuteInput.value > 59) {
+                minuteInput.value = 59;
+            } else if (minuteInput.value < 0) {
+                minuteInput.value = 0;
+            }
+        });
+    });
 
 function displayFlashMessage(message, type = 'success') {
     const flashMessagesDiv = document.getElementById('flash-messages');
@@ -131,13 +255,19 @@ function displayFlashMessage(message, type = 'success') {
         });
     
         // Handle form submission for setting the alarm
-        document.querySelector('#addAlarmForm').addEventListener('submit', event => {
-            event.preventDefault();
-    
+                document.querySelector('#addAlarmForm').addEventListener('submit', event => {
+                event.preventDefault();
+
             const sponsorshipId = document.querySelector('#sponsorshipId').value;
-            const alarmDate = document.querySelector('#alarmDate').value;
+            const alarmDate = document.querySelector('#alarmDate').value;  // YYYY-MM-DD
+            const alarmHour = document.querySelector('#alarmHour').value.padStart(2, '0');  // HH
+            const alarmMinute = document.querySelector('#alarmMinute').value.padStart(2, '0');  // MM
             const alarmPriority = document.querySelector('#alarmPriority').value;
-    
+            const message = document.querySelector('#alarmMessage').value;
+
+            // Format alarm time as "YYYY-MM-DD HH:MM:00"
+            const formattedAlarmTime = `${alarmDate} ${alarmHour}:${alarmMinute}:00`;
+
             fetch(`/set_alarm/${sponsorshipId}`, {
                 method: 'POST',
                 headers: {
@@ -145,8 +275,9 @@ function displayFlashMessage(message, type = 'success') {
                     'X-CSRFToken': getCSRFToken()  // Ensure getCSRFToken() function is defined
                 },
                 body: JSON.stringify({
-                    alarm_time: alarmDate,
-                    priority: alarmPriority
+                    alarm_time: formattedAlarmTime,
+                    priority: alarmPriority,
+                    message: message
                 })
             })
             .then(response => {
@@ -161,13 +292,15 @@ function displayFlashMessage(message, type = 'success') {
             .then(data => {
                 console.log("Alarm set successfully:", data);
                 displayFlashMessage(data.message);
-                document.querySelector('#addAlarmModal').modal('hide'); // Hide modal after setting alarm
+                $('#addAlarmModal').modal('hide'); // Hide modal after setting alarm
             })
             .catch(error => {
                 console.error("Error adding alarm:", error);
                 displayFlashMessage(error.message, 'danger');
             });
         });
+
+
     });
     </script>
     

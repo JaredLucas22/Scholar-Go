@@ -440,6 +440,7 @@ def set_alarm(sponsorship_id):
         # Get data from the request
         alarm_time_str = request.json.get('alarm_time')
         priority = request.json.get('priority')
+        message = request.json.get('message')  # Retrieve the message from the request
         user_id = current_user.id
 
         print(f"Received data: alarm_time={alarm_time_str}, priority={priority}, user_id={user_id}, sponsorship_id={sponsorship_id}")
@@ -450,11 +451,9 @@ def set_alarm(sponsorship_id):
 
         # Parse the alarm time
         try:
-            alarm_time = datetime.strptime(alarm_time_str, '%Y-%m-%dT%H:%M')
+            alarm_time = datetime.strptime(alarm_time_str, '%Y-%m-%d %H:%M:%S')  # Adjusted format to match incoming request
         except ValueError as ve:
             return jsonify({"success": False, "message": f"Invalid date format: {str(ve)}"}), 400
-
-
 
         # Check if an alarm already exists for this user and sponsorship
         existing_alarm = db.session.query(user_sponsorship_alarm).filter_by(
@@ -469,7 +468,8 @@ def set_alarm(sponsorship_id):
                 sponsorship_id=sponsorship_id
             ).update({
                 'alarm_time': alarm_time,
-                'message': f"Alarm updated for Sponsorship {sponsorship_id} with priority {priority}"
+                'message': message,  # Update the message with the new one
+                'priority': priority  # Ensure priority is updated if needed
             })
             db.session.commit()
             return jsonify({"success": True, "message": "Alarm updated successfully."}), 200
@@ -479,7 +479,8 @@ def set_alarm(sponsorship_id):
             user_id=user_id,
             sponsorship_id=sponsorship_id,
             alarm_time=alarm_time,
-            message=f"Alarm set for Sponsorship {sponsorship_id} with priority {priority}"
+            message=message,  # Include the message in the new alarm
+            priority=priority  # Include the priority
         )
 
         # Execute the insert statement
