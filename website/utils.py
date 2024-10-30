@@ -17,10 +17,15 @@ def get_current_year():
 
 def time_since(dt):
     """Returns a string representing how long ago a date was, using UTC+8 timezone."""
-    now = get_current_time()
+    now = get_current_time()  # Assuming this returns a timezone-aware UTC datetime
+    
+    # Ensure `dt` is timezone-aware in UTC if it's not already
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)
+    
     diff = now - dt
-
     seconds = diff.total_seconds()
+    
     if seconds < 60:
         return f"{int(seconds)} second{'s' if seconds != 1 else ''} ago"
     elif seconds < 3600:
@@ -38,5 +43,3 @@ def time_since(dt):
     else:
         years = seconds // 31536000
         return f"{int(years)} year{'s' if years != 1 else ''} ago"
-
-

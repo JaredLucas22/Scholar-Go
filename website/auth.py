@@ -644,96 +644,114 @@ def logout():
 @auth.route('/sign-up', methods=['GET', 'POST'])
 def sign_up():
     if request.method == 'POST':
-        email = request.form.get('email')
-        first_name = request.form.get('firstName')
-        username = request.form.get('username')
-        last_name = request.form.get('lastName')
-        suffix = request.form.get('suffix')
-        city = request.form.get('city')
-        province = request.form.get('province')
-        postalcode = request.form.get('postalcode')
-        gender = request.form.get('gender')
-        course = request.form.get('course')
-        gpa = request.form.get('gpa')
-        extracurricular_activities = request.form.get('extracurricularActivities')
-        financial_status = request.form.get('financialStatus')
-        password1 = request.form.get('password1')
-        password2 = request.form.get('password2')
-        educationlevel = request.form.get('educationlevel')
-        birthdate = request.form.get('dateOfBirth')
-        phone_number = request.form.get('phoneNumber')
+        email = request.form.get("SignUpEmail")  # Capture email
 
-                # Inside the sign_up function
-        birthdate_str = request.form.get('dateOfBirth')  # This is a string in YYYY-MM-DD format
+        # Capture all form data with logs for validation steps
+        try:
+            first_name = request.form.get('firstName')
+            username = request.form.get('username')
+            last_name = request.form.get('lastName')
+            city = request.form.get('city')
+            province = request.form.get('province')
+            postalcode = request.form.get('postalcode')
+            gender = request.form.get('gender')
+            course = request.form.get('course')
+            gpa = request.form.get('gpa')
+            extracurricular_activities = request.form.get('extracurricularActivities')
+            financial_status = request.form.get('financialStatus')
+            password1 = request.form.get('password1')
+            password2 = request.form.get('password2')
+            educationlevel = request.form.get('educationlevel')
+            phone_number = request.form.get('phoneNumber')
 
-        # Convert string to date object
-        if birthdate_str:
-            try:
-                birthdate = datetime.strptime(birthdate_str, '%Y-%m-%d').date()
-            except ValueError:
-                flash('Invalid birthdate format. Please use YYYY-MM-DD.', category='error')
-                return redirect(url_for('auth.sign_up'))
-        else:
-            birthdate = None  # Handle case where no birthdate is provided
-        
-        # Handle picture upload
-        picture = request.files.get('picture')  # Get the uploaded file
-        if picture:
-            try:
-                picture_path = save_picture(picture)  # Call the function to save the picture
-            except ValueError as e:
-                flash(str(e), category='error')
-                return redirect(url_for('auth.sign_up'))
-        else:
-            picture_path = None  # Handle case where no picture is uploaded
-
-        # Error handling and validation
-        user = User.query.filter_by(email=email).first()
-        if user:
-            flash('Email already exists.', category='error')
-        elif len(email) < 4:
-            flash('Email must be greater than 3 characters.', category='error')
-        elif len(first_name) < 2:
-            flash('First name must be greater than 1 character.', category='error')
-        elif password1 != password2:
-            flash('Passwords don\'t match.', category='error')
-        elif len(password1) < 7:
-            flash('Password must be at least 7 characters.', category='error')
-        
-        else:
-            # Create new user
-            new_user = User(
-                email=email,
-                first_name=first_name,
-                username=username,
-                last_name=last_name,
-                suffix=suffix,
-                city=city,
-                province=province,
-                postalcode=postalcode,
-                gender=gender,
-                course=course,
-                gpa=gpa,
-                phone_number = phone_number,
-                educationlevel = educationlevel,
-                birthdate = birthdate,
-                extracurricular_activities=extracurricular_activities,
-                financial_status=financial_status,
-                password=generate_password_hash(password1, method='pbkdf2:sha256'),
-                picture_path=picture_path  # Save the picture path here
-            )
-            db.session.add(new_user)
-            db.session.commit()
+            logger.info(f"Received sign-up data: first_name={first_name}, last_name={last_name}, "
+                        f"username={username}, email={email}, city={city}, province={province}, "
+                        f"postalcode={postalcode}, gender={gender}, course={course}, "
+                        f"gpa={gpa}, phone_number={phone_number}, educationlevel={educationlevel}, "
+                        f"extracurricular_activities={extracurricular_activities}, "
+                        f"financial_status={financial_status}")
             
-            # Log in the new user
-            login_user(new_user, remember=True)  # Use new_user instead of user
-            session['user_type'] = new_user.get_user_type()  # Ensure the user type is set in the session
-            
-            flash('Account created!', category='success')
-            return redirect(url_for('views.home'))
+            socketio.emit('log_event', {'message': f"Received sign-up data for {username}"})
 
+            birthdate_str = request.form.get('dateOfBirth')
+            birthdate = None
+            if birthdate_str:
+                try:
+                    birthdate = datetime.strptime(birthdate_str, '%Y-%m-%d').date()
+                    logger.info(f"Parsed birthdate: {birthdate}")
+                    socketio.emit('log_event', {'message': f"Parsed birthdate: {birthdate}"})
+                except ValueError:
+                    logger.error(f"Invalid birthdate format: {birthdate_str}")
+                    socketio.emit('log_event', {'message': 'Invalid birthdate format. Please use YYYY-MM-DD.'})
+                    flash('Invalid birthdate format. Please use YYYY-MM-DD.', category='error')
+                    return redirect(url_for('auth.sign_up'))
+
+            # Check if user already exists
+            user = User.query.filter_by(email=email).first()
+
+            if email is None:  # Check if email is None
+                logger.warning("Email not provided.")
+                socketio.emit('log_event', {'message': 'Email must be provided.'})
+                flash('Email must be provided.', category='error')
+            elif user:
+                logger.warning(f"Attempted sign-up with existing email: {email}")
+                socketio.emit('log_event', {'message': 'Email already exists.'})
+                flash('Email already exists.', category='error')
+            elif len(email) < 4:
+                logger.warning("Email length is less than 4 characters.")
+                socketio.emit('log_event', {'message': 'Email must be greater than 3 characters.'})
+                flash('Email must be greater than 3 characters.', category='error')
+            elif len(first_name) < 2:
+                logger.warning("First name length is less than 2 characters.")
+                socketio.emit('log_event', {'message': 'First name must be greater than 1 character.'})
+                flash('First name must be greater than 1 character.', category='error')
+            elif password1 != password2:
+                logger.warning("Passwords do not match.")
+                socketio.emit('log_event', {'message': "Passwords don't match."})
+                flash("Passwords don't match.", category='error')
+            elif len(password1) < 7:
+                logger.warning("Password length is less than 7 characters.")
+                socketio.emit('log_event', {'message': 'Password must be at least 7 characters.'})
+                flash('Password must be at least 7 characters.', category='error')
+            else:
+                # Create new user
+                new_user = User(
+                    email=email,
+                    first_name=first_name,
+                    username=username,
+                    last_name=last_name,
+                    city=city,
+                    province=province,
+                    postalcode=postalcode,
+                    gender=gender,
+                    course=course,
+                    gpa=gpa,
+                    phone_number=phone_number,
+                    educationlevel=educationlevel,
+                    birthdate=birthdate,
+                    extracurricular_activities=extracurricular_activities,
+                    financial_status=financial_status,
+                    password=generate_password_hash(password1, method='pbkdf2:sha256'),
+                    picture_path="default-avatar-icon-of-social-media-user-vector.jpg"
+                )
+                db.session.add(new_user)
+                db.session.commit()
+
+                logger.info(f"New user created: {email} (username: {username})")
+
+                # Log in the new user
+                login_user(new_user, remember=True)
+                session['user_type'] = new_user.get_user_type()
+                
+                flash('Account created!', category='success')
+                return redirect(url_for('views.home'))  
+            
+        except Exception as e:
+            logger.error(f"Sign-up error: {str(e)}", exc_info=True)
+            flash('An unexpected error occurred. Please try again.', category='error')
+            return redirect(url_for('auth.sign_up'))  
+        
     return render_template("sign_up.html", user=current_user)
-
 
 from flask import render_template, flash, redirect, url_for, request, session
 from flask_login import login_user, current_user

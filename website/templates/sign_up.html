@@ -1,17 +1,7 @@
-{% extends "base.html" %}
-{% block content %}
-<style>
-    body{
-        color: black;
-    }
-</style>
-<!-- Button to Open the Modal -->
- 
-<div class="container mt-5 text-center">
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#profileModal">
-        Open Sign Up Form
-    </button>
-</div>
+
+<button type="button" class="nav-link btn-short" data-bs-toggle="modal" data-bs-target="#profileModal">
+    Create New Account
+</button>
 
 <!-- Modal Structure -->
 <div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
@@ -22,146 +12,88 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="{{ url_for('auth.sign_up') }}" method="POST" enctype="multipart/form-data">
+                <form id="modalSignUpForm" method="POST" action="{{ url_for('auth.sign_up') }}">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <div class="container right-form rounded bg-white">
-                        <div class="step" id="step1">
-                            <h4>Step 1: Personal Information</h4>
-                            <div class="row mt-2">
-                                <div class="col-md-4">
-                                    <label class="labels">First Name</label>
-                                    <input type="text" class="form-control" id="firstName" name="firstName" required>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="labels">Last Name</label>
-                                    <input type="text" class="form-control" id="lastName" name="lastName" required>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="labels">Suffix</label>
-                                    <select class="form-control" id="suffix" name="suffix">
-                                        <option value="">N/A</option>
-                                        <option>Jr.</option>
-                                        <option>Sr.</option>
-                                    </select>
-                                </div>
+                        <div class="row mt-2">
+                            <div class="col-md-6 mb-3">
+                                <input type="text" class="form-control" id="firstName" name="firstName" placeholder="First Name" required disabled>
                             </div>
-                            <div class="row mt-3">
-                                <div class="col-md-6">
-                                    <label class="labels">Date of Birth</label>
-                                    <input type="date" class="form-control" id="dateOfBirth" name="dateOfBirth" required>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="labels">City</label>
-                                    <input type="text" class="form-control" id="city" name="city" required>
-                                </div>
+                            <div class="col-md-6 mb-3">
+                                <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Last Name" required disabled>
                             </div>
-                            <div class="row mt-3">
-                                <div class="col-md-6">
-                                    <label class="labels">Province</label>
-                                    <input type="text" class="form-control" id="province" name="province" required>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="labels">Postal Code</label>
-                                    <input type="text" class="form-control" id="postalCode" name="postalcode" required>
-                                </div>
+                            <div class="col-md-6 mb-3">
+                                <select class="form-select" id="gender" name="gender" required disabled>
+                                    <option value="" disabled selected>Gender</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                </select>
                             </div>
-                            <div class="row mt-3">
-                                <div class="col-md-6">
-                                    <label class="labels">Gender</label>
-                                    <select class="form-select" id="gender" name="gender" required>
-                                        <option value="" disabled selected>Select</option>
-                                        <option value="Male">Male</option>
-                                        <option value="Female">Female</option>
-                                        <option value="Other">Other</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="labels">Extracurricular Activity</label>
-                                    <select class="form-select" id="extracurricularActivities" name="extracurricularActivities">
-                                        <option value="" disabled selected>Select</option>
-                                        <option value="Option 1">Option 1</option>
-                                        <option value="Option 2">Option 2</option>
-                                        <option value="Other">Other</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="labels">Education Level</label>
-                                    <select class="form-select" id="educationlevel" name="educationlevel" required>
-                                        <option value="" disabled selected>Select</option>
-                                        <option value="Elementary">Elementary</option>
-                                        <option value="Highschool">Highschool</option>
-                                        <option value="College">College</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row mt-3">
-                                <div class="col-md-6">
-                                    <label class="labels">GPA / GWA</label>
-                                    <input type="number" class="form-control" id="gpa" name="gpa" required>
-                                </div>
-                                 <div class="col-md-6">
-                                    <label class="labels">Extracurricular Activity</label>
-                                    <select class="form-select" id="financialStatus" name="financialStatus">
-                                        <option value="" disabled selected>Select</option>
-                                        <option value="Option 1">Option 1</option>
-                                        <option value="Option 2">Option 2</option>
-                                        <option value="Other">Other</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="labels">Course</label>
-                                    <input type="text" class="form-control" id="course" name="course" required>
-                                </div>
-                            </div>
-                            <div class="mt-5 text-center">
-                                <button class="btn btn-primary" type="button" id="nextButton1">Next</button>
+                            <div class="col-md-6 mb-3">
+                                <input type="date" class="form-control" id="dateOfBirth" name="dateOfBirth" required disabled>
                             </div>
                         </div>
-
-                        <div class="step" id="step2" style="display: none;">
-                            <h4>Step 2: Account Information</h4>
-                            <div class="row mt-3">
-                                <div class="col-md-6">
-                                    <label class="labels">Username</label>
-                                    <input type="text" class="form-control" id="username" name="username" required>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="labels">Email Address</label>
-                                    <input type="email" class="form-control" id="email" name="email" required>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="labels">Phone Number</label>
-                                    <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" required>
-                                </div>
+                        <div class="row mt-3">
+                            <div class="col-md-4 mb-3">
+                                <input type="text" class="form-control" id="city" name="city" placeholder="City" required disabled>
                             </div>
-                            <div class="row mt-3">
-                                <div class="col-md-6">
-                                    <label class="labels">Password</label>
-                                    <input type="password" class="form-control" id="password1" name="password1" required>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="labels">Confirm Password</label>
-                                    <input type="password" class="form-control" id="password2" name="password2" required>
-                                </div>
+                            <div class="col-md-4 mb-3">
+                                <input type="text" class="form-control" id="province" name="province" placeholder="Province" required disabled>
                             </div>
-                            <div class="mt-5 text-center">
-                                <button class="btn btn-secondary" type="button" id="prevButton2">Previous</button>
-                                <button class="btn btn-primary" type="button" id="nextButton2">Next</button>
+                            <div class="col-md-4 mb-3">
+                                <input type="text" class="form-control" id="postalCode" name="postalcode" placeholder="Postal Code" required disabled>
                             </div>
                         </div>
-
-                        <div class="step" id="step3" style="display: none;">
-                            <h4>Step 3: Profile Picture</h4>
-                            <div class="d-flex flex-column align-items-center text-center p-3 py-5">
-                                <img id="profilePicture" src="https://via.placeholder.com/150" alt="Profile Picture" class="rounded-circle" style="width: 100px; height: 100px;">
-                                <h5 class="mt-2" id="pictureName">Default Picture</h5>
-                                <input type="file" class="form-control mt-3" name="picture" id="image" accept="image/*" onchange="previewImage(event)">
+                        <div class="row mt-2">
+                            <div class="col-md-4 mb-3">
+                                <input type="text" class="form-control" id="course" name="course" placeholder="Course" required disabled>
                             </div>
-                            <div class="mt-5 text-center">
-                                <button class="btn btn-secondary" type="button" id="prevButton3">Previous</button>
-                                <button class="btn btn-primary profile-button" type="submit">Save Profile</button>
+                            <div class="col-md-4 mb-3">
+                                <select class="form-select" id="extracurricularActivities" name="extracurricularActivities">
+                                    <option value="" disabled selected>Extracurricular Activity</option>
+                                    <option value="Option 1">Option 1</option>
+                                    <option value="Option 2">Option 2</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <select class="form-select" id="educationlevel" name="educationlevel" required disabled>
+                                    <option value="" disabled selected>Education Level</option>
+                                    <option value="Elementary">Elementary</option>
+                                    <option value="Highschool">Highschool</option>
+                                    <option value="College">College</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <input type="number" class="form-control" id="gpa" name="gpa" placeholder="GPA / GWA" required disabled>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <select class="form-select" id="financialStatus" name="financialStatus">
+                                    <option value="" disabled selected>Financial Status</option>
+                                    <option value="Option 1">Option 1</option>
+                                    <option value="Option 2">Option 2</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <input type="email" class="form-control" id="SignUpEmail" name="SignUpEmail" placeholder="Email Address" required disabled>
                             </div>
                         </div>
+                        <div class="row mt-3">
+                            <div class="col-md-6 mb-3">
+                                <input type="text" class="form-control" id="username" name="username" placeholder="Username" required disabled>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" placeholder="Phone Number" required disabled>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <input type="password" class="form-control" id="password1" name="password1" placeholder="Password" required disabled>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <input type="password" class="form-control" id="password2" name="password2" placeholder="Confirm Password" required disabled>
+                            </div>
+                        </div>
+                        <button class="col-md-4 btn btn-primary profile-button" type="submit">Save Profile</button>
                     </div>
                 </form>
             </div>
@@ -169,48 +101,3 @@
     </div>
 </div>
 
-<script>
-    let currentStep = 1;
-
-    document.getElementById('nextButton1').onclick = function() {
-        document.getElementById('step1').style.display = 'none';
-        document.getElementById('step2').style.display = 'block';
-        currentStep++;
-    };
-
-    document.getElementById('nextButton2').onclick = function() {
-        document.getElementById('step2').style.display = 'none';
-        document.getElementById('step3').style.display = 'block';
-        currentStep++;
-    };
-
-    document.getElementById('prevButton2').onclick = function() {
-        document.getElementById('step2').style.display = 'none';
-        document.getElementById('step1').style.display = 'block';
-        currentStep--;
-    };
-
-    document.getElementById('prevButton3').onclick = function() {
-        document.getElementById('step3').style.display = 'none';
-        document.getElementById('step2').style.display = 'block';
-        currentStep--;
-    };
-
-    function previewImage(event) {
-        const file = event.target.files[0];
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const imgElement = document.getElementById('profilePicture');
-            const pictureNameElement = document.getElementById('pictureName');
-            imgElement.src = e.target.result;
-            pictureNameElement.textContent = file.name; // Show the name of the uploaded file
-        };
-        if (file) {
-            reader.readAsDataURL(file);
-        }
-    }
-
-</script>
-
-
-{% endblock %}

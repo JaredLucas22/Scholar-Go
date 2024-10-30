@@ -16,26 +16,93 @@
       </div>
       <div class="col-md-6 d-flex justify-content-center align-items-center flex-column">
         <div class="login-form-container">
-          <form method="POST">
+          <form method="POST" id="loginForm">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <div class="form-group">
-              <input type="email" class="form-control" id="email" name="email" placeholder="Email or username" />
+              <input type="email" class="form-control" id="email" name="email" placeholder="Email or username" required />
             </div>
             <div class="form-group">
-              <input type="password" class="form-control" id="password" name="password" placeholder="Password" />
+              <input type="password" class="form-control" id="password" name="password" placeholder="Password" required />
             </div>
             <button type="submit" class="btn btn-primary btn-block">Log In</button>
             <div class="form-actions">
               <a href="/forgot-password" class="forgot-password">Forgot Password?</a>
-              <a class="nav-link btn-short" id="signUp" href="/sign-up">Create New Account</a>
-          </div>
-          
+            </div>
+            <div class="signup-option">
+              {% include "sign_up.html" %} <!-- Use include to add the signup form or link -->
+            </div>
           </form>
         </div>
       </div>
     </div>
   </div>
 </div>
-</div>
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+      const profileModal = document.getElementById('profileModal');
+
+      if (profileModal) {
+          // Log when the modal is shown
+          profileModal.addEventListener('shown.bs.modal', () => {
+              console.log("Profile modal opened");
+              // Enable all form elements when modal is shown
+              document.querySelectorAll('#profileModal .form-control, #profileModal .form-select, #profileModal .profile-button').forEach(elem => {
+                  elem.removeAttribute('disabled');
+              });
+          });
+
+          // Log when the modal is hidden
+          profileModal.addEventListener('hidden.bs.modal', () => {
+              console.log("Profile modal closed");
+              // Disable all form elements when modal is hidden
+              document.querySelectorAll('#profileModal .form-control, #profileModal .form-select, #profileModal .profile-button').forEach(elem => {
+                  elem.setAttribute('disabled', 'true');
+              });
+
+              // Reset form fields to avoid invalid states
+              const forms = profileModal.querySelectorAll('form');
+              forms.forEach(form => form.reset());
+          });
+
+          // Log form submissions
+          const loginForm = profileModal.querySelector('#modalLoginForm');
+          const signupForm = profileModal.querySelector('#modalSignUpForm');
+
+          if (loginForm) {
+              loginForm.addEventListener('submit', (event) => {
+                  console.log("Login form submitted", {
+                      email: loginForm.email.value,
+                      password: loginForm.password.value
+                  });
+                  // Prevent default if necessary for debugging
+                  // event.preventDefault(); 
+              });
+          }
+
+          if (signupForm) {
+              signupForm.addEventListener('submit', (event) => {
+                  // Check if form is valid before proceeding
+                  if (signupForm.checkValidity()) {
+                      console.log("Sign up form submitted", {
+                          firstName: signupForm.firstName.value,
+                          lastName: signupForm.lastName.value,
+                          email: signupForm.SignUpEmail.value,
+                          password: signupForm.password1.value
+                      });
+                  } else {
+                      console.error("Sign up form is invalid");
+                  }
+                  // Prevent default if necessary for debugging
+                  // event.preventDefault(); 
+              });
+          }
+      } else {
+          console.error("Modal with ID 'profileModal' not found");
+      }
+  });
+</script>
+
 
 {% endblock %}

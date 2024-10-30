@@ -58,7 +58,6 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(150))
     first_name = db.Column(db.String(150))
     last_name = db.Column(db.String(150))
-    suffix = db.Column(db.String(150), nullable=True)
     gender = db.Column(db.String(150))
     course = db.Column(db.String(150))
     phone_number = db.Column(db.String(150))
