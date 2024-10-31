@@ -5,15 +5,40 @@
 
 <!-- Modal Structure -->
  <style>
-    body{
-        color: black;
+        /* Custom styling for the select element */
+        .form-select {
+        padding-right: 2.5rem; /* Add padding to prevent overlap with the arrow */
     }
+
+    /* Optional: adjust the arrow position if needed */
+    .form-select::-ms-expand {
+        display: none; /* Remove default arrow in IE */
+    }
+
+    /* Styling for better appearance */
+    .form-control {
+        position: relative; /* For positioning the arrow */
+    }
+
+    .profile-button {
+    min-width: 200px; /* Set a minimum width to prevent wrapping */
+    max-width: 25%; /* Optional: max width for larger screens */
+    width: auto; /* Allow the button to shrink if necessary */
+    display: inline-block; /* Ensure the button is an inline block */
+}
+
+/* Optional: Make adjustments for very small screens */
+@media (max-width: 576px) {
+    .profile-button {
+        width: 80%; /* Wider button on smaller screens, adjust as needed */
+    }
+}
  </style>
 <div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="profileModalLabel">Sign Up Form</h5>
+                <h5 class="modal-title" id="profileModalLabel" style="color: black; font-size: 2.5vh;">Sign Up Form</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -51,18 +76,132 @@
                         </div>
                         <div class="row mt-2">
                             <div class="col-md-4 mb-3">
-                                <input type="text" class="form-control" id="course" name="course" placeholder="Course" required disabled>
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <select class="form-select" id="extracurricularActivities" name="extracurricularActivities">
-                                    <option value="" disabled selected>Extracurricular Activity</option>
-                                    <option value="Option 1">Option 1</option>
-                                    <option value="Option 2">Option 2</option>
-                                    <option value="Other">Other</option>
+                                <select class="form-control form-select" id="course" name="course" required>
+                                    <option value="" disabled selected>Select your course</option>
+                                    <optgroup label="Business and Management">
+                                        <option value="business_admin">Bachelor of Science in Business Administration</option>
+                                        <option value="accountancy">Bachelor of Science in Accountancy</option>
+                                        <option value="management_engineering">Bachelor of Science in Management Engineering</option>
+                                        <option value="marketing_management">Bachelor of Science in Marketing Management</option>
+                                    </optgroup>
+                                    <optgroup label="Engineering and Technology">
+                                        <option value="civil_engineering">Bachelor of Science in Civil Engineering</option>
+                                        <option value="computer_engineering">Bachelor of Science in Computer Engineering</option>
+                                        <option value="electronics_engineering">Bachelor of Science in Electronics Engineering</option>
+                                        <option value="information_technology">Bachelor of Science in Information Technology</option>
+                                        <option value="mechanical_engineering">Bachelor of Science in Mechanical Engineering</option>
+                                    </optgroup>
+                                    <optgroup label="Health Sciences">
+                                        <option value="nursing">Bachelor of Science in Nursing</option>
+                                        <option value="pharmacy">Bachelor of Science in Pharmacy</option>
+                                        <option value="physical_therapy">Bachelor of Science in Physical Therapy</option>
+                                        <option value="medical_technology">Bachelor of Science in Medical Technology</option>
+                                    </optgroup>
+                                    <optgroup label="Arts and Humanities">
+                                        <option value="communication">Bachelor of Arts in Communication</option>
+                                        <option value="fine_arts">Bachelor of Fine Arts</option>
+                                        <option value="english">Bachelor of Arts in English</option>
+                                        <option value="philosophy">Bachelor of Arts in Philosophy</option>
+                                    </optgroup>
+                                    <optgroup label="Social Sciences">
+                                        <option value="psychology">Bachelor of Arts in Psychology</option>
+                                        <option value="political_science">Bachelor of Arts in Political Science</option>
+                                        <option value="sociology">Bachelor of Arts in Sociology</option>
+                                        <option value="anthropology">Bachelor of Arts in Anthropology</option>
+                                    </optgroup>
+                                    <optgroup label="Education">
+                                        <option value="education">Bachelor of Science in Education</option>
+                                        <option value="special_education">Bachelor of Special Education</option>
+                                        <option value="early_childhood_education">Bachelor of Early Childhood Education</option>
+                                    </optgroup>
+                                    <optgroup label="Natural Sciences">
+                                        <option value="biology">Bachelor of Science in Biology</option>
+                                        <option value="chemistry">Bachelor of Science in Chemistry</option>
+                                        <option value="physics">Bachelor of Science in Physics</option>
+                                        <option value="environmental_science">Bachelor of Science in Environmental Science</option>
+                                    </optgroup>
+                                    <optgroup label="Hospitality and Tourism">
+                                        <option value="hotel_management">Bachelor of Science in Hotel and Restaurant Management</option>
+                                        <option value="tourism_management">Bachelor of Science in Tourism Management</option>
+                                    </optgroup>
+                                    <optgroup label="Law and Governance">
+                                        <option value="law">Bachelor of Laws (LLB)</option>
+                                        <option value="public_administration">Bachelor of Public Administration</option>
+                                    </optgroup>
+                                    <optgroup label="Architecture">
+                                        <option value="architecture">Bachelor of Science in Architecture</option>
+                                        <option value="interior_design">Bachelor of Science in Interior Design</option>
+                                    </optgroup>
                                 </select>
                             </div>
                             <div class="col-md-4 mb-3">
-                                <select class="form-select" id="educationlevel" name="educationlevel" required disabled>
+                                <select class="form-control form-select" id="extracurricularActivities" name="extracurricularActivities" required>
+                                    <option value="" disabled selected>Club Activity</option>
+                                    
+                                    <optgroup label="Physical Activities">
+                                        <option value="Sports">Sports</option>
+                                        <option value="Basketball">Basketball</option>
+                                        <option value="Soccer">Soccer</option>
+                                        <option value="Volleyball">Volleyball</option>
+                                        <option value="Track and Field">Track and Field</option>
+                                        <option value="Swimming">Swimming</option>
+                                        <option value="Gymnastics">Gymnastics</option>
+                                        <option value="Tennis">Tennis</option>
+                                        <option value="Cycling">Cycling</option>
+                                        <option value="Badminton">Badminton</option>
+                                        <option value="Wrestling">Wrestling</option>
+                                        <option value="Cheerleading">Cheerleading</option>
+                                        <option value="Dance">Dance</option>
+                                    </optgroup>
+                                    
+                                    <optgroup label="Mental/Cognitive Activities">
+                                        <option value="Science Club">Science Club</option>
+                                        <option value="Math Club">Math Club</option>
+                                        <option value="Debate Club">Debate Club</option>
+                                        <option value="Literary Club">Literary Club</option>
+                                        <option value="History Club">History Club</option>
+                                        <option value="Robotics Club">Robotics Club</option>
+                                        <option value="Computer Science Club">Computer Science Club</option>
+                                        <option value="Environment Club">Environment Club</option>
+                                        <option value="Engineering Club">Engineering Club</option>
+                                        <option value="Science and Technology Studies">Science and Technology Studies</option>
+                                        <option value="Competitions">Competitions</option>
+                                        <option value="English Club">English Club</option>
+                                    </optgroup>
+                                    
+                                    <optgroup label="Creative/Artistic Activities">
+                                        <option value="Theater">Theater</option>
+                                        <option value="Arts and Creativity">Arts and Creativity</option>
+                                        <option value="Art Music">Music</option>
+                                        <option value="Sculpture">Sculpture</option>
+                                        <option value="Drama">Drama</option>
+                                        <option value="Animation">Animation</option>
+                                        <option value="Graphic Design">Graphic Design</option>
+                                        <option value="Choir">Choir</option>
+                                        <option value="Photography">Photography</option>
+                                        <option value="Film Production">Film Production</option>
+                                        <option value="Crafting">Crafting</option>
+                                    </optgroup>
+                                    
+                                    <optgroup label="Social/Community-Oriented Activities">
+                                        <option value="Community Service">Community Service</option>
+                                        <option value="Social Justice">Social Justice</option>
+                                        <option value="Leadership and Entrepreneurship">Leadership and Entrepreneurship</option>
+                                        <option value="Volunteer Programs">Volunteer Programs</option>
+                                        <option value="Peer Mentoring">Peer Mentoring</option>
+                                    </optgroup>
+                                    
+                                    <optgroup label="Cultural Activities">
+                                        <option value="Cultural Activities">Cultural Activities</option>
+                                        <option value="Cultural Exchange Programs">Cultural Exchange Programs</option>
+                                        <option value="International Club">International Club</option>
+                                    </optgroup>
+                                    
+                                </select>
+                            </div>
+                            
+                            <div class="col-md-4 mb-3">
+                                <select class="form-control form-select" id="educationlevel" name="educationlevel" required disabled>
                                     <option value="" disabled selected>Education Level</option>
                                     <option value="Elementary">Elementary</option>
                                     <option value="Highschool">Highschool</option>
@@ -73,11 +212,12 @@
                                 <input type="number" class="form-control" id="gpa" name="gpa" placeholder="GPA / GWA" required disabled>
                             </div>
                             <div class="col-md-4 mb-3">
-                                <select class="form-select" id="financialStatus" name="financialStatus">
+                                <select class="form-control form-select" id="financialStatus" name="financialStatus" required>
                                     <option value="" disabled selected>Financial Status</option>
-                                    <option value="Option 1">Option 1</option>
-                                    <option value="Option 2">Option 2</option>
-                                    <option value="Other">Other</option>
+                                    <option value="Low Income">Low Income</option>
+                                    <option value="Middle Income">Middle Income</option>
+                                    <option value="High Income">High Income</option>
+                                    <option value="Self-Funded">Self-Funded</option>
                                 </select>
                             </div>
                             <div class="col-md-4 mb-3">
@@ -98,7 +238,9 @@
                                 <input type="password" class="form-control" id="password2" name="password2" placeholder="Confirm Password" required disabled>
                             </div>
                         </div>
-                        <button class="col-md-4 btn btn-primary profile-button" type="submit">Save Profile</button>
+                        <div class="col-md-12 mb-3 text-center">
+                            <button class="btn btn-primary profile-button" type="submit" style="width: 25%;"">Save Profile</button>
+                        </div>
                     </div>
                 </form>
             </div>
