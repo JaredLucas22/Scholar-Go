@@ -644,15 +644,15 @@ def logout():
 @auth.route('/sign-up', methods=['GET', 'POST'])
 def sign_up():
     if request.method == 'POST':
-        email = request.form.get("SignUpEmail")  # Capture email
+        email = request.form.get("SignUpEmail").lower()  # Capture email
 
         # Capture all form data with logs for validation steps
         try:
             first_name = request.form.get('firstName')
-            username = request.form.get('username')
+            username = request.form.get('username').lower
             last_name = request.form.get('lastName')
-            city = request.form.get('city')
-            province = request.form.get('province')
+            city = request.form.get('city').lower
+            province = request.form.get('province').lower
             postalcode = request.form.get('postalcode')
             gender = request.form.get('gender')
             course = request.form.get('course')

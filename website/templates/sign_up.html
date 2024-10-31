@@ -4,6 +4,11 @@
 </button>
 
 <!-- Modal Structure -->
+ <style>
+    body{
+        color: black;
+    }
+ </style>
 <div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -12,7 +17,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="modalSignUpForm" method="POST" action="{{ url_for('auth.sign_up') }}">
+                <form id="modalSignUpForm" method="POST" action="{{ url_for('auth.sign_up') }}" autocomplete="off">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <div class="container right-form rounded bg-white">
                         <div class="row mt-2">
