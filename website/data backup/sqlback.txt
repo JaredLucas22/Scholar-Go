@@ -1,0 +1,110 @@
+Table user_sponsorship {
+  user_id integer [ref: > users.id]
+  sponsorship_id integer [ref: > sponsorship_data.id]
+  created_at timestamp
+  primary key (user_id, sponsorship_id)
+}
+
+Table user_sponsorship_alarm {
+  user_id integer [ref: > users.id]
+  sponsorship_id integer [ref: > sponsorship_data.id]
+  priority varchar(50)
+  alarm_time timestamp [default: 'CURRENT_TIMESTAMP']
+  message varchar(256)
+  primary key (user_id, sponsorship_id)
+}
+
+Table user_sponsorship_likes {
+  user_id integer [ref: > users.id]
+  sponsorship_id integer [ref: > sponsorship_data.id]
+  primary key (user_id, sponsorship_id)
+}
+
+Table user_sponsorship_visits {
+  id integer [primary key]
+  user_id integer [ref: > users.id, not null]
+  sponsorship_id integer [ref: > sponsorship_data.id, not null]
+  created_at timestamp [default: 'CURRENT_TIMESTAMP']
+}
+
+Table notes {
+  id integer [primary key]
+  data varchar(10000)
+  date timestamp [default: 'CURRENT_TIMESTAMP']
+  user_id integer [ref: > users.id]
+}
+
+Table users {
+  id integer [primary key]
+  username varchar(150) [unique]
+  image varchar(300)
+  city varchar(150)
+  birthdate date [not null]
+  province varchar(150)
+  postalcode varchar(150)
+  picture_path varchar(255) [not null]
+  educationlevel varchar(150)
+  email varchar(150) [unique]
+  password varchar(150)
+  first_name varchar(150)
+  last_name varchar(150)
+  gender varchar(150)
+  course varchar(150)
+  phone_number varchar(150)
+  gpa float
+  extracurricular_activities varchar(300)
+  financial_status varchar(150)
+  created_at timestamp [default: 'CURRENT_TIMESTAMP']
+}
+
+Table trigger_words {
+  id integer [primary key]
+  word varchar(100) [not null]
+}
+
+Table notifications {
+  id integer [primary key]
+  user_id integer [ref: > users.id, not null]
+  sponsorship_id integer [ref: > sponsorship_data.id, not null]
+  message varchar(255) [not null]
+  is_read boolean [default: false]
+  priority varchar(50)
+  alarm_date timestamp
+  created_at timestamp [default: 'CURRENT_TIMESTAMP']
+}
+
+Table comments {
+  id integer [primary key]
+  content text [not null]
+  user_id integer [ref: > users.id]
+  sponsorship_id integer [ref: > sponsorship_data.id, not null]
+  created_at timestamp [default: 'CURRENT_TIMESTAMP']
+}
+
+Table sponsorship_data {
+  id integer [primary key]
+  sponsor_name varchar(150)
+  persontocontact varchar(150)
+  course varchar(150)
+  url varchar(356) [unique]
+  type_of_sponsor varchar(150)
+  address varchar(150)
+  contact_information varchar(150)
+  extracurricular_activity varchar(150)
+  email varchar(150) [unique, not null]
+  password varchar(150) [not null]
+  weight_fos float
+  weight_gpa float
+  weight_extracurricular_activities float
+  weight_financial_status float
+  passing_requirement float
+  verified boolean [default: false, not null]
+  description text
+  full_description text
+  image varchar(300)
+  deadline_date date [not null]
+  active boolean [default: true, not null]
+  amount_per_semester float [not null]
+  picture_path varchar(255) [not null]
+  created_at timestamp [default: 'CURRENT_TIMESTAMP']
+}
