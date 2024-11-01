@@ -5,6 +5,7 @@
     margin-top: 10px;
 }
 
+
 .button-group button,
 .button-group a {
     flex-grow: 1; /* Make buttons take equal space */

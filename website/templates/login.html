@@ -53,7 +53,6 @@
               document.querySelectorAll('#loginForm .form-control').forEach(elem => {
                   elem.setAttribute('disabled', 'true');
               });
-              console.log("Login form inputs are disabled");
               
               // Enable all form elements in the modal when it is shown
               document.querySelectorAll('#profileModal .form-control, #profileModal .form-select, #profileModal .profile-button').forEach(elem => {
@@ -63,7 +62,6 @@
 
           // Log when the modal is hidden
           profileModal.addEventListener('hidden.bs.modal', () => {
-              console.log("Profile modal closed");
               // Re-enable the login form inputs when the modal is closed
               document.querySelectorAll('#loginForm .form-control').forEach(elem => {
                   elem.removeAttribute('disabled');
@@ -113,7 +111,6 @@
               });
           }
       } else {
-          console.error("Modal with ID 'profileModal' or login form with ID 'loginForm' not found");
       }
   });
 </script>

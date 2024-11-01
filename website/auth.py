@@ -168,8 +168,6 @@ def toggle_follow_sponsorship(sponsorship_id):
         "is_following": is_following
     })
 
-
-
 @auth.route('/unfollow/<int:sponsorship_id>', methods=['POST'])
 @login_required
 def unfollow_sponsorship(sponsorship_id):
@@ -189,8 +187,9 @@ def unfollow_sponsorship(sponsorship_id):
     try:
         # Attempt to remove the follow
         current_user.remove_follow(sponsorship)
+        db.session.commit()  # Commit the changes
         print("Sponsorship unfollowed successfully.")
-        return jsonify({'success': True, 'message': 'Sponsorship removed successfully.'})
+        return jsonify({'success': True, 'message': 'Sponsorship removed successfully.'}), 200
     except Exception as e:
         db.session.rollback()  # Rollback in case of error
         print(f"Error while unfollowing sponsorship: {e}")
@@ -440,7 +439,7 @@ def set_alarm(sponsorship_id):
         # Get data from the request
         alarm_time_str = request.json.get('alarm_time')
         priority = request.json.get('priority')
-        message = request.json.get('message')  # Retrieve the message from the request
+        message = request.json.get('message')
         user_id = current_user.id
 
         print(f"Received data: alarm_time={alarm_time_str}, priority={priority}, user_id={user_id}, sponsorship_id={sponsorship_id}")
@@ -451,7 +450,7 @@ def set_alarm(sponsorship_id):
 
         # Parse the alarm time
         try:
-            alarm_time = datetime.strptime(alarm_time_str, '%Y-%m-%d %H:%M:%S')  # Adjusted format to match incoming request
+            alarm_time = datetime.strptime(alarm_time_str, '%Y-%m-%d %H:%M:%S')
         except ValueError as ve:
             return jsonify({"success": False, "message": f"Invalid date format: {str(ve)}"}), 400
 
@@ -468,8 +467,9 @@ def set_alarm(sponsorship_id):
                 sponsorship_id=sponsorship_id
             ).update({
                 'alarm_time': alarm_time,
-                'message': message,  # Update the message with the new one
-                'priority': priority  # Ensure priority is updated if needed
+                'message': message,
+                'priority': priority,
+                'is_alarm_set': True
             })
             db.session.commit()
             return jsonify({"success": True, "message": "Alarm updated successfully."}), 200
@@ -479,20 +479,21 @@ def set_alarm(sponsorship_id):
             user_id=user_id,
             sponsorship_id=sponsorship_id,
             alarm_time=alarm_time,
-            message=message,  # Include the message in the new alarm
-            priority=priority  # Include the priority
+            message=message,
+            priority=priority,
+            is_alarm_set=True
         )
 
-        # Execute the insert statement
         db.session.execute(stmt)
         db.session.commit()
         print("Alarm added successfully.")
-        return jsonify({"success": True, "message": "Alarm set successfully."})
+        return jsonify({"success": True, "message": "Alarm set successfully."}), 201
 
     except Exception as e:
-        db.session.rollback()  # Rollback on error
+        db.session.rollback()
         print(f"Error setting alarm: {str(e)}")
         return jsonify({"success": False, "message": "An error occurred while setting the alarm."}), 500
+
 
 
 @auth.route('/test_alarm', methods=['POST'])
@@ -760,7 +761,7 @@ from datetime import datetime
 from .models import Sponsorship_data
 from . import db
 
-@auth.route('/sign-sponsor', methods=['GET', 'POST'])
+@auth.route('/sdjaksjfipjl;nnkvpiphdp%12312p4pifancbuoaskdsanvxzcnk;vsd#2sa!2123rsaf', methods=['GET', 'POST'])
 def sign_sponsor():
     if request.method == 'POST':
         # Retrieve form data

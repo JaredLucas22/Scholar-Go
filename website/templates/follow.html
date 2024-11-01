@@ -6,70 +6,72 @@
 <link rel="stylesheet" href="/static/css/follow.css"/>
 
 <div class="container-list mt-4">
+        <!-- Flash Messages Section -->
+<div id="flash-messages" class="flash-messages"></div>
     <div class="bookmarks-title">
         <h3>Your Bookmarks</h3>
     </div>
 
-    <!-- Flash Messages Section -->
-    <div id="flash-messages"></div>
 
     <div class="row">
+        <p style=" position: absolute; z-index: 0; color: black;">You are not following any sponsorships yet.</p>
         {% if followed_sponsorships %}
-            {% for item in followed_sponsorships %}
-            <div class="col-12 mb-4 list position-relative">
-                <a href="{{ url_for('views.view_sponsorship', sponsor_id=item.id) }}" class="stretched-link" style="z-index: 1;"></a>
-                
-                <div class="d-flex flex-column flex-sm-row align-items-stretch position-relative">
-                    <div class="logo">
-                        <img src="{{ url_for('static', filename='uploads/' ~ item.picture_path) }}" alt="Logo" class="img-fluid logo-img">
-                    </div>
-
-                    <div class="content flex-grow-1 ms-3"> 
-                        <h5 class="title mb-1 me-2">{{ item.sponsor_name }}</h5>
-                        <p class="description mb-1">{{ item.description | safe }}</p>
-                        <b><p class="likes mb-1">Likes: {{ item.likes | length }} | Deadline on {{ item.deadline_date.strftime('%B %d, %Y') }}</p></b>
-                    
-                        <div class="d-flex content-between mt-auto">
-                            {% if item.active %}
-                            <span class="badge bg-success">Active Program</span>
-                            {% else %}
-                            <span class="badge bg-danger">Inactive Program</span>
-                            {% endif %}
-                            <p class="mb-0"><strong>Scholarship Program:</strong> {{ item.course }}</p>
-                            <p class="mb-0"><strong>Amount per Semester:</strong> P{{ "{:,.2f}".format(item.amount_per_semester) }}</p>
-                        </div>
-                    </div>
-
-                    <!-- Replace ellipsis with Share and Close buttons -->
-                    <div class="dropdown-top-right position-relative ms-auto" style="z-index: 3;">
-                        <button class="btn btn-link share-button" type="button" data-sponsorship-id="{{ item.id }}">
-                            <i class="fas fa-share"></i> 
-                        </button>
-                        <button class="btn btn-link close-button" type="button" data-sponsorship-id="{{ item.id }}">
-                            <i class="fas fa-times"></i> 
-                        </button>
+        {% for sponsorship, is_alarm_set in sponsorships_with_alarm_status %}
+        <div class="col-12 mb-4 list position-relative">
+            <a href="{{ url_for('views.view_sponsorship', sponsor_id=sponsorship.id) }}" class="stretched-link" style="z-index: 1;"></a>
+            
+            <div class="d-flex flex-column flex-sm-row align-items-stretch position-relative">
+                <div class="logo">
+                    <img src="{{ url_for('static', filename='uploads/' ~ sponsorship.picture_path) }}" alt="Logo" class="img-fluid logo-img">
+                </div>
+    
+                <div class="content flex-grow-1 ms-3"> 
+                    <h5 class="title mb-1 me-2">{{ sponsorship.sponsor_name }}</h5>
+                    <p class="description mb-1">{{ sponsorship.description | safe }}</p>
+                    <b><p class="likes mb-1">Likes: {{ sponsorship.likes | length }} | Deadline on {{ sponsorship.deadline_date.strftime('%B %d, %Y') }}</p></b>
+    
+                    <div class="d-flex content-between mt-auto">
+                        {% if sponsorship.active %}
+                        <span class="badge bg-success">Active Program</span>
+                        {% else %}
+                        <span class="badge bg-danger">Inactive Program</span>
+                        {% endif %}
+                        <p class="mb-0"><strong>Scholarship Program:</strong> {{ sponsorship.course }}</p>
+                        <p class="mb-0"><strong>Amount per Semester:</strong> P{{ "{:,.2f}".format(sponsorship.amount_per_semester) }}</p>
                     </div>
                 </div>
-
-                <div class="button-group d-flex flex-column flex-sm-row">
-                    <button class="btn btn-warning btn-sm flex-grow-1 add-alarm-button" data-bs-toggle="modal" data-bs-target="#addAlarmModal" data-sponsorship-id="{{ item.id }}">
-                        <i class="fa-solid fa-bell"></i> Add Alarm
+    
+                <div class="dropdown-top-right position-relative ms-auto" style="z-index: 3;">
+                    {% if is_alarm_set %}
+                    <span class="badge bg-warning" style="color: #fffcea;">Alarm Set</span>
+                    {% endif %}
+                    <button class="btn btn-link share-button" type="button" data-sponsorship-id="{{ sponsorship.id }}">
+                        <i class="fas fa-share"></i> 
                     </button>
-                    <a class="btn btn-primary btn-sm flex-grow-1 visit-button" 
-                    data-sponsorship-id="{{ item.id }}" 
-                    href="{{ url_for('views.view_sponsorship', sponsor_id=item.id) }}" >
-                    <i class="fa-solid fa-eye"></i> Visit Program
-                 </a>
-                    <button class="btn btn-danger btn-sm flex-grow-1"><i class="fa-solid fa-archive"></i> Archive</button>
-                    <button class="btn btn-dark btn-sm flex-grow-1"><i class="fa-solid fa-share"></i> Share</button>
+                    <button class="btn btn-link close-button" type="button" data-sponsorship-id="{{ sponsorship.id }}">
+                        <i class="fas fa-times"></i> 
+                    </button>
                 </div>
-                
             </div>
-            {% endfor %}
+    
+            <div class="button-group d-flex flex-column flex-sm-row">
+                <button class="btn btn-warning btn-sm flex-grow-1 add-alarm-button" data-bs-toggle="modal" data-bs-target="#addAlarmModal" data-sponsorship-id="{{ sponsorship.id }}">
+                    <i class="fa-solid fa-bell"></i> Add Alarm
+                </button>
+                <a class="btn btn-primary btn-sm flex-grow-1 visit-button" 
+                   data-sponsorship-id="{{ sponsorship.id }}" 
+                   href="{{ url_for('views.view_sponsorship', sponsor_id=sponsorship.id) }}" >
+                    <i class="fa-solid fa-eye"></i> Visit Program
+                </a>
+                <button class="btn btn-danger btn-sm flex-grow-1"><i class="fa-solid fa-archive"></i> Archive</button>
+                <button class="btn btn-dark btn-sm flex-grow-1"><i class="fa-solid fa-share"></i> Share</button>
+            </div>
+            
+        </div>
+    {% endfor %}
+    
+    
         {% else %}
-            <div class="col-12">
-                <p style="color: black;">You are not following any sponsorships yet.</p>
-            </div>
         {% endif %}
     </div>
 </div>
@@ -79,9 +81,9 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header justify-content-center"> <!-- Center the title -->
-                <h5 class="modal-title d-flex align-items-center" id="addAlarmModalLabel">
+                <h5 class="modal-title d-flex align-items-center"  style="color: #fdf1ac;" id="addAlarmModalLabel">
                     <i class="bi bi-alarm me-2"></i> <!-- Alarm icon with a slight right margin -->
-                    Add Alarm
+                    Set Alarm
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -92,21 +94,21 @@
                     <div class="mb-3 text-center">
                         <div class="d-flex align-items-center justify-content-center">
                             <input type="number" class="form-control time-input" style="font-size: 50px;" id="alarmHour" name="alarmHour" min="0" max="23" placeholder="00" required>
-                            <div class="mx-2" style="color: #000000; font-size: 70px;">:</div> <!-- Separator between hour and minute -->
+                            <div class="mx-2" style="color: black; font-size: 70px;">:</div> <!-- Separator between hour and minute -->
                             <input type="number" class="form-control time-input" style="font-size: 50px;" id="alarmMinute" name="alarmMinute" min="0" max="59" placeholder="00" required>
                         </div>
                     </div>
-                    <!-- Alarm Date and Priority Fields -->
+                   <!-- Alarm Date and Priority Fields -->
                     <div class="d-flex justify-content-between align-items-center">
                         <!-- Alarm Date Field on the Left -->
-                        <div class="mb-3 w-50">
-                            <label for="alarmDate" class="form-label">Date</label>
+                        <div class="mb-2 w-50">
+                            <label for="alarmDate" class="form-label" style="color: #444235;">Date</label>
                             <input type="date" class="form-control" id="alarmDate" name="alarmDate" required>
                         </div>
 
                         <!-- Priority Field on the Right -->
-                        <div class="mb-3 w-50 text-align">
-                            <label for="alarmPriority" class="form-label">Priority</label>
+                        <div class="mb-2 w-50 ms-4"> 
+                            <label for="alarmPriority" style="color: #444235;" class="form-label">Priority</label>
                             <select class="form-select" id="alarmPriority" name="priority">
                                 <option value="low">Low</option>
                                 <option value="medium">Medium</option>
@@ -115,9 +117,10 @@
                         </div>
                     </div>
 
+
                     <!-- Message Field -->
                     <div class="mb-3">
-                        <label for="alarmMessage" class="form-label">Message</label>
+                        <label for="alarmMessage" class="form-label"style="color: #444235;" >Message</label>
                         <textarea class="form-control" id="alarmMessage" name="message" rows="3" placeholder="Enter your message here..." required></textarea>
                     </div>
 
@@ -133,6 +136,16 @@
 
 
 <style>
+    .alarm-badge {
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.alarm-badge.show {
+    display: inline-block; /* Ensures it's visible before opacity transition */
+    opacity: 1;
+}
+
 /* Add Alarm Modal Styling */
 .modal-content {
   background-color: #FFFFE0; /* Yellow background */
@@ -210,11 +223,10 @@
 
 {% block scripts %}
 <script>
-
-document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function() {
         const hourInput = document.getElementById("alarmHour");
         const minuteInput = document.getElementById("alarmMinute");
-
+    
         // Validate hour input
         hourInput.addEventListener("input", function() {
             if (hourInput.value > 23) {
@@ -223,7 +235,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 hourInput.value = 0;
             }
         });
-
+    
         // Validate minute input
         minuteInput.addEventListener("input", function() {
             if (minuteInput.value > 59) {
@@ -232,77 +244,132 @@ document.addEventListener("DOMContentLoaded", function() {
                 minuteInput.value = 0;
             }
         });
+    
+        // Function to display flash messages
+        function displayFlashMessage(message, type = 'success') {
+            const flashMessagesDiv = document.getElementById('flash-messages');
+            flashMessagesDiv.innerHTML = `
+                <div class="alert alert-${type}" role="alert">
+                    ${message}
+                </div>
+            `;
+            setTimeout(() => {
+                flashMessagesDiv.innerHTML = ''; // Remove the message after a few seconds
+            }, 5000);
+        }
+    
+ // Set sponsorship ID to the form when "Add Alarm" button is clicked
+ document.querySelectorAll('.add-alarm-button').forEach(button => {
+        button.addEventListener('click', () => {
+            const sponsorshipId = button.getAttribute('data-sponsorship-id');
+            document.querySelector('#sponsorshipId').value = sponsorshipId;
+        });
     });
 
-function displayFlashMessage(message, type = 'success') {
-    const flashMessagesDiv = document.getElementById('flash-messages');
-    flashMessagesDiv.innerHTML = `
-        <div class="alert alert-${type}" role="alert">
-            ${message}
-        </div>
-    `;
-    setTimeout(() => {
-        flashMessagesDiv.innerHTML = ''; // Remove the message after a few seconds
-    }, 5000);
-}
-    document.addEventListener("DOMContentLoaded", () => {
-        // Set sponsorship ID to the form when "Add Alarm" button is clicked
-        document.querySelectorAll('.add-alarm-button').forEach(button => {
-            button.addEventListener('click', () => {
-                const sponsorshipId = button.getAttribute('data-sponsorship-id');
-                document.querySelector('#sponsorshipId').value = sponsorshipId;
-            });
+    // Handle form submission for setting the alarm
+    document.querySelector('#addAlarmForm').addEventListener('submit', event => {
+        event.preventDefault();
+
+        const sponsorshipId = document.querySelector('#sponsorshipId').value;
+        const alarmDate = document.querySelector('#alarmDate').value;  // YYYY-MM-DD
+        const alarmHour = document.querySelector('#alarmHour').value.padStart(2, '0');  // HH
+        const alarmMinute = document.querySelector('#alarmMinute').value.padStart(2, '0');  // MM
+        const alarmPriority = document.querySelector('#alarmPriority').value;
+        const message = document.querySelector('#alarmMessage').value;
+
+        // Format alarm time as "YYYY-MM-DD HH:MM:00"
+        const formattedAlarmTime = `${alarmDate} ${alarmHour}:${alarmMinute}:00`;
+
+        fetch(`/set_alarm/${sponsorshipId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCSRFToken()  // Ensure getCSRFToken() function is defined
+            },
+            body: JSON.stringify({
+                alarm_time: formattedAlarmTime,
+                priority: alarmPriority,
+                message: message
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(data => {
+                    console.error("Server response:", data);
+                    throw new Error(data.message || 'Error adding alarm');
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log("Alarm operation successful:", data);
+            displayFlashMessage(data.message);
+
+            // Show the "Alarm Set" badge
+            const badge = document.querySelector('.alarm-badge');
+            badge.classList.add('show');
+
+            // Hide the badge after a set duration
+            setTimeout(() => {
+                badge.classList.remove('show');
+            }, 3000);
+
+            $('#addAlarmModal').modal('hide'); // Hide modal after setting alarm
+        })
+        .catch(error => {
+            console.error("Error adding alarm:", error);
+            displayFlashMessage(error.message, 'danger');
         });
-    
-        // Handle form submission for setting the alarm
-                document.querySelector('#addAlarmForm').addEventListener('submit', event => {
-                event.preventDefault();
+    });
+});
+    </script>    
 
-            const sponsorshipId = document.querySelector('#sponsorshipId').value;
-            const alarmDate = document.querySelector('#alarmDate').value;  // YYYY-MM-DD
-            const alarmHour = document.querySelector('#alarmHour').value.padStart(2, '0');  // HH
-            const alarmMinute = document.querySelector('#alarmMinute').value.padStart(2, '0');  // MM
-            const alarmPriority = document.querySelector('#alarmPriority').value;
-            const message = document.querySelector('#alarmMessage').value;
-
-            // Format alarm time as "YYYY-MM-DD HH:MM:00"
-            const formattedAlarmTime = `${alarmDate} ${alarmHour}:${alarmMinute}:00`;
-
-            fetch(`/set_alarm/${sponsorshipId}`, {
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll('.close-button').forEach(button => {
+        button.addEventListener('click', () => {
+            const sponsorshipId = button.getAttribute('data-sponsorship-id');
+            fetch(`/unfollow/${sponsorshipId}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'X-CSRFToken': getCSRFToken()  // Ensure getCSRFToken() function is defined
                 },
-                body: JSON.stringify({
-                    alarm_time: formattedAlarmTime,
-                    priority: alarmPriority,
-                    message: message
-                })
             })
             .then(response => {
-                if (!response.ok) {
-                    return response.json().then(data => {
-                        console.error("Server response:", data);
-                        throw new Error(data.message || 'Error adding alarm');
-                    });
-                }
-                return response.json();
+                return response.json().then(data => {
+                    if (!response.ok) {
+                        console.error("Error:", data);
+                        throw new Error(data.message || 'Error unfollowing sponsorship');
+                    }
+                    return data; // Return the JSON data for further processing
+                });
             })
             .then(data => {
-                console.log("Alarm set successfully:", data);
-                displayFlashMessage(data.message);
-                $('#addAlarmModal').modal('hide'); // Hide modal after setting alarm
+                console.log("Unfollowed successfully:", data);
+                // Remove the card from the DOM
+                const sponsorshipCard = button.closest('.list'); // Find the closest parent with class 'list'
+                if (sponsorshipCard) {
+                    sponsorshipCard.remove(); // Remove the entire card element
+                }
             })
             .catch(error => {
-                console.error("Error adding alarm:", error);
-                displayFlashMessage(error.message, 'danger');
+                console.error("Error unfollowing:", error);
             });
         });
-
-
     });
-    </script>
+});
+
+// Function to get CSRF token
+function getCSRFToken() {
+    return document.querySelector('input[name="csrf_token"]').value;
+}
+    // Function to get the CSRF token
+    function getCSRFToken() {
+        return document.querySelector('input[name="csrf_token"]').value;
+    }
+</script>
+    
     
 {% endblock %}
 {% endblock %}

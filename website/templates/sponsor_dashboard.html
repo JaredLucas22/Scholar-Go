@@ -45,8 +45,6 @@
             </div>
 
             <!-- Sponsor Information -->
-            <!-- Sponsor Information -->
-            <!-- Sponsor Information -->
             <div class="row mt-5">
                 <div class="col-md-12">
                     <div class="d-flex align-items-center"> 
@@ -56,7 +54,7 @@
                                 <span class="university-name">{{ sponsorship_data.sponsor_name }}</span>
                                 <i class="fas fa-edit edit-icon"></i> 
                             </div>
-                            <button class="btn btn-success">Active Program</button> <!-- Button placed below the sponsor name -->
+                            <button class="btn btn-success"><b>Active Program</b></button> <!-- Button placed below the sponsor name -->
                             <div class="applicant-info-container mt-2"> 
                                 <p class="applicant-info">Number of matched applicants: <strong>{{matched_applicants_count}}</strong></p>
                                 <p class="applicant-info">Number of Available Applicants: <strong>{{ total_applicants_count }}</strong></p>
@@ -192,6 +190,21 @@ socket.on('update_likes', function(data) {
         return cookieValue;
     }
 
+// Helper function to create and animate a temporary icon
+function createTemporaryIcon(isIncrease, targetElement) {
+    const icon = document.createElement("i");
+    icon.className = isIncrease ? "fas fa-arrow-circle-up increase-icon" : "fas fa-arrow-down custom-arrow custom-arrow-down";
+
+    // Append icon next to the target element (follower count)
+    targetElement.appendChild(icon);
+
+    // Apply a fade-out effect after a short delay
+    setTimeout(() => {
+        icon.style.opacity = "0"; // Start fade-out
+        icon.addEventListener("transitionend", () => icon.remove()); // Remove icon after fade-out
+    }, 800); // Duration before fade-out starts
+}
+
 // Fetch follower count function
 async function fetchFollowerCount(sponsorshipId) {
     try {
@@ -204,11 +217,20 @@ async function fetchFollowerCount(sponsorshipId) {
             const followerCountElement = document.getElementById(`follower-count-${sponsorshipId}`);
 
             if (followerCountElement) {
-                followerCountElement.innerHTML = `${data.follower_count} <i class="fas fa-arrow-circle-up"></i>`;
+                // Check if count has increased or decreased
+                const oldCount = parseInt(followerCountElement.textContent) || 0;
+                const newCount = data.follower_count;
+
+                // Update the follower count display
+                followerCountElement.innerHTML = `${newCount}`;
+
+                // Display icon indicating increase or decrease if count has changed
+                if (newCount !== oldCount) {
+                    createTemporaryIcon(newCount > oldCount, followerCountElement);
+                }
             } else {
                 console.error("Follower count element not found");
             }
-
         } else {
             console.error("Error fetching follower count:", data.error);
         }
@@ -222,19 +244,27 @@ socket.on('update_follower_count', function(data) {
     const { sponsorship_id, follower_count } = data;
     const followerCountElement = document.getElementById(`follower-count-${sponsorship_id}`);
     const followerCountCardElement = document.getElementById(`follower-count-card-${sponsorship_id}`);
-    
+
     if (followerCountElement) {
+        const oldCount = parseInt(followerCountElement.textContent) || 0;
         followerCountElement.textContent = `Followers: ${follower_count}`;
+
+        // Display icon indicating increase or decrease if count has changed
+        if (follower_count !== oldCount) {
+            createTemporaryIcon(follower_count > oldCount, followerCountElement);
+        }
     } else {
         console.error(`Follower count element not found for sponsorship ID ${sponsorship_id}`);
     }
-    
+
     if (followerCountCardElement) {
         followerCountCardElement.textContent = `Followers: ${follower_count}`;
     } else {
         console.error(`Follower count card element not found for sponsorship ID ${sponsorship_id}`);
     }
 });
+
+
 
 </script>
 

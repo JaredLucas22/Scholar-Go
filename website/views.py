@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, flash, jsonify, session
 from flask_login import login_required, current_user
-from .models import Note, Sponsorship_data, Comment, user_sponsorship_visits, User
+from .models import Note, Sponsorship_data, Comment, user_sponsorship_visits, User, user_sponsorship_alarm
 from . import db
 import json
 from scoring import calculate_compatibility_score, match_students_to_sponsorships
@@ -167,7 +167,24 @@ def delete_note():
 @login_required
 def follow():
     followed_sponsorships = current_user.followed_sponsorships  # Assuming this relationship is set up in your User model
-    return render_template("follow.html", followed_sponsorships=followed_sponsorships, user=current_user)
+    
+    # Create a list to hold sponsorships along with their alarm status
+    sponsorships_with_alarm_status = []
+
+    for sponsorship in followed_sponsorships:
+        # Check if the current sponsorship has an alarm set
+        alarm_status = db.session.query(user_sponsorship_alarm.c.is_alarm_set).filter(
+            user_sponsorship_alarm.c.user_id == current_user.id,
+            user_sponsorship_alarm.c.sponsorship_id == sponsorship.id
+        ).first()
+
+        # Get the alarm status (True/False), defaulting to False if no record found
+        is_alarm_set = alarm_status.is_alarm_set if alarm_status else False
+        
+        sponsorships_with_alarm_status.append((sponsorship, is_alarm_set))
+    
+    return render_template("follow.html", sponsorships_with_alarm_status=sponsorships_with_alarm_status, followed_sponsorships=followed_sponsorships, user=current_user)
+
 
 
 @views.route("/profile")

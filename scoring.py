@@ -8,11 +8,10 @@ def score_academic_performance(gpa, weight):
 
 def score_financial_need(financial_status, weight):
     financial_mapping = {
-        'Low Income': 100,
-        'Lower Middle': 75,
-        'Middle': 50,
-        'Upper Middle': 25,
-        'Rich': 0
+        'Self-Funded': 100,
+        'Low Income': 75,
+        'Middle Income': 50,
+        'High Income': 25,
     }
     base_score = financial_mapping.get(financial_status, 0)
     score = base_score * weight

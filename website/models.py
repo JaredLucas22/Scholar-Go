@@ -14,14 +14,18 @@ user_sponsorship = db.Table('user_sponsorship',
     db.Column('sponsorship_id', db.Integer, db.ForeignKey('sponsorship_data.id'), primary_key=True)
 )
 
+
+
 # Association Table for User Sponsorship Alarms
 user_sponsorship_alarm = db.Table('user_sponsorship_alarm',
     db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
     db.Column('sponsorship_id', db.Integer, db.ForeignKey('sponsorship_data.id'), primary_key=True),
     db.Column('priority', db.String(50), nullable=True),
     db.Column('alarm_time', db.DateTime(timezone=True), default=func.now()),
-    db.Column('message', (db.String(256)))
+    db.Column('message', db.String(256)),
+    db.Column('is_alarm_set', db.Boolean, default=False)  # Add this line for the boolean flag
 )
+
 
 # Association Table for User Likes
 user_sponsorship_likes = db.Table('user_sponsorship_likes',
