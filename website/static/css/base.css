@@ -13,6 +13,7 @@ body {
 .page.active {
   opacity: 1;
 }
+
 .flash-messages {
   top: 90px;
   position: absolute; /* Make it sticky */
@@ -20,6 +21,22 @@ body {
   transition: opacity 0.5s ease-in-out; /* Fade effect */
 }
 
+/*
+.flash-message.flash-success.flash-show.flash-hide {
+    top: 90px;
+    left: 50%; =
+    transform: translateX(-50%); 
+    position: absolute;
+    z-index: 1050;
+    padding: 10px 20px; 
+    background-color: #4caf50; 
+    color: white; 
+    border-radius: 5px; 
+    text-align: center;
+    transition: opacity 0.5s ease-in-out;
+    opacity: 1; 
+}
+*/
 
 
 .navbar {
