@@ -3,4 +3,5 @@ Flask-SQLAlchemy
 flask-login
 flask-socketio
 Flask-WTF
+gunicorn
 APScheduler
