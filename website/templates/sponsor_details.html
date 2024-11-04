@@ -48,7 +48,7 @@
                             <span class="sponsor-status inactive">Inactive Program</span>
                         {% endif %}
                     </p>
-                    <p><span class="info-label">Scholarship Program:</span> {{ sponsor.course }}</p>
+                    <p><span class="info-label">Scholarship Program:</span> {{ sponsor.course | title_case }}</p>
                     <p><span class="info-label">Amount:</span> {{ sponsor.amount_per_semester }}</p>
                 </div>
             </div>

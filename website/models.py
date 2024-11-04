@@ -129,7 +129,7 @@ class Sponsorship_data(db.Model, UserMixin):
     course = db.Column(db.String(150))
     fos = db.Column(db.String(150), nullable=True)
     url = db.Column(db.String(356), unique=True, nullable=True)
-    type_of_sponsor  = db.Column(db.String(150))
+    type_of_sponsor  = db.Column(db.String(150), nullable=True)
     tar_province  = db.Column(db.String(150), nullable=True)
     tar_city  = db.Column(db.String(150), nullable=True)
     tar_postalcode = db.Column(db.String(150), nullable=True)

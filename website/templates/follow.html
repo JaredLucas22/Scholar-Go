@@ -36,7 +36,7 @@
                         {% else %}
                         <span class="badge bg-danger">Inactive Program</span>
                         {% endif %}
-                        <p class="mb-0"><strong>Scholarship Program:</strong> {{ sponsorship.course }}</p>
+                        <p class="mb-0"><strong>Scholarship Program:</strong> {{ sponsorship.course | title_case }}</p>
                         <p class="mb-0"><strong>Amount per Semester:</strong> {{ sponsorship.amount_per_semester }}</p>
                     </div>
                 </div>
@@ -45,12 +45,17 @@
                     {% if is_alarm_set %}
                     <span class="badge bg-warning" style="color: #fffcea;">Alarm Set</span>
                     {% endif %}
-                    <button class="btn btn-link share-button" type="button" data-sponsorship-id="{{ sponsorship.id }}">
-                        <i class="fas fa-share"></i> 
-                    </button>
-                    <button class="btn btn-link close-button" type="button" data-sponsorship-id="{{ sponsorship.id }}">
-                        <i class="fas fa-times"></i> 
-                    </button>
+               
+                    <div style="display: flex; justify-content: flex-start; margin-left: 10px;">
+                        <button class="btn btn-link share-button" type="button" data-sponsorship-id="{{ sponsorship.id }}" title="Share">
+                            <i class="fas fa-share"></i>
+                        </button>
+                        <button class="btn btn-link close-button" type="button" data-sponsorship-id="{{ sponsorship.id }}" title="Close">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    
+                    
                 </div>
             </div>
     

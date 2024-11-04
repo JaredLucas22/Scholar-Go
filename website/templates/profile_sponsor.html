@@ -46,15 +46,36 @@
 
       <!-- First Row: Sponsor Name and Contact Person's Full Name -->
       <div class="row mt-2">
-        <div class="col-md-6">
+        <div class="col-md-4">
           <label class="labels">Name</label>
           <input type="text" class="form-control" name="sponsor_name" value="{{ sponsorship_data.sponsor_name }}">
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
           <label class="labels">Contact Person's Full Name</label>
           <input type="text" class="form-control" name="persontocontact" value="{{ sponsorship_data.persontocontact }}">
         </div>
-      </div>
+          <div class="col-md-4">
+          <label for="course">Course</label>
+          <select class="form-control" id="course" name="course" value="{{ sponsorship_data.course }}">
+              <option value="pre school to college">Pre-school to College</option>
+              <option value="pre school to elementary">Pre-school to Elementary School</option>
+              <option value="elementary to junior high">Elementary School to Junior High School</option>
+              <option value="junior high to senior high">Junior High School to Senior High School</option>
+              <option value="senior high to college">Senior High to College</option>
+              <option value="college">College</option>
+              <option value="incoming college">Incoming College</option>
+              <option value="incoming freshman">Incoming Freshman</option>
+              <option value="transfer student">Transfer Student</option>
+              <option value="bachelor degree">Bachelor's Degree</option>
+              <option value="associate degree">Associate's Degree</option>
+              <option value="master degree">Master's Degree</option>
+              <option value="doctorate degree">Doctorate Degree</option>
+              <option value="graduate student">Graduate Student</option>
+              <option value="adult learner">Adult Learner</option>
+              <option value="online degree">Online Degree Programs</option>            
+          </select>
+          </div>
+        </div>
 
       <!-- Second Row: Email and Contact Number -->
       <div class="row mt-3">
@@ -87,7 +108,6 @@
         <div class="col-md-6">
           <label class="labels">Field of Study</label>
         <select class="form-control form-select" id="fos" name="fos"  value="{{ sponsorship_data.fos }}">
-          <option value="" disabled selected>Select your course</option>
                                   <optgroup label="Business and Management">
                                       <option value="business_admin">Bachelor of Science in Business Administration</option>
                                       <option value="accountancy">Bachelor of Science in Accountancy</option>

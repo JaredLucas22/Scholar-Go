@@ -782,7 +782,7 @@ def sign_sponsor():
         url = request.form.get('url')
         contact_information = request.form.get('contact_information')
         course = request.form.get('course')
-        fos = request.get('fos')
+        fos = request.form.get('fos')
         weight_fos = request.form.get('weight_fos', type=float)
         weight_course = request.form.get('weight_course', type=float)
         weight_loc = request.form.get('weight_loc', type=float)
@@ -1088,6 +1088,7 @@ def update_sponsor_profile():
         address = request.form.get('address')
         fos = request.form.get('fos')
         persontocontact = request.form.get('persontocontact')
+        course = request.form.get('course')
         email = request.form.get('email')
         contact_information = request.form.get('contact_information')
         amount = request.form.get('amount_per_semester')
@@ -1103,6 +1104,7 @@ def update_sponsor_profile():
             sponsorship_data.sponsor_name = sponsor_name
             sponsorship_data.email = email
             sponsorship_data.fos = fos
+            sponsorship_data.course = course
             sponsorship_data.address = address
             sponsorship_data.persontocontact = persontocontact
             sponsorship_data.contact_information = contact_information
