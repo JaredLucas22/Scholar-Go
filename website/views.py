@@ -185,7 +185,28 @@ def follow():
     
     return render_template("follow.html", sponsorships_with_alarm_status=sponsorships_with_alarm_status, followed_sponsorships=followed_sponsorships, user=current_user)
 
+@views.route('/search', methods=['GET'])
+@login_required
+def search():
+    query = request.args.get('q', '').strip().lower()  # Get the search query from URL parameters and convert to lowercase
 
+    if query:
+        # Filter sponsorships by lowercased sponsor name, course, or description
+        results = Sponsorship_data.query.filter(
+            (Sponsorship_data.sponsor_name.ilike(f'%{query}%')) |  # Case-insensitive search for sponsor name
+            (Sponsorship_data.course.ilike(f'%{query}%')) |      # Optional: search by course
+            (Sponsorship_data.description.ilike(f'%{query}%'))   # Optional: search by description
+            ).all()
+    else:
+        results = []  # Return an empty list if no query is provided
+
+    # Return search results to the same page or to a dedicated search results page
+    return render_template(
+        'search_results.html',
+        user=current_user,
+        sponsorships=results,
+        query=query  # Pass the query to display it in the search bar if needed
+    )
 
 @views.route("/profile")
 @login_required

@@ -567,10 +567,16 @@ def reset_password(token):
 
     if request.method == 'POST':
         new_password = request.form.get('new_password')  # Get the new password from the form
+        confirm_password = request.form.get('confirm_password')  # Get the confirmation password
 
         # Check if the new password is valid
         if not new_password or new_password.strip() == "":
             flash('Please provide a new password.', category='error')
+            return render_template('reset_password.html', user=current_user, token=token)
+
+        # Check if the passwords match
+        if new_password != confirm_password:
+            flash('Passwords do not match! Please try again.', category='error')
             return render_template('reset_password.html', user=current_user, token=token)
 
         # Update the user's password
@@ -765,7 +771,7 @@ from . import db
 def sign_sponsor():
     if request.method == 'POST':
         # Retrieve form data
-        sponsor_name = request.form.get('sponsor-name')
+        sponsor_name = request.form.get('sponsor-name', '').lower()
         persontocontact	= request.form.get('persontocontact	')
         email = request.form.get('email')
         password1 = request.form.get('password1')
@@ -1072,36 +1078,37 @@ def update_sponsor_profile():
     # Check if the user is of type Sponsorship
     if session.get('user_type') == 'Sponsorship':
         # Get form data
-        sponsor_name = request.form.get('sponsor_name')
+        sponsor_name = request.form.get('sponsor_name') # Use 'sponsor_name' to match the input field name
         address = request.form.get('address')
         persontocontact = request.form.get('persontocontact')
         email = request.form.get('email')
         contact_information = request.form.get('contact_information')
         type_of_sponsor = request.form.get('type_of_sponsor')
-        description = request.form.get('description')
-        full_description = request.form.get('full_description')
-        amount_per_semester = request.form.get('amount_per_semester')
+
+
+        # Log the profile update attempt
+        logging.info(f'User {current_user.id} is updating their profile.')
 
         # Update sponsor information
         sponsorship_data = Sponsorship_data.query.filter_by(id=current_user.id).first()
         if sponsorship_data:
             sponsorship_data.sponsor_name = sponsor_name
             sponsorship_data.email = email
-            address = address
-            persontocontact = persontocontact
+            sponsorship_data.address = address
+            sponsorship_data.persontocontact = persontocontact
             sponsorship_data.contact_information = contact_information
             sponsorship_data.type_of_sponsor = type_of_sponsor
-            sponsorship_data.description = description
-            sponsorship_data.full_description = full_description
-            sponsorship_data.amount_per_semester = amount_per_semester
 
             # Commit the changes
-            try:
-                db.session.commit()
-                flash('Sponsor profile updated successfully!', category='success')
-            except Exception as e:
-                db.session.rollback()
-                flash('An error occurred while updating your sponsor profile. Please try again.', category='error')
+        try:
+            db.session.commit()
+            logging.info(f'User {current_user.id} successfully updated their profile.')
+            flash('Sponsor profile updated successfully!', category='success')
+        except Exception as e:
+            db.session.rollback()
+            logging.error(f'Error updating profile for user {current_user.id}: {str(e)}')
+            flash(f'An error occurred while updating your sponsor profile: {str(e)}. Please try again.', category='error')  # Include the error message for debugging
+
 
     return redirect(url_for('views.profile_sponsor'))  # Redirect to the sponsor profile page
 

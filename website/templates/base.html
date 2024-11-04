@@ -102,6 +102,12 @@
                           </a>
                           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationsDropdown" id="notificationsList">
                           </ul>
+                          <li class="nav-item">
+                            <form action="{{ url_for('views.search') }}" method="get" class="d-flex">
+                              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                              <input type="text" class="form-control search-bar" name="q" value="{{ query }}" placeholder="Search sponsorships..." required>
+                            </form>
+                        </li>                                             
                       {% elif session['user_type'] == 'Sponsorship' %}
                       <li class="nav-item">
                           <a class="nav-link text-white" id="sponsordashboard" href="/sponsordashboard">Sponsor Dashboard</a>

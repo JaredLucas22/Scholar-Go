@@ -14,31 +14,22 @@ body {
   opacity: 1;
 }
 
+/* Search Bar Styles */
+.search-bar {
+  width: 100%; /* Take full width */
+  max-width: 600px; /* Increase max width for larger screens */
+  margin-left: 10px;
+  border-radius: 4px;
+}
+
 .flash-messages {
   top: 90px;
-  position: absolute; /* Make it sticky */
-  z-index: 1050; /* Ensure it appears above other elements */
-  transition: opacity 0.5s ease-in-out; /* Fade effect */
+  position: absolute;
+  z-index: 1050;
+  transition: opacity 0.5s ease-in-out;
 }
 
-/*
-.flash-message.flash-success.flash-show.flash-hide {
-    top: 90px;
-    left: 50%; =
-    transform: translateX(-50%); 
-    position: absolute;
-    z-index: 1050;
-    padding: 10px 20px; 
-    background-color: #4caf50; 
-    color: white; 
-    border-radius: 5px; 
-    text-align: center;
-    transition: opacity 0.5s ease-in-out;
-    opacity: 1; 
-}
-*/
-
-
+/* Navbar Styles */
 .navbar {
   background: linear-gradient(90deg, #012cb8, #017cff) !important;
   position: sticky !important;
@@ -47,7 +38,6 @@ body {
   padding: 1.5vh 0;
 }
 
-
 .nav-logo img {
   width: 200px;
   height: auto;
@@ -55,31 +45,16 @@ body {
 }
 
 .nav-link {
-  position: relative;
-  display: inline-block;
   color: #ffffff;
   text-decoration: none;
   padding-bottom: 5px;
   transition: color 0.3s ease, transform 0.3s ease, text-shadow 0.3s ease;
 }
 
-.quick-links a {
-  text-decoration: none; /* Remove the underline */
-}
-
-.quick-links a:hover {
-  text-decoration: underline; /* Optional: add underline on hover if needed */
-}
-
-
 .nav-link:hover {
   color: #f8f9fa;
   text-shadow: 0 0 8px rgba(64, 189, 238, 0.6);
   transform: scale(1.1);
-}
-
-.nav-link:active {
-  text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
 }
 
 .profile-pic img {
@@ -92,57 +67,29 @@ body {
   margin-right: 1%;
 }
 
-.navbar-toggler {
-  background-color: transparent;
-  border: none;
-  transition: background-color 0.2s ease;
-}
-
-.navbar-toggler:focus,
-.navbar-toggler:active {
-  outline: none;
-  box-shadow: none;
-}
-
-.navbar-toggler.clicked {
-  background-color: rgba(182, 30, 30, 0.2);
-}
-
-.navbar-toggler:not(:focus):not(:active) {
-  background-color: transparent;
-}
-
-.navbar-collapse.show + .navbar-toggler {
-  background-color: rgba(0, 0, 0, 0.1);
-}
-
+/* Responsive Design */
 @media (max-width: 1200px) {
-
-
   .nav-logo img {
     width: 170px;
   }
 
-  .navbar-nav .nav-link {
+  .navbar-nav .nav-link,
+  .nav-link {
     font-size: 14px;
   }
 
-  .nav-link {
-    font-size: 14px;
+  .search-bar {
+    width: 100%; /* Full width on large screens */
+    max-width: 550px;
   }
 }
 
 @media (max-width: 992px) {
-
-
   .nav-logo img {
     width: 150px;
   }
 
-  .navbar-nav .nav-link {
-    font-size: 13px;
-  }
-
+  .navbar-nav .nav-link,
   .nav-link {
     font-size: 13px;
   }
@@ -150,36 +97,37 @@ body {
   .container-fluid {
     margin: 0 2%;
   }
+
+  .search-bar {
+    width: 100%; /* Full width on medium screens */
+    max-width: 500px;
+  }
 }
 
 @media (max-width: 768px) {
-
   .nav-logo img {
-    width: 150px;
+    width: 130px;
   }
 
-  .navbar-nav .nav-link {
-    font-size: 14px;
+  .navbar-nav .nav-link,
+  .nav-link {
+    font-size: 12px;
   }
 
   .container-fluid {
     margin: 0 5%;
   }
 
-  .nav-link {
-    font-size: 12px;
-  }
-
-  .container-fluid {
-    margin: 0 2%;
+  .search-bar {
+    width: 100%; /* Full width on smaller screens */
+    max-width: 400px;
+    margin-left: 0;
   }
 }
 
 @media (max-width: 576px) {
-
-
   .nav-logo img {
-    width: 150px;
+    width: 120px;
   }
 
   .navbar-nav .nav-link {
@@ -194,5 +142,11 @@ body {
   .profile-pic {
     width: 30px;
     height: 30px;
+  }
+
+  .search-bar {
+    width: 100%; /* Full width on very small screens */
+    max-width: 300px;
+    margin: 0 auto;
   }
 }

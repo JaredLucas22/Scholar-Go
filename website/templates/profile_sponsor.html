@@ -35,56 +35,59 @@
       </div>
     </div>
 
-    <!-- Profile Settings Form (Right) -->
-    <div class="col-md-9 border-right">
-      <div class="p-3 py-5">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <h4 class="text-right">Settings</h4>
-        </div>
+<!-- Update Profile Settings Form (Right) -->
+<div class="col-md-9 border-right">
+  <form method="POST" action="{{ url_for('auth.update_sponsor_profile') }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="p-3 py-5">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="text-right">Settings</h4>
+      </div>
 
-        <!-- First Row: GPA and Extracurricular Weights -->
-        <div class="row mt-2">
-          <div class="col-md-6">
-            <label class="labels">Name</label>
-            <input type="text" class="form-control" id="Sponsor_name" value="{{ sponsorship_data.sponsor_name}}">
-          </div>
-          <div class="col-md-6">
-            <label class="labels">Contact Person's Full Name</label>
-            <input type="text" class="form-control" id = "persontocontact" value="{{ sponsorship_data.persontocontact}}">
-          </div>
+      <!-- First Row: Sponsor Name and Contact Person's Full Name -->
+      <div class="row mt-2">
+        <div class="col-md-6">
+          <label class="labels">Name</label>
+          <input type="text" class="form-control" name="sponsor_name" value="{{ sponsorship_data.sponsor_name }}">
         </div>
-
-        <!-- Second Row: Financial and Field of Study Weights -->
-        <div class="row mt-3">
-          <div class="col-md-6">
-            <label class="labels">Email</label>
-            <input type="text" id = "email" class="form-control" value="{{ sponsorship_data.email}}">
-          </div>
-          <div class="col-md-6">
-            <label class="labels">Contact Number</label>
-            <input type="text" id="contact_information" class="form-control" value="{{ sponsorship_data.contact_information}}">
-          </div>
-        </div>
-
-        <!-- Third Row: Extracurricular Activity of Choice and Mobile Number -->
-        <div class="row mt-3">
-          <div class="col-md-6">
-            <label class="labels">Address</label>
-            <input type="text" class="form-control" value="{{ sponsorship_data.address}}">
-          </div>
-          <div class="col-md-6">
-            <label class="labels">Type of Sponsor</label>
-            <input type="text" id= "type_of_sponsor" class="form-control" value="{{ sponsorship_data.type_of_sponsor}}">
-          </div>
-        </div>
-
-        <!-- Save Profile Button -->
-        <div class="mt-5 text-center">
-          <button class="btn btn-primary profile-button" type="button">Save Profile</button>
+        <div class="col-md-6">
+          <label class="labels">Contact Person's Full Name</label>
+          <input type="text" class="form-control" name="persontocontact" value="{{ sponsorship_data.persontocontact }}">
         </div>
       </div>
+
+      <!-- Second Row: Email and Contact Number -->
+      <div class="row mt-3">
+        <div class="col-md-6">
+          <label class="labels">Email</label>
+          <input type="text" name="email" class="form-control" value="{{ sponsorship_data.email }}">
+        </div>
+        <div class="col-md-6">
+          <label class="labels">Contact Number</label>
+          <input type="text" name="contact_information" class="form-control" value="{{ sponsorship_data.contact_information }}">
+        </div>
+      </div>
+
+      <!-- Third Row: Address and Type of Sponsor -->
+      <div class="row mt-3">
+        <div class="col-md-6">
+          <label class="labels">Address</label>
+          <input type="text" name="address" class="form-control" value="{{ sponsorship_data.address }}">
+        </div>
+        <div class="col-md-6">
+          <label class="labels">Type of Sponsor</label>
+          <input type="text" name="type_of_sponsor" class="form-control" value="{{ sponsorship_data.type_of_sponsor }}">
+        </div>
+      </div>
+
+      <!-- Save Profile Button -->
+      <div class="mt-5 text-center">
+        <button class="btn btn-primary profile-button" type="submit">Save Profile</button>
+      </div>
     </div>
-  </div>
+  </form>
+</div>
+</div>
 </div>
 </div>
 </div>

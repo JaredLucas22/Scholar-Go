@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% block title %}Search Results{% endblock %}
+{% block content %}
+
+<!-- CSS Links -->
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet" integrity="sha384-L3dWZAD7h5I0opE5m9jp/5lI7XcBX5Dd9S3l+vZW2IfGAVoUGf9wbRHTSwu3RE5N" crossorigin="anonymous">
+
+<link rel="stylesheet" href="/static/css/sponsorlist.css"/>
+
+<!-- Flash Messages Section -->
+<div id="flash-messages">
+</div>
+
+<div class="container-list mt-4">
+    <div class="row">
+        {% if sponsorships %}
+            {% for sponsorship in sponsorships %}
+                <div class="col-12 mb-4 list position-relative">
+                    <!-- Entire Card Link -->
+                    <a href="{{ url_for('views.view_sponsorship', sponsor_id=sponsorship.id) }}" class="stretched-link" style="z-index: 1;"></a>
+                    
+                    <div class="d-flex flex-column flex-sm-row align-items-stretch position-relative"> 
+                        
+                        <!-- Sponsorship details -->
+                        <div class="logo">
+                            <img src="{{ url_for('static', filename='uploads/' ~ sponsorship.picture_path) }}" alt="Logo" class="img-fluid logo-img">
+                        </div>
+
+                        <div class="content flex-grow-1 ms-3"> 
+                            <h5 class="title mb-1 me-2">{{ sponsorship.sponsor_name }}</h5>
+                            <p class="description mb-1">{{ sponsorship.description | safe }}</p>
+                            <p class="likes mb-1">Likes: {{ sponsorship.likes | length }} | Deadline on {{ sponsorship.deadline_date.strftime('%B %d, %Y') }}</p>
+                            <div class="d-flex content-between mt-auto"> 
+                                {% if sponsorship.active %}
+                                    <span class="badge bg-success">Active Program</span>
+                                {% else %}
+                                    <span class="badge bg-danger">Inactive Program</span>
+                                {% endif %}
+                                
+                                <p class="mb-0"><strong>Scholarship Program:</strong> {{ sponsorship.course }}</p>
+                                <p class="mb-0"><strong>Amount per Semester:</strong> P{{ "{:,.2f}".format(sponsorship.amount_per_semester) }}</p>
+                            </div>
+                        </div>
+
+                        <!-- Dropdown for additional options -->
+                        <div class="dropdown-top-right position-relative ms-auto" style="z-index: 3;">
+                            <button class="btn btn-link ellipsis-button" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </button>
+
+                            <div class="dropdown-menu-container dropdown-menu-end">
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <form action="/follow/{{ sponsorship.id }}" method="POST" class="bookmark-form">
+                                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                            <button type="button" class="dropdown-item bookmark-button" 
+                                                    data-sponsorship-id="{{ sponsorship.id }}" 
+                                                    data-is-following="{{ 'true' if current_user.is_following(sponsorship.id) else 'false' }}">
+                                                {% if current_user.is_following(sponsorship.id) %}
+                                                    <i class="fa-solid fa-bookmark"></i> <span>Remove Bookmark</span>
+                                                {% else %}
+                                                    <i class="fa-regular fa-bookmark"></i> <span>Add Bookmark</span>
+                                                {% endif %}
+                                            </button>
+                                        </form>
+                                    </li>                                    
+                                    <li>
+                                        <a class="dropdown-item" href="#"><i class="fa-solid fa-share"></i> <span>Share</span></a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12" style="background-color: whitesmoke;">
+                <p>No sponsorships found for your search.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- JavaScript -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const bookmarkButtons = document.querySelectorAll('.bookmark-button');
+
+    bookmarkButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const sponsorshipId = this.dataset.sponsorshipId;
+            const isFollowing = this.dataset.isFollowing === 'true';
+            const form = this.closest('.bookmark-form');
+            const csrfToken = form.querySelector('input[name="csrf_token"]').value;
+
+            fetch(`/follow/${sponsorshipId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-Token': csrfToken
+                },
+                body: JSON.stringify({ 'follow': !isFollowing })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    if (isFollowing) {
+                        this.innerHTML = `<i class="fa-regular fa-bookmark"></i> <span>Add Bookmark</span>`;
+                    } else {
+                        this.innerHTML = `<i class="fa-solid fa-bookmark"></i> <span>Remove Bookmark</span>`;
+                    }
+                    this.dataset.isFollowing = !isFollowing;
+                } else {
+                    alert('Failed to update bookmark status.');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    });
+});
+</script>
+
+{% endblock %}
