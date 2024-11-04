@@ -207,7 +207,7 @@ def login():
         user = User.query.filter_by(email=email).first()
         if user and check_password_hash(user.password, password):
             login_user(user, remember=True)
-            session['user_type'] = user.get_user_type()  # Store user type in the session
+            session['user_type'] = 'User'  # Store user type as 'User' in the session
             return redirect(url_for('views.home'))
         
         # Try to find the email in the Sponsorship_data table
@@ -215,10 +215,7 @@ def login():
         if sponsorship and check_password_hash(sponsorship.password, password):
             login_user(sponsorship, remember=True)
             session['user_type'] = 'Sponsorship'  # Store user type as 'Sponsorship' in the session
-            
-            # Fetch sponsorship data if needed for the dashboard
-            sponsorship_data = Sponsorship_data.query.filter_by(id=sponsorship.id).first()
-            return redirect(url_for('views.sponsordashboard', sponsorship_data=sponsorship_data))
+            return redirect(url_for('views.home'))  # Redirect to home for common handling
         
         # If no match found in both tables
         flash('Invalid email or password.', category='error')
@@ -767,7 +764,9 @@ from datetime import datetime
 from .models import Sponsorship_data
 from . import db
 
-@auth.route('/sdjaksjfipjl;nnkvpiphdp%12312p4pifancbuoaskdsanvxzcnk;vsd#2sa!2123rsaf', methods=['GET', 'POST'])
+
+
+@auth.route('/sign-sponsor', methods=['GET', 'POST'])
 def sign_sponsor():
     if request.method == 'POST':
         # Retrieve form data
@@ -775,11 +774,18 @@ def sign_sponsor():
         persontocontact	= request.form.get('persontocontact	')
         email = request.form.get('email')
         password1 = request.form.get('password1')
+        tar_city = request.form.get('tar_city')
+        tar_province = request.form.get('tar_province')
+        tar_postalcode = request.form.get('tar_postalcode')
         password2 = request.form.get('password2')
+        address = request.form.get('address')
         url = request.form.get('url')
         contact_information = request.form.get('contact_information')
         course = request.form.get('course')
+        fos = request.get('fos')
         weight_fos = request.form.get('weight_fos', type=float)
+        weight_course = request.form.get('weight_course', type=float)
+        weight_loc = request.form.get('weight_loc', type=float)
         weight_gpa = request.form.get('weightgpa', type=float)
         weight_extracurricular = request.form.get('weightextracurricularActivities', type=float)
         weight_financial = request.form.get('weightfinancialStatus', type=float)
@@ -788,14 +794,7 @@ def sign_sponsor():
         full_description = request.form.get('fulldescription')
         extracurricular_activity = request.form.get('extracurricularActivities')
         deadline_date_str = request.form.get('deadline_date')  # Get the date input from the form
-        
-        # Get the amount_per_semester and format it
-        amount_per_semester_str = request.form.get('amount_per_semester')
-        try:
-            amount_per_semester = float(amount_per_semester_str.replace(',', '').strip())  # Remove commas for conversion
-        except (ValueError, TypeError):
-            flash('Invalid amount per semester.', category='error')
-            return redirect(url_for('auth.sign_sponsor'))
+        amount_per_semester = request.form.get('amount_per_semester')
 
         # Convert it directly into a date object
         deadline_date = datetime.strptime(deadline_date_str, '%Y-%m-%d').date() if deadline_date_str else None
@@ -827,12 +826,19 @@ def sign_sponsor():
         new_sponsor = Sponsorship_data(
             sponsor_name=sponsor_name,
             email=email,
+            address = address,
             password=generate_password_hash(password1, method='pbkdf2:sha256'),
             course=course,
             url=url,
             persontocontact=persontocontact,
             contact_information=contact_information,
             weight_fos=weight_fos,
+            fos = fos,
+            weight_loc=weight_loc,
+            tar_province = tar_province,
+            tar_city = tar_city,
+            tar_postalcode = tar_postalcode,
+            weight_course=weight_course,
             weight_gpa=weight_gpa,
             weight_extracurricular_activities=weight_extracurricular,
             weight_financial_status=weight_financial,
@@ -855,7 +861,7 @@ def sign_sponsor():
             login_user(new_sponsor, remember=True)  # Use new_sponsor to log in
             session['user_type'] = 'Sponsorship'  # Store user type as 'Sponsorship' in the session
             flash('Sponsor added successfully!', category='success')
-            return redirect(url_for('views.sponsordashboard'))  # Redirect to the sponsor dashboard
+            return redirect(url_for('views.home'))  # Redirect to the sponsor dashboard
         except Exception as e:
             db.session.rollback()  # Roll back on error
             print(e)  # Log error for debugging
@@ -1080,9 +1086,11 @@ def update_sponsor_profile():
         # Get form data
         sponsor_name = request.form.get('sponsor_name') # Use 'sponsor_name' to match the input field name
         address = request.form.get('address')
+        fos = request.form.get('fos')
         persontocontact = request.form.get('persontocontact')
         email = request.form.get('email')
         contact_information = request.form.get('contact_information')
+        amount = request.form.get('amount_per_semester')
         type_of_sponsor = request.form.get('type_of_sponsor')
 
 
@@ -1094,10 +1102,12 @@ def update_sponsor_profile():
         if sponsorship_data:
             sponsorship_data.sponsor_name = sponsor_name
             sponsorship_data.email = email
+            sponsorship_data.fos = fos
             sponsorship_data.address = address
             sponsorship_data.persontocontact = persontocontact
             sponsorship_data.contact_information = contact_information
             sponsorship_data.type_of_sponsor = type_of_sponsor
+            sponsorship_data.amount_per_semester = amount
 
             # Commit the changes
         try:

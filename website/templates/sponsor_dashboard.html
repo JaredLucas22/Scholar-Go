@@ -19,7 +19,7 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Visits</h5>
-                            <h1 class="card-text"><span id="visit-count-card">{{ visit_count}}</span><i class="fas fa-arrow-down custom-arrow custom-arrow-down"></i></h1>
+                            <h1 class="card-text"><span id="visit-count-card">{{ visit_count}}</span></h1>
                             <p class="card-text-description">107% more than Jan 1 - Dec 31 2024</p>
                         </div>
                     </div>
@@ -28,7 +28,7 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Likes</h5>
-                            <h1 class="card-text" id="likes-count">{{ total_likes }}<i class="fas fa-arrow-circle-up"></i></h1>
+                            <h1 class="card-text" id="likes-count">{{ total_likes }}</i></h1>
                             <p class="card-text-description">105% more than Jan 1 - Dec 31 2024</p>
                         </div>
                     </div>
@@ -37,7 +37,7 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Bookmarks</h5>
-                            <h1 class="card-text" id="follower-count-{{ sponsorship_data.id }}">{{ follower_count }}<i class="fas fa-arrow-circle-up"></i></h1>
+                            <h1 class="card-text" id="follower-count-{{ sponsorship_data.id }}">{{ follower_count }}/i></h1>
                             <p class="card-text-description">110% more than Jan 1 - Dec 31 2024</p>
                         </div>
                     </div>
@@ -82,37 +82,54 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
 <script>
     const socket = io();  // Connect to the SocketIO server
-
-    // Listen for visit count updates
+    
+    // Update visit count function
     socket.on('update_visit_count', function(data) {
         const visitCountTextElement = document.getElementById('visit-count-text');
         const visitCountCardElement = document.getElementById('visit-count-card');
-        if (visitCountTextElement && visitCountCardElement) {
-            visitCountTextElement.textContent = data.visit_count; // Update main display
-            visitCountCardElement.textContent = data.visit_count; // Update card display
-        } else {
-            console.error("Visit count elements not found");
+    
+        if (visitCountTextElement) {
+            const oldCount = parseInt(visitCountTextElement.textContent) || 0;
+            visitCountTextElement.textContent = data.visit_count;
+    
+        }
+    
+        if (visitCountCardElement) {
+            visitCountCardElement.textContent = data.visit_count;
+    
+            // Trigger animation if count has changed
+            if (data.visit_count !== oldCount) {
+                createTemporaryIcon(data.visit_count > oldCount, visitCountCardElement);
+            }
+                        // Trigger animation if count has changed
+            if (data.visit_count !== oldCount) {
+                createTemporaryIcon(data.visit_count > oldCount, visitCountTextElement);
+            }
         }
     });
-
-  // Listen for likes count updates
-socket.on('update_likes', function(data) {
-    const likesCountElement = document.getElementById('likes-count');
-    if (likesCountElement) {
-        // Update the likes count in the <h1> element
-        likesCountElement.innerHTML = `${data.likes_count} <i class="fas fa-arrow-circle-up"></i>`;
-    } else {
-        console.error("Likes count element not found");
-    }
-});
-
+    
+    // Update likes count function
+    socket.on('update_likes', function(data) {
+        const likesCountElement = document.getElementById('likes-count');
+    
+        if (likesCountElement) {
+            const oldCount = parseInt(likesCountElement.textContent) || 0;
+            likesCountElement.innerHTML = `${data.likes_count} <i class="fas fa-arrow-circle-up"></i>`;
+    
+            // Trigger animation if count has changed
+            if (data.likes_count !== oldCount) {
+                createTemporaryIcon(data.likes_count > oldCount, likesCountElement);
+            }
+        }
+    });
+    
     // Fetch the initial visit count and likes count on page load
     document.addEventListener('DOMContentLoaded', function() {
         const sponsorshipId = "{{ sponsorship_data.id }}"; // Ensure this ID is set correctly in your template
         fetchVisitCount(sponsorshipId); // Make sure this function is defined
         fetchLikesCount(sponsorshipId);
         fetchFollowerCount(sponsorshipId);
-
+    
         // Optionally set interval to fetch data every 5 seconds
         setInterval(() => {
             fetchVisitCount(sponsorshipId);
@@ -120,30 +137,38 @@ socket.on('update_likes', function(data) {
             fetchFollowerCount(sponsorshipId);
         }, 5000);
     });
-
+    
+    // Fetch likes count function
     async function fetchLikesCount(sponsorshipId) {
-    try {
-        const response = await fetch(`/get_likes/${sponsorshipId}`);
-        if (!response.ok) {
-            throw new Error('Failed to fetch likes count: ' + response.statusText);
-        }
-        const data = await response.json();
-        if (data.success) {
-            const likesCountElement = document.getElementById('likes-count');
-
-            if (likesCountElement) {
-                likesCountElement.innerHTML = `${data.likes_count} <i class="fas fa-arrow-circle-up"></i>`;
-            } else {
-                console.error("Likes count element not found");
+        try {
+            const response = await fetch(`/get_likes/${sponsorshipId}`);
+            if (!response.ok) {
+                throw new Error('Failed to fetch likes count: ' + response.statusText);
             }
-        } else {
-            console.error("Error fetching likes count:", data.error);
+            const data = await response.json();
+            if (data.success) {
+                const likesCountElement = document.getElementById('likes-count');
+    
+                if (likesCountElement) {
+                    const oldCount = parseInt(likesCountElement.textContent) || 0;
+                    likesCountElement.innerHTML = `${data.likes_count}`;
+    
+                    // Trigger animation if count has changed
+                    if (data.likes_count !== oldCount) {
+                        createTemporaryIcon(data.likes_count > oldCount, likesCountElement);
+                    }
+                } else {
+                    console.error("Likes count element not found");
+                }
+            } else {
+                console.error("Error fetching likes count:", data.error);
+            }
+        } catch (error) {
+            console.error("Failed to fetch likes count:", error.message);
         }
-    } catch (error) {
-        console.error("Failed to fetch likes count:", error.message);
     }
-}
-
+    
+    // Fetch visit count function
     async function fetchVisitCount(sponsorshipId) {
         try {
             const response = await fetch(`/visit_count/${sponsorshipId}`);
@@ -154,15 +179,26 @@ socket.on('update_likes', function(data) {
             if (data.success) {
                 const visitCountElement = document.getElementById('visit-count');
                 const visitCountCardElement = document.getElementById('visit-count-card');
-
+    
                 if (visitCountElement) {
+                    const oldCount = parseInt(visitCountElement.textContent) || 0;
                     visitCountElement.textContent = data.visit_count; // Display visit count
+    
+                    // Trigger animation if count has changed
+                    if (data.visit_count !== oldCount) {
+                        createTemporaryIcon(data.visit_count > oldCount, visitCountElement);
+                    }
                 } else {
                     console.error("Visit count element not found");
                 }
-
+    
                 if (visitCountCardElement) {
                     visitCountCardElement.textContent = data.visit_count; // Display visit count on card
+    
+                    // Trigger animation if count has changed
+                    if (data.visit_count !== oldCount) {
+                        createTemporaryIcon(data.visit_count > oldCount, visitCountCardElement);
+                    }
                 } else {
                     console.error("Visit count card element not found");
                 }
@@ -267,7 +303,7 @@ socket.on('update_follower_count', function(data) {
 
 
 </script>
-
+<script src="/static/alllocations.js"></script>
 
 
 

@@ -24,6 +24,17 @@
             required
         />
     </div>
+    <div class="form-group">
+        <label for="sponsor-name">Sponsor Address</label>
+        <input
+            type="text"
+            class="form-control"
+            id="address"
+            name="address"
+            placeholder="Enter your address"
+            required
+        />
+    </div>
     <!-- New Email Field -->
     <div class="form-group">
         <label for="email">Email</label>
@@ -36,7 +47,6 @@
             required
         />
     </div>
-        <!-- New Email Field -->
         <div class="form-group">
             <label for="persontocontact">Contact Person</label>
             <input
@@ -47,12 +57,35 @@
             />
         </div>
         <div class="form-group">
-            <label for="address">Address</label>
+            <label for="tar_province">Target Province</label>
             <input
+                type="text"
                 class="form-control"
-                id="address"
-                name="address"
-                placeholder="Enter the person to contact"
+                id="tar_province"
+                name="tar_province"
+                placeholder="Enter target province"
+                required
+            />
+        </div>
+        <div class="form-group">
+            <label for="tar_city">Target City</label>
+            <input
+                type="text"
+                class="form-control"
+                id="tar_city"
+                name="tar_city"
+                placeholder="Enter target province"
+                required
+            />
+        </div>
+        <div class="form-group">
+            <label for="tar_postalcode">Target Postalcode</label>
+            <input
+                type="text"
+                class="form-control"
+                id="tar_postalcode"
+                name="tar_postalcode"
+                placeholder="Enter target province"
                 required
             />
         </div>
@@ -118,6 +151,36 @@
         />
     </div>
     <div class="form-group">
+        <label for="weightgpa">Course Weight</label>
+        <input
+            type="number"
+            step="0.01"
+            class="form-control"
+            id="weight_course"
+            name="weight_course"
+            placeholder="Enter GPA Weight"
+            min="0"
+            max="1"
+            oninput="validateWeight(this)"
+            required
+        />
+    </div>
+    <div class="form-group">
+        <label for="weight_loc">Location Weight</label>
+        <input
+            type="number"
+            step="0.01"
+            class="form-control"
+            id="weight_loc"
+            name="weight_loc"
+            placeholder="Enter GPA Weight"
+            min="0"
+            max="1"
+            oninput="validateWeight(this)"
+            required
+        />
+    </div>
+    <div class="form-group">
         <label for="weightextracurricularActivities">Extracurricular Activities Weight</label>
         <input
             type="number"
@@ -135,31 +198,66 @@
     <div class="form-group">
         <label for="extracurricularActivities">Extracurricular Activities</label>
         <select class="form-control" id="extracurricularActivities" name="extracurricularActivities" required>
-            <option value="" disabled selected>Select an activity</option>
-            <option value="Sports">Sports</option>
-            <option value="Community Service">Community Service</option>
-            <option value="Academic Clubs">Academic Clubs</option>
-            <option value="Theater">Theater</option>
-            <option value="Academic">Academic</option>
-            <option value="Cultural Activities">Cultural Activities</option>
-            <option value="Internships">Internships</option>
-            <option value="Science and Technology Studies">Science and Technology Studies</option>
-            <option value="Arts and Creativity">Arts and Creativity</option>
-            <option value="Competitions">Competitions</option>
-            <option value="Leadership and Entrepreneurship">Leadership and Entrepreneurship</option>
-            <option value="Art Music">Art Music</option>
-            <option value="Sculpture">Sculpture</option>
-            <option value="Social Justice">Social Justice</option>
-            <option value="Art Club">Art Club</option>
-            <option value="Drama">Drama</option>
-            <option value="Interest Clubs">Interest Clubs</option>
-            <option value="Animation">Animation</option>
-            <option value="Basketball">Basketball</option>
-            <option value="Choir">Choir</option>
-            <option value="Cycling">Cycling</option>
-            <option value="English Club">English Club</option>
-            <option value="Graphic Design">Graphic Design</option>
-            <option value="Gymnastics">Gymnastics</option>
+            <option value="" disabled selected>Club Activity</option>
+                                    
+                                    <optgroup label="Physical Activities">
+                                        <option value="Sports">Sports</option>
+                                        <option value="Basketball">Basketball</option>
+                                        <option value="Soccer">Soccer</option>
+                                        <option value="Volleyball">Volleyball</option>
+                                        <option value="Track and Field">Track and Field</option>
+                                        <option value="Swimming">Swimming</option>
+                                        <option value="Gymnastics">Gymnastics</option>
+                                        <option value="Tennis">Tennis</option>
+                                        <option value="Cycling">Cycling</option>
+                                        <option value="Badminton">Badminton</option>
+                                        <option value="Wrestling">Wrestling</option>
+                                        <option value="Cheerleading">Cheerleading</option>
+                                        <option value="Dance">Dance</option>
+                                    </optgroup>
+                                    
+                                    <optgroup label="Mental/Cognitive Activities">
+                                        <option value="Science Club">Science Club</option>
+                                        <option value="Math Club">Math Club</option>
+                                        <option value="Debate Club">Debate Club</option>
+                                        <option value="Literary Club">Literary Club</option>
+                                        <option value="History Club">History Club</option>
+                                        <option value="Robotics Club">Robotics Club</option>
+                                        <option value="Computer Science Club">Computer Science Club</option>
+                                        <option value="Environment Club">Environment Club</option>
+                                        <option value="Engineering Club">Engineering Club</option>
+                                        <option value="Science and Technology Studies">Science and Technology Studies</option>
+                                        <option value="Competitions">Competitions</option>
+                                        <option value="English Club">English Club</option>
+                                    </optgroup>
+                                    
+                                    <optgroup label="Creative/Artistic Activities">
+                                        <option value="Theater">Theater</option>
+                                        <option value="Arts and Creativity">Arts and Creativity</option>
+                                        <option value="Art Music">Music</option>
+                                        <option value="Sculpture">Sculpture</option>
+                                        <option value="Drama">Drama</option>
+                                        <option value="Animation">Animation</option>
+                                        <option value="Graphic Design">Graphic Design</option>
+                                        <option value="Choir">Choir</option>
+                                        <option value="Photography">Photography</option>
+                                        <option value="Film Production">Film Production</option>
+                                        <option value="Crafting">Crafting</option>
+                                    </optgroup>
+                                    
+                                    <optgroup label="Social/Community-Oriented Activities">
+                                        <option value="Community Service">Community Service</option>
+                                        <option value="Social Justice">Social Justice</option>
+                                        <option value="Leadership and Entrepreneurship">Leadership and Entrepreneurship</option>
+                                        <option value="Volunteer Programs">Volunteer Programs</option>
+                                        <option value="Peer Mentoring">Peer Mentoring</option>
+                                    </optgroup>
+                                    
+                                    <optgroup label="Cultural Activities">
+                                        <option value="Cultural Activities">Cultural Activities</option>
+                                        <option value="Cultural Exchange Programs">Cultural Exchange Programs</option>
+                                        <option value="International Club">International Club</option>
+                                    </optgroup>
         </select>
     </div>
     <div class="form-group">
@@ -180,63 +278,86 @@
     <div class="form-group">
         <label for="course">Course</label>
         <select class="form-control" id="course" name="course" required>
-                <option value="" disabled selected>Select your course</option>
-                <optgroup label="Business and Management">
-                    <option value="business_admin">Bachelor of Science in Business Administration</option>
-                    <option value="accountancy">Bachelor of Science in Accountancy</option>
-                    <option value="management_engineering">Bachelor of Science in Management Engineering</option>
-                    <option value="marketing_management">Bachelor of Science in Marketing Management</option>
-                </optgroup>
-                <optgroup label="Engineering and Technology">
-                    <option value="civil_engineering">Bachelor of Science in Civil Engineering</option>
-                    <option value="computer_engineering">Bachelor of Science in Computer Engineering</option>
-                    <option value="electronics_engineering">Bachelor of Science in Electronics Engineering</option>
-                    <option value="information_technology">Bachelor of Science in Information Technology</option>
-                    <option value="mechanical_engineering">Bachelor of Science in Mechanical Engineering</option>
-                </optgroup>
-                <optgroup label="Health Sciences">
-                    <option value="nursing">Bachelor of Science in Nursing</option>
-                    <option value="pharmacy">Bachelor of Science in Pharmacy</option>
-                    <option value="physical_therapy">Bachelor of Science in Physical Therapy</option>
-                    <option value="medical_technology">Bachelor of Science in Medical Technology</option>
-                </optgroup>
-                <optgroup label="Arts and Humanities">
-                    <option value="communication">Bachelor of Arts in Communication</option>
-                    <option value="fine_arts">Bachelor of Fine Arts</option>
-                    <option value="english">Bachelor of Arts in English</option>
-                    <option value="philosophy">Bachelor of Arts in Philosophy</option>
-                </optgroup>
-                <optgroup label="Social Sciences">
-                    <option value="psychology">Bachelor of Arts in Psychology</option>
-                    <option value="political_science">Bachelor of Arts in Political Science</option>
-                    <option value="sociology">Bachelor of Arts in Sociology</option>
-                    <option value="anthropology">Bachelor of Arts in Anthropology</option>
-                </optgroup>
-                <optgroup label="Education">
-                    <option value="education">Bachelor of Science in Education</option>
-                    <option value="special_education">Bachelor of Special Education</option>
-                    <option value="early_childhood_education">Bachelor of Early Childhood Education</option>
-                </optgroup>
-                <optgroup label="Natural Sciences">
-                    <option value="biology">Bachelor of Science in Biology</option>
-                    <option value="chemistry">Bachelor of Science in Chemistry</option>
-                    <option value="physics">Bachelor of Science in Physics</option>
-                    <option value="environmental_science">Bachelor of Science in Environmental Science</option>
-                </optgroup>
-                <optgroup label="Hospitality and Tourism">
-                    <option value="hotel_management">Bachelor of Science in Hotel and Restaurant Management</option>
-                    <option value="tourism_management">Bachelor of Science in Tourism Management</option>
-                </optgroup>
-                <optgroup label="Law and Governance">
-                    <option value="law">Bachelor of Laws (LLB)</option>
-                    <option value="public_administration">Bachelor of Public Administration</option>
-                </optgroup>
-                <optgroup label="Architecture">
-                    <option value="architecture">Bachelor of Science in Architecture</option>
-                    <option value="interior_design">Bachelor of Science in Interior Design</option>
-                </optgroup>
-            </select>
+            <option value="pre school to college">Pre-school to College</option>
+            <option value="pre school to elementary">Pre-school to Elementary School</option>
+            <option value="elementary to junior high">Elementary School to Junior High School</option>
+            <option value="junior high to senior high">Junior High School to Senior High School</option>
+            <option value="senior high to college">Senior High to College</option>
+            <option value="college">College</option>
+            <option value="incoming college">Incoming College</option>
+            <option value="incoming freshman">Incoming Freshman</option>
+            <option value="transfer student">Transfer Student</option>
+            <option value="bachelor degree">Bachelor's Degree</option>
+            <option value="associate degree">Associate's Degree</option>
+            <option value="master degree">Master's Degree</option>
+            <option value="doctorate degree">Doctorate Degree</option>
+            <option value="graduate student">Graduate Student</option>
+            <option value="adult learner">Adult Learner</option>
+            <option value="online degree">Online Degree Programs</option>            
+        </select>
+            
         </div>
+
+        <div class="form-group">
+            <label for="course">Course</label>
+            <select class="form-control form-select" id="fos" name="fos" required>
+            <option value="" disabled selected>Select your course</option>
+                                    <optgroup label="Business and Management">
+                                        <option value="business_admin">Bachelor of Science in Business Administration</option>
+                                        <option value="accountancy">Bachelor of Science in Accountancy</option>
+                                        <option value="management_engineering">Bachelor of Science in Management Engineering</option>
+                                        <option value="marketing_management">Bachelor of Science in Marketing Management</option>
+                                    </optgroup>
+                                    <optgroup label="Engineering and Technology">
+                                        <option value="civil_engineering">Bachelor of Science in Civil Engineering</option>
+                                        <option value="computer_engineering">Bachelor of Science in Computer Engineering</option>
+                                        <option value="electronics_engineering">Bachelor of Science in Electronics Engineering</option>
+                                        <option value="information_technology">Bachelor of Science in Information Technology</option>
+                                        <option value="mechanical_engineering">Bachelor of Science in Mechanical Engineering</option>
+                                    </optgroup>
+                                    <optgroup label="Health Sciences">
+                                        <option value="nursing">Bachelor of Science in Nursing</option>
+                                        <option value="pharmacy">Bachelor of Science in Pharmacy</option>
+                                        <option value="physical_therapy">Bachelor of Science in Physical Therapy</option>
+                                        <option value="medical_technology">Bachelor of Science in Medical Technology</option>
+                                    </optgroup>
+                                    <optgroup label="Arts and Humanities">
+                                        <option value="communication">Bachelor of Arts in Communication</option>
+                                        <option value="fine_arts">Bachelor of Fine Arts</option>
+                                        <option value="english">Bachelor of Arts in English</option>
+                                        <option value="philosophy">Bachelor of Arts in Philosophy</option>
+                                    </optgroup>
+                                    <optgroup label="Social Sciences">
+                                        <option value="psychology">Bachelor of Arts in Psychology</option>
+                                        <option value="political_science">Bachelor of Arts in Political Science</option>
+                                        <option value="sociology">Bachelor of Arts in Sociology</option>
+                                        <option value="anthropology">Bachelor of Arts in Anthropology</option>
+                                    </optgroup>
+                                    <optgroup label="Education">
+                                        <option value="education">Bachelor of Science in Education</option>
+                                        <option value="special_education">Bachelor of Special Education</option>
+                                        <option value="early_childhood_education">Bachelor of Early Childhood Education</option>
+                                    </optgroup>
+                                    <optgroup label="Natural Sciences">
+                                        <option value="biology">Bachelor of Science in Biology</option>
+                                        <option value="chemistry">Bachelor of Science in Chemistry</option>
+                                        <option value="physics">Bachelor of Science in Physics</option>
+                                        <option value="environmental_science">Bachelor of Science in Environmental Science</option>
+                                    </optgroup>
+                                    <optgroup label="Hospitality and Tourism">
+                                        <option value="hotel_management">Bachelor of Science in Hotel and Restaurant Management</option>
+                                        <option value="tourism_management">Bachelor of Science in Tourism Management</option>
+                                    </optgroup>
+                                    <optgroup label="Law and Governance">
+                                        <option value="law">Bachelor of Laws (LLB)</option>
+                                        <option value="public_administration">Bachelor of Public Administration</option>
+                                    </optgroup>
+                                    <optgroup label="Architecture">
+                                        <option value="architecture">Bachelor of Science in Architecture</option>
+                                        <option value="interior_design">Bachelor of Science in Interior Design</option>
+                                    </optgroup>
+                                </select>
+                            </div>
     <div class="form-group">
         <label for="passingrequirement">Passing Requirement</label>
         <input
@@ -248,6 +369,7 @@
             required
         />
     </div>
+    
     <div class="form-group">
         <label for="description">Description</label>
         <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
@@ -259,8 +381,7 @@
     <div class="form-group">
         <label for="amount_per_semester">Amount per Semester</label>
         <input
-            type="number"
-            step="0.01"
+            type="text"
             class="form-control"
             id="amount_per_semester"
             name="amount_per_semester"

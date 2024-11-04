@@ -30,6 +30,7 @@
             <div class="row">
                 {% if sponsorships %}
                 {% for sponsorship in sponsorships %}
+                {% if sponsorship.active %}
                 <div class="col-12 mb-4 list position-relative">
                     <!-- Entire Card Link -->
                     <a href="{{ url_for('views.view_sponsorship', sponsor_id=sponsorship.id) }}" class="stretched-link" style="z-index: 1;"></a>
@@ -52,8 +53,8 @@
                                 <span class="badge bg-danger">Inactive Program</span>
                                 {% endif %}
                                 
-                                <p class="mb-0"><strong>Scholarship Program:</strong> {{ sponsorship.course }}</p>
-                                <p class="mb-0"><strong>Amount per Semester:</strong> P{{ "{:,.2f}".format(sponsorship.amount_per_semester) }}</p>
+                                <p class="mb-0"><strong>Scholarship Program:</strong> {{ sponsorship.course | title_case }}</p>
+                                <p class="mb-0"><strong>Amount:</strong> {{ sponsorship.amount_per_semester }}</p>
                             </div>
                         </div>
 
@@ -87,6 +88,7 @@
                         </div>
                     </div>
                 </div>
+                {% endif %}
                 {% endfor %}
                 {% else %}
                 <div class="col-12" style="background-color: whitesmoke;">
@@ -110,6 +112,7 @@
                 </p>
                 {% if sponsors %}
                 {% for item in sponsors %}
+                {% if item.sponsor.active %}
                 <div class="col-12 mb-4 list position-relative">
                     <!-- Entire Card Link -->
                     <a href="{{ url_for('views.view_sponsorship', sponsor_id=item.sponsor.id) }}" class="stretched-link" style="z-index: 1;"></a>
@@ -133,7 +136,7 @@
                                 {% endif %}
                                 
                                 <p class="mb-0"><strong>Scholarship Program:</strong> {{ item.sponsor.course }}</p>
-                                <p class="mb-0"><strong>Amount per Semester:</strong> P{{ "{:,.2f}".format(item.sponsor.amount_per_semester) }}</p>
+                                <p class="mb-0"><strong>Amount:</strong> {{ item.sponsor.amount_per_semester }}</p>
                             </div>
                         </div>
 
@@ -167,6 +170,7 @@
                         </div>
                     </div>
                 </div>
+                {% endif %}
                 {% endfor %}
                 {% else %}
                 <div class="col-12" style="background-color: whitesmoke;">

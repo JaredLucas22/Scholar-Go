@@ -7,6 +7,11 @@ from website.auth import auth as auth_blueprint
 app = create_app()
 app.register_blueprint(auth_blueprint, url_prefix='/auth', name='auth_bp')
 
+
+@app.template_filter('title_case')
+def title_case(s):
+    return s.title() if isinstance(s, str) else s
+
 @app.cli.command('match')
 def match():
     matches = match_students_to_sponsorships()
