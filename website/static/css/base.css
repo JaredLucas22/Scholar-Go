@@ -22,13 +22,6 @@ body {
   border-radius: 4px;
 }
 
-.flash-messages {
-  top: 90px;
-  position: absolute;
-  z-index: 1050;
-  transition: opacity 0.5s ease-in-out;
-}
-
 /* Navbar Styles */
 .navbar {
   background: linear-gradient(90deg, #012cb8, #017cff) !important;
