@@ -48,6 +48,15 @@ body{
 }
  </style>
 <div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
+    {% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div id="flash-message" style="display: none;">
+      {% for message in messages %}
+        <div class="alert alert-info">{{ message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -93,7 +102,6 @@ body{
                             <div class="col-md-4 mb-3">
                                 <select class="form-control form-select" id="course" name="course" required>
                                     <option value="" disabled selected>Select your course</option>
-                                    <option value="">Blank</option>
                                     <optgroup label="Business and Management">
                                         <option value="business_admin">Bachelor of Science in Business Administration</option>
                                         <option value="accountancy">Bachelor of Science in Accountancy</option>
@@ -280,3 +288,6 @@ body{
     </div>
 </div>
 
+<script>
+    
+</script>

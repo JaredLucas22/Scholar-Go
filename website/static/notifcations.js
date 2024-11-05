@@ -193,7 +193,21 @@ function fetchNotifications() {
                 noNotificationItem.textContent = 'You have no notifications.';
                 notificationList.appendChild(noNotificationItem);
             }
+
+            // Add a button to view all notifications
+            const viewAllButton = document.createElement('button');
+            viewAllButton.classList.add('dropdown-item', 'text-center');
+            viewAllButton.textContent = 'View All Notifications';
+            viewAllButton.onclick = function() {
+                window.location.href = '/notifications'; // Redirect to the notifications page
+            };
+            notificationList.appendChild(viewAllButton);
         })
         .catch(error => console.error('Error fetching notifications:', error));
-        
+}
+
+// Function to redirect to the corresponding sponsorship page
+function markNotificationAsRead(sponsorshipId) {
+    // Redirect to the corresponding sponsorship page
+    window.location.href = `/sponsor/${sponsorshipId}`; // Adjust to your route
 }

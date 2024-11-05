@@ -127,7 +127,62 @@
                     <div class="row mt-3">
                         <div class="col-md-6">
                             <label class="labels">Course</label>
-                            <input type="text" class="form-control" name="course" value="{{ current_user.course }}">
+                            <select class="form-select" id="course" name="course" value="{{ current_user.course }}" >
+                                <optgroup label="Business and Management">
+                                    <option value="business_admin" {% if current_user.education_level == 'business_admin' %}selected{% endif %}>Bachelor of Science in Business Administration</option>
+                                    <option value="accountancy" {% if current_user.education_level == 'accountancy' %}selected{% endif %}>Bachelor of Science in Accountancy</option>
+                                    <option value="management_engineering" {% if current_user.education_level == 'management_engineering' %}selected{% endif %}>Bachelor of Science in Management Engineering</option>
+                                    <option value="marketing_management" {% if current_user.education_level == 'marketing_management' %}selected{% endif %}>Bachelor of Science in Marketing Management</option>
+                                </optgroup>
+                                <optgroup label="Engineering and Technology">
+                                    <option value="civil_engineering" {% if current_user.education_level == 'civil_engineering' %}selected{% endif %}>Bachelor of Science in Civil Engineering</option>
+                                    <option value="computer_engineering" {% if current_user.education_level == 'computer_engineering' %}selected{% endif %}>Bachelor of Science in Computer Engineering</option>
+                                    <option value="electronics_engineering" {% if current_user.education_level == 'electronics_engineering' %}selected{% endif %}>Bachelor of Science in Electronics Engineering</option>
+                                    <option value="information_technology" {% if current_user.education_level == 'information_technology' %}selected{% endif %}>Bachelor of Science in Information Technology</option>
+                                    <option value="mechanical_engineering" {% if current_user.education_level == 'mechanical_engineering' %}selected{% endif %}>Bachelor of Science in Mechanical Engineering</option>
+                                </optgroup>
+                                <optgroup label="Health Sciences">
+                                    <option value="nursing" {% if current_user.education_level == 'nursing' %}selected{% endif %}>Bachelor of Science in Nursing</option>
+                                    <option value="pharmacy" {% if current_user.education_level == 'pharmacy' %}selected{% endif %}>Bachelor of Science in Pharmacy</option>
+                                    <option value="physical_therapy" {% if current_user.education_level == 'physical_therapy' %}selected{% endif %}>Bachelor of Science in Physical Therapy</option>
+                                    <option value="medical_technology" {% if current_user.education_level == 'medical_technology' %}selected{% endif %}>Bachelor of Science in Medical Technology</option>
+                                </optgroup>
+                                <optgroup label="Arts and Humanities">
+                                    <option value="communication" {% if current_user.education_level == 'communication' %}selected{% endif %}>Bachelor of Arts in Communication</option>
+                                    <option value="fine_arts" {% if current_user.education_level == 'fine_arts' %}selected{% endif %}>Bachelor of Fine Arts</option>
+                                    <option value="english" {% if current_user.education_level == 'english' %}selected{% endif %}>Bachelor of Arts in English</option>
+                                    <option value="philosophy" {% if current_user.education_level == 'philosophy' %}selected{% endif %}>Bachelor of Arts in Philosophy</option>
+                                </optgroup>
+                                <optgroup label="Social Sciences">
+                                    <option value="psychology" {% if current_user.education_level == 'psychology' %}selected{% endif %}>Bachelor of Arts in Psychology</option>
+                                    <option value="political_science" {% if current_user.education_level == 'political_science' %}selected{% endif %}>Bachelor of Arts in Political Science</option>
+                                    <option value="sociology" {% if current_user.education_level == 'sociology' %}selected{% endif %}>Bachelor of Arts in Sociology</option>
+                                    <option value="anthropology" {% if current_user.education_level == 'anthropology' %}selected{% endif %}>Bachelor of Arts in Anthropology</option>
+                                </optgroup>
+                                <optgroup label="Education">
+                                    <option value="education" {% if current_user.education_level == 'education' %}selected{% endif %}>Bachelor of Science in Education</option>
+                                    <option value="special_education" {% if current_user.education_level == 'special_education' %}selected{% endif %}>Bachelor of Special Education</option>
+                                    <option value="early_childhood_education" {% if current_user.education_level == 'early_childhood_education' %}selected{% endif %}>Bachelor of Early Childhood Education</option>
+                                </optgroup>
+                                <optgroup label="Natural Sciences">
+                                    <option value="biology" {% if current_user.education_level == 'biology' %}selected{% endif %}>Bachelor of Science in Biology</option>
+                                    <option value="chemistry" {% if current_user.education_level == 'chemistry' %}selected{% endif %}>Bachelor of Science in Chemistry</option>
+                                    <option value="physics" {% if current_user.education_level == 'physics' %}selected{% endif %}>Bachelor of Science in Physics</option>
+                                    <option value="environmental_science" {% if current_user.education_level == 'environmental_science' %}selected{% endif %}>Bachelor of Science in Environmental Science</option>
+                                </optgroup>
+                                <optgroup label="Hospitality and Tourism">
+                                    <option value="hotel_management" {% if current_user.education_level == 'hotel_management' %}selected{% endif %}>Bachelor of Science in Hotel and Restaurant Management</option>
+                                    <option value="tourism_management" {% if current_user.education_level == 'tourism_management' %}selected{% endif %}>Bachelor of Science in Tourism Management</option>
+                                </optgroup>
+                                <optgroup label="Law and Governance">
+                                    <option value="law" {% if current_user.education_level == 'law' %}selected{% endif %}>Bachelor of Laws (LLB)</option>
+                                    <option value="public_administration" {% if current_user.education_level == 'public_administration' %}selected{% endif %}>Bachelor of Public Administration</option>
+                                </optgroup>
+                                <optgroup label="Architecture">
+                                    <option value="architecture" {% if current_user.education_level == 'architecture' %}selected{% endif %}>Bachelor of Science in Architecture</option>
+                                    <option value="interior_design" {% if current_user.education_level == 'interior_design' %}selected{% endif %}>Bachelor of Science in Interior Design</option>
+                                </optgroup>
+                            </select>
                         </div>
                         <div class="col-md-6">
                             <label class="labels">Email Address</label>

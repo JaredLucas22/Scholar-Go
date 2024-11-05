@@ -343,8 +343,9 @@ def notifications():
     # Commit the session to save changes
     db.session.commit()
 
-    # Render the notifications template and pass unread_count
+    # Render the notifications template and pass the notifications and unread_count
     return render_template("notifications.html", notifications=user_notifications, unread_count=unread_count, user=current_user)
+
 
 @auth.route('/notifications/read/<int:notification_id>')
 @login_required
@@ -743,19 +744,20 @@ def sign_up():
 
                 logger.info(f"New user created: {email} (username: {username})")
 
-                # Log in the new user
-                login_user(new_user, remember=True)
-                session['user_type'] = new_user.get_user_type()
-                
-                flash('Account created!', category='success')
-                return redirect(url_for('views.home'))  
+            login_user(new_user, remember=True)
+            session['user_type'] = new_user.get_user_type()
             
+            # Emit a real-time flash message to the client
+            emit('flash_message', {'message': 'Account created!', 'category': 'success'}, broadcast=True, namespace='/notifications')
+            
+            return redirect(url_for('views.home'))
+        
         except Exception as e:
             logger.error(f"Sign-up error: {str(e)}", exc_info=True)
-            flash('An unexpected error occurred. Please try again.', category='error')
-            return redirect(url_for('auth.sign_up'))  
-        
-    return render_template("sign_up.html", user=current_user)
+            emit('flash_message', {'message': 'An unexpected error occurred. Please try again.', 'category': 'error'}, broadcast=True, namespace='/notifications')
+            return redirect(url_for('auth.sign_up'))
+    
+    return render_template("login.html", user=current_user)
 
 from flask import render_template, flash, redirect, url_for, request, session
 from flask_login import login_user, current_user

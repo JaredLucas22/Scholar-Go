@@ -4,45 +4,44 @@
 {% block content %}
 
 <style>
-    body{
+    body {
         color: black;
     }
 
     h2 {
-    font-size: 3.5vh;
-    background-color:#006fe6;
-    color: rgb(255, 255, 255);
-    border-radius: 10px;
-    padding: 10px;
-    width: 100%;
-    margin-top: 50px;
-    margin-bottom: 50px;
-    text-align: center;
+        font-size: 3.5vh;
+        background-color: #006fe6;
+        color: rgb(255, 255, 255);
+        border-radius: 10px;
+        padding: 10px;
+        width: 100%;
+        margin-top: 50px;
+        margin-bottom: 50px;
+        text-align: center;
     }
 
     li.list-group-item {
-    margin: 5px 0;
-    border-radius: 5px; /* Set this to the desired value */
+        margin: 5px 0;
+        border-radius: 5px; /* Set this to the desired value */
     }
-
 </style>
-    <div class="container mt-5">
-        <h2>Your Notifications</h2>
-        <ul class="list-group mt-3" id="notification-list">
-            {% if notifications %}
-                {% for notification in notifications %}
-                    <li class="list-group-item {% if not notification.is_read %}list-group-item-info{% endif %}">
-                        {{ notification.message }}
-                        {% if not notification.is_read %}
-                            <a href="{{ url_for('auth.read_notification', notification_id=notification.id) }}" class="btn btn-sm btn-primary float-right">
-                                Mark as Read
-                            </a>
-                        {% endif %}
-                    </li>
-                {% endfor %}
-            {% else %}
-                <li class="list-group-item">You have no notifications.</li>
-            {% endif %}
-        </ul>
-    </div>
+
+<div class="container mt-5">
+    <h2>Your Notifications</h2>
+    <ul class="list-group mt-3" id="notification-list">
+        {% for notification in notifications %}
+            <li class="list-group-item d-flex justify-content-between align-items-center {% if not notification.is_read %}list-group-item-info{% endif %}">
+                <span>{{ notification.message }}</span>
+                <a href="{{ url_for('views.view_sponsorship', sponsor_id=notification.sponsorship_id) }}" class="btn btn-sm btn-primary">
+                    Visit
+                </a>
+            </li>
+        {% else %}
+            <li class="list-group-item">You have no notifications.</li>
+        {% endfor %}
+    </ul>
+</div>
+
+
+
 {% endblock %}
