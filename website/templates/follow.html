@@ -59,7 +59,7 @@
                 </div>
             </div>
     
-            <div class="button-group d-flex flex-column flex-sm-row">
+            <div class="button-group d-flex flex-column flex-sm-row" style="z-index: 1;">
                 <button class="btn btn-warning btn-sm flex-grow-1 add-alarm-button" data-bs-toggle="modal" data-bs-target="#addAlarmModal" data-sponsorship-id="{{ sponsorship.id }}">
                     <i class="fa-solid fa-bell"></i> Add Alarm
                 </button>
@@ -310,9 +310,9 @@
             console.log("Alarm operation successful:", data);
             displayFlashMessage(data.message);
 
-            // Show the "Alarm Set" badge
+            // Show and animate the "Alarm Set" badge
             const badge = document.querySelector('.alarm-badge');
-            badge.classList.add('show');
+            badge.classList.add('show'); // Add the show class to trigger animation
 
             // Hide the badge after a set duration
             setTimeout(() => {
@@ -321,10 +321,6 @@
 
             $('#addAlarmModal').modal('hide'); // Hide modal after setting alarm
         })
-        .catch(error => {
-            console.error("Error adding alarm:", error);
-            displayFlashMessage(error.message, 'danger');
-        });
     });
 });
     </script>    

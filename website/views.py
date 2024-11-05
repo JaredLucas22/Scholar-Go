@@ -126,7 +126,7 @@ def home():
             follower_count = sponsorship_data.get_follower_count()
 
             # Get matched applicants count and total applicants count
-            matches, matched_applicants_count, total_applicants_count = match_students_to_sponsorships()
+            matched_applicants_count, total_applicants_count = match_students_to_sponsorships()
 
             if total_applicants_count > 0:
                 acceptance_rating = (matched_applicants_count / total_applicants_count) * 100

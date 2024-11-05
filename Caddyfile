@@ -1,0 +1,3 @@
+http://153.92.8.210 {
+    reverse_proxy localhost:8000
+}

@@ -20,7 +20,7 @@
                         <div class="card-body">
                             <h5 class="card-title">Visits</h5>
                             <h1 class="card-text"><span id="visit-count-card">{{ visit_count}}</span></h1>
-                            <p class="card-text-description">107% more than Jan 1 - Dec 31 2024</p>
+                            <p class="card-text-description"></p>
                         </div>
                     </div>
                 </div>
@@ -29,7 +29,7 @@
                         <div class="card-body">
                             <h5 class="card-title">Likes</h5>
                             <h1 class="card-text" id="likes-count">{{ total_likes }}</i></h1>
-                            <p class="card-text-description">105% more than Jan 1 - Dec 31 2024</p>
+                            <p class="card-text-description"></p>
                         </div>
                     </div>
                 </div>
@@ -38,7 +38,7 @@
                         <div class="card-body">
                             <h5 class="card-title">Bookmarks</h5>
                             <h1 class="card-text" id="follower-count-{{ sponsorship_data.id }}">{{ follower_count }}/i></h1>
-                            <p class="card-text-description">110% more than Jan 1 - Dec 31 2024</p>
+                            <p class="card-text-description"></p>
                         </div>
                     </div>
                 </div>
@@ -89,7 +89,7 @@
         const visitCountCardElement = document.getElementById('visit-count-card');
     
         if (visitCountTextElement) {
-            const oldCount = parseInt(visitCountTextElement.textContent) || 0;
+            const oldCount = parseInt(visitCountTextElement.textContent);
             visitCountTextElement.textContent = data.visit_count;
     
         }
@@ -230,8 +230,15 @@
 function createTemporaryIcon(isIncrease, targetElement) {
     const icon = document.createElement("i");
     icon.className = isIncrease ? "fas fa-arrow-circle-up increase-icon" : "fas fa-arrow-down custom-arrow custom-arrow-down";
+    
+    // Set the icon's style
+    icon.style.position = "absolute"; // Position the icon absolutely
+    icon.style.bottom = "39.45%";          // Position it at the bottom of the target element
+    icon.style.left = "56.5%";          // Center it horizontally
+    icon.style.transform = "translateX(-50%)"; // Adjust to center the icon
+    icon.style.transition = "opacity 0.8s"; // Fade-out transition
 
-    // Append icon next to the target element (follower count)
+    // Append icon to the target element
     targetElement.appendChild(icon);
 
     // Apply a fade-out effect after a short delay

@@ -30,7 +30,6 @@
             <div class="row">
                 {% if sponsorships %}
                 {% for sponsorship in sponsorships %}
-                {% if sponsorship.active %}
                 <div class="col-12 mb-4 list position-relative">
                     <!-- Entire Card Link -->
                     <a href="{{ url_for('views.view_sponsorship', sponsor_id=sponsorship.id) }}" class="stretched-link" style="z-index: 1;"></a>
@@ -88,7 +87,6 @@
                         </div>
                     </div>
                 </div>
-                {% endif %}
                 {% endfor %}
                 {% else %}
                 <div class="col-12" style="background-color: whitesmoke;">
@@ -112,7 +110,6 @@
                 </p>
                 {% if sponsors %}
                 {% for item in sponsors %}
-                {% if item.sponsor.active %}
                 <div class="col-12 mb-4 list position-relative">
                     <!-- Entire Card Link -->
                     <a href="{{ url_for('views.view_sponsorship', sponsor_id=item.sponsor.id) }}" class="stretched-link" style="z-index: 1;"></a>
@@ -170,7 +167,6 @@
                         </div>
                     </div>
                 </div>
-                {% endif %}
                 {% endfor %}
                 {% else %}
                 <div class="col-12" style="background-color: whitesmoke;">

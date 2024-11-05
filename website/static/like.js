@@ -40,8 +40,7 @@ document.querySelectorAll('.like-button').forEach(button => {
                     likesCountElement.textContent = `Likes: ${data.likes_count} | Deadline on ${deadline}`;
                 }
 
-                // Show a flash message
-                showFlashMessage(data.message);
+
             } else {
                 console.error('Failed to like/unlike:', data.message);
             }

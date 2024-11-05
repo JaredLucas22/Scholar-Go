@@ -34,8 +34,7 @@ document.querySelectorAll('.follow-button').forEach(button => {
                     icon.classList.add('far', 'fa-bookmark');      // Add 'far' class for unfollowed state
                 }
                 
-                // Show the flash message from the server
-                showFlashMessage(data.message);
+
             } else {
                 console.error('Failed to follow/unfollow:', data.message);
             }
@@ -60,20 +59,4 @@ function getCookie(name) {
         }
     }
     return cookieValue;
-}
-
-// Function to display flash messages
-function showFlashMessage(message) {
-    const flashContainer = document.getElementById('flash-messages');
-    if (flashContainer) {
-        const flashMessage = document.createElement('div');
-        flashMessage.className = 'alert alert-info'; // Customize the alert class if needed
-        flashMessage.textContent = message;
-        flashContainer.appendChild(flashMessage);
-        
-        // Automatically remove the flash message after 3 seconds
-        setTimeout(() => {
-            flashMessage.remove();
-        }, 3000);
-    }
 }
