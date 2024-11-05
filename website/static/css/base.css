@@ -14,13 +14,115 @@ body {
   opacity: 1;
 }
 
-/* Search Bar Styles */
+
+
+
+
+/* General styles for the search bar */
 .search-bar {
-  width: 100%; /* Take full width */
-  max-width: 600px; /* Increase max width for larger screens */
-  margin-left: 10px;
-  border-radius: 4px;
+  width: 28vw;  /* Default width for the search bar */
+  margin-left: 10%;
+  border-radius: 20px; /* Rounded corners */
+  border: 1px solid #ccc; /* Border styling */
+  padding: 3px 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); /* Light shadow */
+  border: none;
+  z-index: 1; /* Lower z-index to place it below nav items */
+  /* Removed margin-left */
 }
+
+/* Styles for the search form */
+.search-form {
+  z-index: 1; /* Lower z-index to place it below nav items */
+  position: absolute; /* Positioning the search form absolutely */
+  top: 33%; /* Center vertically */
+  left: 75%; /* Center horizontally */
+  transform: translate(-50%, -50%); /* Centering trick */
+  /* Add margin or padding to position the form correctly without affecting hover */
+  margin-top: 10px; /* Add a margin to separate from the navbar if needed */
+  border: none;
+}
+
+.search-bar:focus {
+  outline: none; /* Remove default outline */
+  border: none; /* Remove the border */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); /* Keep the shadow for focus state */
+}
+
+/* Media query for smaller screens */
+@media (max-width: 992px) {
+  .search-form {
+    position: fixed; /* Positioning the search form absolutely */
+    top: 2.5%; /* Center vertically */
+    left: 70%; /* Center horizontally */
+    transform: translate(-50%, -50%); /* Centering trick */
+    z-index: 10; /* Ensure it sits above other content */
+    width: 20vw; /* Default width for the search bar */
+  }
+
+  .search-bar:placeholder {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 767px) {
+  .search-form {
+    position: fixed;
+    top: 2.5%;
+    left: 60%;
+    padding: 5px;
+  }
+
+  .search-bar::placeholder {
+    color: rgb(131, 131, 131); /* Change placeholder color for very small screens */
+    font-size: 13px; /* Further adjust font size */
+}
+}
+
+/* Media query for screens smaller than 576px */
+@media (max-width: 575px) {
+  .search-form {
+    position: fixed;
+    top: 2.5%;
+    left: 50%;
+    z-index: 10;
+    padding: 5px;
+  }
+
+  .search-bar::placeholder {
+    color: rgb(131, 131, 131); /* Change placeholder color for very small screens */
+    font-size: 13px; /* Further adjust font size */
+}
+}
+
+
+
+
+.navbar-toggler {
+  border: none; /* Remove border */
+  background-color: transparent; /* Make background transparent */
+}
+
+
+.navbar-toggler:not(:disabled):hover {
+  background-color: rgba(255, 255, 255, 0.2); /* Darken slightly on hover */
+}
+
+.navbar-toggler:focus {
+  outline: none; /* Remove outline on focus */
+  box-shadow: none; /* Remove box-shadow if present */
+}
+
+.navbar-toggler:active {
+  background-color: rgba(255, 255, 255, 0.2); /* Darken effect on active */
+  outline: none; /* Remove outline on active */
+  box-shadow: none; /* Remove box-shadow if present */
+}
+
+
+
+
+
 
 /* Navbar Styles */
 .navbar {
@@ -40,14 +142,16 @@ body {
 .nav-link {
   color: #ffffff;
   text-decoration: none;
-  padding-bottom: 5px;
   transition: color 0.3s ease, transform 0.3s ease, text-shadow 0.3s ease;
+  line-height: 1.5; /* Adjust to make it more accessible */
+
 }
 
 .nav-link:hover {
   color: #f8f9fa;
   text-shadow: 0 0 8px rgba(64, 189, 238, 0.6);
-  transform: scale(1.1);
+  transform: scale(1.1) !important;
+  cursor: pointer;
 }
 
 .profile-pic img {
@@ -71,10 +175,6 @@ body {
     font-size: 14px;
   }
 
-  .search-bar {
-    width: 100%; /* Full width on large screens */
-    max-width: 550px;
-  }
 }
 
 @media (max-width: 992px) {
@@ -91,11 +191,6 @@ body {
     margin: 0 2%;
   }
 
-  .search-bar {
-    width: 100%; /* Full width on medium screens */
-    max-width: 500px;
-  }
-}
 
 @media (max-width: 768px) {
   .nav-logo img {
@@ -111,11 +206,7 @@ body {
     margin: 0 5%;
   }
 
-  .search-bar {
-    width: 100%; /* Full width on smaller screens */
-    max-width: 400px;
-    margin-left: 0;
-  }
+
 }
 
 @media (max-width: 576px) {
@@ -137,9 +228,6 @@ body {
     height: 30px;
   }
 
-  .search-bar {
-    width: 100%; /* Full width on very small screens */
-    max-width: 300px;
-    margin: 0 auto;
-  }
+
+}
 }

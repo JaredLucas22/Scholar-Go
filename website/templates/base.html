@@ -1,381 +1,173 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta name="csrf-token" content="{{ csrf_token() }}">
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-   <!-- Bootstrap CSS -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     
-   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-  
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet" />
-  
-  <!-- Custom CSS -->
-  <link rel="stylesheet" href="/static/css/base.css" />
-  <link rel="stylesheet" href="/static/css/footer.css"/>
-  
-  <!-- Font Awesome for icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-  
-
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet" />
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/base.css" />
+    <link rel="stylesheet" href="/static/css/footer.css"/>
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    
     <!-- Favicon -->
     <link rel="icon" href="{{ url_for('static', filename='images/favicon.png') }}" type="image/png">
 
-
-</head>
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
   
-
-
-  <!--
-  <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
-    <div class="container">
-      <a class="navbar-brand d-flex align-items-center" href="/">
-        <img src="/static/images/logo.png" alt="Logo" class="navbar-logo" />
-        <div class="navbar-text ml-2">
-          <h1 class="mb-0">ScholarGO</h1>
-          <h2 class="mb-0">FIND SCHOLARSHIPS NEARBY</h2>
-        </div>
-      </a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ml-auto custom-navbar-nav">
-          {% if user.is_authenticated %}
-          <li class="nav-item"><a class="nav-link" id="home" href="/">Home</a></li>
-          <li class="nav-item"><a class="nav-link" id="logout" href="/sponsorlist">Sponsors</a></li>
-          <li class="nav-item"><a class="nav-link" id="logout" href="/profile">Profile</a></li>
-          <li class="nav-item"><a class="nav-link" id="logout" href="/logout">Logout</a></li>
-          <li class="nav-item">
-            <a class="nav-link" id="follow" href="/follow">
-                <i class="fas fa-bookmark"></i>
-              </a>
-            </li>
-          {% else %}
-            <li class="nav-item"><a class="nav-link" id="login" href="/Landing" style="display: none;">Log in</a></li>
-            <li class="nav-item"><a class="nav-link" id="signUp" href="/sign-up" style="display: none;">Sign Up</a></li>
-          {% endif %}
-        </ul>
-      </div>
-    </div>
-  </nav>
-  -->
-  <nav class="navbar navbar-expand-lg" style="background-color: #1A32D0;">
-    <div class="container-fluid">
-        <div class="nav-logo">
-            <img src="/static/images/nav-logo.png" alt="Logo">
-        </div>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <!-- Left-aligned menu items -->
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-
-                {% if current_user.is_authenticated %}
-                    {% if session['user_type'] == 'User' %}
-                    <li class="nav-item">
-                      <a class="nav-link text-white" id="home" href="/">Home</a>
-                  </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white" id="profile" href="/profile">Profile</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white" id="sponsor-list" href="/sponsorlist">Sponsors</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white" id="bookmarks" href="/follow">
-                               Bookmarks
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                          <a class="nav-link text-white" id="bookmarks" href="/notifications">
-                             Notifications
-                          </a>
-                        <li class="nav-item dropdown">
-                          <a class="nav-link dropdown-toggle text-white" id="notificationsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                              <span id="unreadCount" class="badge bg-danger"></span>  <!-- Unread count badge -->
-                          </a>
-                          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationsDropdown" id="notificationsList">
-                          </ul>
-                          <li class="nav-item">
-                            <form action="{{ url_for('views.search') }}" method="get" class="d-flex">
-                              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                              <input type="text" class="form-control search-bar" name="q" value="{{ query }}" placeholder="Search sponsorships..." required>
-                            </form>
-                        </li>                                             
-                      {% elif session['user_type'] == 'Sponsorship' %}
-                      <li class="nav-item">
-                          <a class="nav-link text-white" id="sponsordashboard" href="/">Sponsor Dashboard</a>
-                      </li>
-                      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                          <li class="nav-item">
-                              <a href="/profilesponsor">
-                                  <img class="rounded-circle me-2 profile-picture"
-                                       style="width: 37px; height: 37px; cursor: pointer;"
-                                       src="{{ url_for('static', filename='uploads/' + sponsorship_data.picture_path) }}"
-                                       alt="Profile Picture">
-                              </a>                               
-                          </li>
-                      </ul>             
-                      {% endif %}                      
-                {% endif %}
-            </ul>
-
-            <!-- Right-aligned items (notifications and logout) -->
-            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                {% if current_user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="nav-link text-white" id="logout" href="/logout">Log out</a>
-                    </li>
-                {% else %}
-
-                {% endif %}
-            </ul>
-        </div>
-    </div>
-</nav>
-
-{% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-        {% for category, message in messages %}
-            <div class="flash-message flash-{{ category }}">
-                {{ message }}
+    <nav class="navbar navbar-expand-lg" style="background-color: #1A32D0;">
+        <div class="container-fluid">
+            <div class="nav-logo">
+                <img src="/static/images/nav-logo.png" alt="Logo">
             </div>
-        {% endfor %}
-    {% endif %}
-{% endwith %}
 
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    {% if current_user.is_authenticated %}
+                        {% if session['user_type'] == 'User' %}
+                            <li class="nav-item"><a class="nav-link text-white" id="home" href="/">Home</a></li>
+                            <li class="nav-item"><a class="nav-link text-white" id="profile" href="/profile">Profile</a></li>
+                            <li class="nav-item"><a class="nav-link text-white" id="logout" href="/sponsorlist">Sponsors</a></li>
+                            <li class="nav-item"><a class="nav-link text-white" id="bookmarks" href="/follow">Bookmarks</a></li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-white" id="notificationsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Notifications <span id="unreadCount" class="badge bg-danger"></span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationsDropdown" id="notificationsList"></ul>
+                            </li>
+                        {% elif session['user_type'] == 'Sponsorship' %}
+                            <li class="nav-item"><a class="nav-link text-white" id="sponsordashboard" href="/">Sponsor Dashboard</a></li>
+                        {% endif %}
+                    {% endif %}
+                </ul>
 
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    {% if current_user.is_authenticated %}
+                        <li class="nav-item"><a class="nav-link text-white" id="logout" href="/logout">Log out</a></li>
+                    {% endif %}
+                </ul>
+            </div>
 
-  <script>
-  document.querySelectorAll('.dropdown-toggle').forEach(item => {
-    item.addEventListener('click', event => {
-   
-      if(event.target.classList.contains('dropdown-toggle') ){
-        event.target.classList.toggle('toggle-change');
-      }
-      else if(event.target.parentElement.classList.contains('dropdown-toggle')){
-        event.target.parentElement.classList.toggle('toggle-change');
-      }
-    })
-  });
-</script>
-
-<script>
-  // Wait for the DOM to fully load
-  document.addEventListener('DOMContentLoaded', function () {
-      // Get the flash message element
-      var flashMessage = document.querySelector('.flash-message');
-
-      // If flash message exists, animate its appearance
-      if (flashMessage) {
-          // Add the class that shows the flash message
-          flashMessage.classList.add('flash-show');
-
-          // After 5 seconds, hide the flash message with animation
-          setTimeout(function () {
-              flashMessage.classList.add('flash-hide');
-          }, 5000);  // Adjust time (5000ms = 5s)
-
-          // Remove the flash message element after the animation completes
-          flashMessage.addEventListener('transitionend', function () {
-              if (flashMessage.classList.contains('flash-hide')) {
-                  flashMessage.remove();
-              }
-          });
-      }
-  });
-</script>
-
-
-  
-  
-  <div class="container">
-    {% block content %} {% endblock %}
-  </div>
-
-  <!-- 
-      <section>
-        <div class="row">
-          <div class="col-lg-3 col-md-6">
-            <h6 class="text-uppercase mb-4 font-weight-bold">ScholarGO</h6>
-            <p>Makes scholarship search easy with personalized recommendations, timely alerts, while boosting provider visibility and improving management.</p>
-          </div>
-          <div class="col-lg-3 col-md-6">
-            <h6 class="text-uppercase mb-4 font-weight-bold">About</h6>
-            <p><a class="text-white">ScholarGo</a></p>
-            <p><a class="text-white">Donation</a></p>
-            <p><a class="text-white">Partnership Programs</a></p>
-            <p><a class="text-white">Report an Issue</a></p>
-          </div>
-          <div class="col-lg-3 col-md-6">
-            <h6 class="text-uppercase mb-4 font-weight-bold">Need help?</h6>
-            <p><a class="text-white">Terms and Conditions</a></p>
-            <p><a class="text-white">Privacy Policy</a></p>
-            <p><a class="text-white">Help</a></p>
-            <p><a class="text-white">FAQ</a></p>
-          </div>
-          <div class="col-lg-3 col-md-6">
-            <h6 class="text-uppercase mb-4 font-weight-bold">Contact</h6>
-            <p><i class="fas fa-home mr-3"></i> San Fernando, Pampanga, PH</p>
-            <p><i class="fas fa-envelope mr-3"></i> scholargo@gmail.com</p>
-            <p><i class="fas fa-phone mr-3"></i> + 01 234 567 88</p>
-            <p><i class="fas fa-print mr-3"></i> + 01 234 567 89</p>
-          </div>
+            <form action="{{ url_for('views.search') }}" method="get" class="d-flex search-form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <input type="text" class="search-bar" name="q" value="{{ query }}" placeholder="Search sponsorships..." required>
+            </form>
         </div>
-      </section>
+    </nav>
 
-      <section class="p-3 pt-0">
-        <div class="row">
-          <div class="text-left">
-            <a class="text-white" href="https://mdbootstrap.com/">©TheScholars 2024</a>
-          </div>
-          <div class="text-right">
-            <a class="btn btn-outline-light btn-floating m-1" role="button"><i class="fab fa-facebook-f"></i></a>
-            <a class="btn btn-outline-light btn-floating m-1" role="button"><i class="fab fa-twitter"></i></a>
-            <a class="btn btn-outline-light btn-floating m-1" role="button"><i class="fab fa-google"></i></a>
-            <a class="btn btn-outline-light btn-floating m-1" role="button"><i class="fab fa-instagram"></i></a>
-          </div>
-        </div>
-      </section>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="flash-message flash-{{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <script>
+        // Wait for the DOM to fully load
+        document.addEventListener('DOMContentLoaded', function () {
+            // Get the flash message element
+            var flashMessage = document.querySelector('.flash-message');
+
+            // If flash message exists, animate its appearance
+            if (flashMessage) {
+                // Add the class that shows the flash message
+                flashMessage.classList.add('flash-show');
+
+                // After 5 seconds, hide the flash message with animation
+                setTimeout(function () {
+                    flashMessage.classList.add('flash-hide');
+                }, 5000);  // Adjust time (5000ms = 5s)
+
+                // Remove the flash message element after the animation completes
+                flashMessage.addEventListener('transitionend', function () {
+                    if (flashMessage.classList.contains('flash-hide')) {
+                        flashMessage.remove();
+                    }
+                });
+            }
+        });
+    </script>
+
+    <div class="container">
+        {% block content %} {% endblock %}
     </div>
-  </footer>
-</footer>
--->
 
-<footer>
-  <div class="container">
-    <div class="row">
-      <!-- Existing columns for About, Help, and Contact & Support -->
-      <div class="col-md-4 footer-column">
-        <!-- About Section -->
-        <ul class="nav flex-column">
-          <li class="nav-item">
-            <span class="footer-title">About</span>
-          </li>
-          <li class="footer nav-item">
-            <a class="nav-link-footer" href="#">ScholarGo</a>
-          </li>
-          <li class="footer nav-item">
-            <a class="nav-link-footer" href="#">Donation</a>
-          </li>
-          <li class="footer nav-item">
-            <a class="nav-link-footer" href="#">Partnership Programs</a>
-          </li>
-          <li class="footer nav-item">
-            <a class="nav-link-footer" href="#">Report an Issue</a>
-          </li>
-        </ul>
-      </div>
-      
-      <div class="col-md-4 footer-column">
-        <!-- Need Help Section -->
-        <ul class="nav flex-column">
-          <li class="nav-item">
-            <span class="footer-title">Need Help?</span>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link-footer" href="#">Terms and Conditions</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link-footer" href="#">Privacy Policy</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link-footer" href="#">Help</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link-footer" href="#">FAQ</a>
-          </li>
-        </ul>
-      </div>
-      
-      <div class="col-md-4 footer-column">
-        <!-- Contact & Support Section -->
-        <ul class="nav flex-column">
-          <li class="nav-item">
-            <span class="footer-title">Contact & Support</span>
-          </li>
-          <li class="nav-item">
-            <span class="navlink-footer"><i class="fas fa-home"></i> San Fernando, Pampanga, Ph.</span>
-          </li>
-          <li class="nav-item">
-            <span class="navlink-footer"><i class="fas fa-phone"></i> 0919 657 2351</span>
-          </li>
-          <li class="nav-item">
-            <span class="navlink-footer"><i class="fas fa-envelope"></i> scholargo@gmail.com</span>
-          </li>
-          <li class="nav-item">
-            <span class="navlink-footer"><i class="fas fa-star"></i> Give feedback</span>
-          </li>
-        </ul>
-      </div>
-      
-      
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 footer-column">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <span class="footer-title">About</span>
+                        </li>
+                        <li class="footer nav-item"><a class="nav-link-footer" href="#">ScholarGo</a></li>
+                        <li class="footer nav-item"><a class="nav-link-footer" href="#">Donation</a></li>
+                        <li class="footer nav-item"><a class="nav-link-footer" href="#">Partnership Programs</a></li>
+                        <li class="footer nav-item"><a class="nav-link-footer" href="#">Report an Issue</a></li>
+                    </ul>
+                </div>
 
-    <!-- Social Media Links Row -->
-<div class="row icons">
-<div class="col-12 text-center">
-  <ul class="list-inline social-buttons">
-    <li class="list-inline-item">
-      <a href="#"><i class="fab fa-twitter"></i></a>
-    </li>
-    <li class="list-inline-item">
-      <a href="#"><i class="fab fa-facebook-f"></i></a>
-    </li>
-    <li class="list-inline-item">
-      <a href="#"><i class="fab fa-linkedin-in"></i></a>
-    </li>
-    <li class="list-inline-item">
-      <a href="#"><i class="fab fa-instagram"></i></a> <!-- Added Instagram -->
-    </li>
-    <li class="list-inline-item">
-      <a href="#"><i class="fab fa-youtube"></i></a> <!-- Added YouTube -->
-    </li>
-  </ul>
-</div>
-</div>
+                <div class="col-md-4 footer-column">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <span class="footer-title">Need Help?</span>
+                        </li>
+                        <li class="nav-item"><a class="nav-link-footer" href="#">Terms and Conditions</a></li>
+                        <li class="nav-item"><a class="nav-link-footer" href="#">Privacy Policy</a></li>
+                        <li class="nav-item"><a class="nav-link-footer" href="#">Help</a></li>
+                        <li class="nav-item"><a class="nav-link-footer" href="#">FAQ</a></li>
+                    </ul>
+                </div>
 
+                <div class="col-md-4 footer-column">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <span class="footer-title">Contact & Support</span>
+                        </li>
+                        <li class="nav-item"><span class="navlink-footer"><i class="fas fa-home"></i> San Fernando, Pampanga, Ph.</span></li>
+                        <li class="nav-item"><span class="navlink-footer"><i class="fas fa-phone"></i> 0919 657 2351</span></li>
+                        <li class="nav-item"><span class="navlink-footer"><i class="fas fa-envelope"></i> scholargo@gmail.com</span></li>
+                        <li class="nav-item"><span class="navlink-footer"><i class="fas fa-star"></i> Give feedback</span></li>
+                    </ul>
+                </div>
 
-  </div>
-</footer>
+                <div class="row icons">
+                    <div class="col-12 text-center">
+                        <ul class="list-inline social-buttons">
+                            <li class="list-inline-item"><a href="#"><i class="fab fa-twitter"></i></a></li>
+                            <li class="list-inline-item"><a href="#"><i class="fab fa-facebook-f"></i></a></li>
+                            <li class="list-inline-item"><a href="#"><i class="fab fa-linkedin-in"></i></a></li>
+                            <li class="list-inline-item"><a href="#"><i class="fab fa-instagram"></i></a></li>
+                            <li class="list-inline-item"><a href="#"><i class="fab fa-youtube"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
 
-  
-  
-  <!-- Correct JavaScript files order -->
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-  
-  
-
-
-
-  {% block javascript %}
-  <script type="text/javascript">
-    function deleteNote(noteId) {
-      fetch("/delete-note", {
-        method: "POST",
-        body: JSON.stringify({ noteId: noteId }),
-      }).then((_res) => {
-        window.location.href = "/";
-      });
-    }
-
-    document.querySelector('.navbar-toggler').addEventListener('click', function() {
-      this.classList.toggle('clicked');
-    });
-  </script>
-<script src="{{ url_for('static', filename='notifcations.js') }}"></script>
-  
-  {% endblock %}
-  
+    {% block javascript %}
+    <script src="{{ url_for('static', filename='notifcations.js') }}"></script>
+    {% endblock %}
 </body>
 </html>
