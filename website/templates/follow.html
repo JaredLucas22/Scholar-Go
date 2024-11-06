@@ -315,7 +315,7 @@
                 $('#addAlarmModal').modal('hide');
             })
             .catch(() => {
-                displayFlashMessage('Replacing exisiting Alarm to: "' + formattedAlarmTime + '"');
+                displayFlashMessage('Setting Alarm to: "' + formattedAlarmTime + '"');
                 $('#addAlarmModal').modal('hide'); // Ensure modal closes even on error
             });
         });

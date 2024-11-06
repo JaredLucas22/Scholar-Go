@@ -125,14 +125,19 @@ def home():
             # Get follower count using the new method
             follower_count = sponsorship_data.get_follower_count()
 
-            # Get matched applicants count and total applicants count
-            matched_applicants_count, total_applicants_count = match_students_to_sponsorships()
+            matched_applicants_count, total_applicants_count, acceptance_rating = match_students_to_sponsorships()
 
-            if total_applicants_count > 0:
+
+            # If matched_applicants_count is a list, use len() to get the count
+            if isinstance(matched_applicants_count, list):
+                matched_applicants_count = len(matched_applicants_count)
+
+            # Now perform the calculation
+            if total_applicants_count > 0:  # Ensure there is no division by zero
                 acceptance_rating = (matched_applicants_count / total_applicants_count) * 100
-
             # Get the visit count for the current sponsorship
             visit_count = db.session.query(user_sponsorship_visits).filter_by(sponsorship_id=sponsorship_data.id).count()
+            
 
         return render_template('sponsor_dashboard.html',
                                visit_count=visit_count,
@@ -146,6 +151,7 @@ def home():
                                follower_count=follower_count)
     else:
         return render_template("home.html", user=current_user)
+
 
 @views.route('/delete-note', methods=['POST'])
 def delete_note():  
