@@ -105,13 +105,32 @@ body{
                         </div>
                         <div class="row mt-3">
                             <div class="col-md-4 mb-3">
-                                <input type="text" class="form-control" id="city" name="city" placeholder="City" required disabled>
+                                <select class="form-control" name="province" id="tar_province" value ="{{ current_user.province }}" onchange="updateCity()" required disabled>
+                                    <option value="" disabled selected>Select a province</option>
+                                    <option value="Metro Manila">Metro Manila</option>
+                                    <option value="Cebu">Cebu</option>
+                                    <option value="Davao del Sur">Davao del Sur</option>
+                                    <option value="Benguet">Benguet</option>
+                                    <option value="Iloilo">Iloilo</option>
+                                    <option value="Misamis Oriental">Misamis Oriental</option>
+                                    <option value="South Cotabato">South Cotabato</option>
+                                    <option value="Zamboanga del Sur">Zamboanga del Sur</option>
+                                    <option value="Pampanga">Pampanga</option>
+                                    <option value="Batangas">Batangas</option>
+                                    <option value="Laguna">Laguna</option>
+                                    <option value="Cavite">Cavite</option>
+                                    <option value="Negros Occidental">Negros Occidental</option>
+                                    <option value="Palawan">Palawan</option>
+                                    <option value="Bohol">Bohol</option>
+                                </select>
                             </div>
                             <div class="col-md-4 mb-3">
-                                <input type="text" class="form-control" id="province" name="province" placeholder="Province" required disabled>
+                                <select class="form-control" name="city" value ="{{ current_user.city }}" id="tar_city" value = "{{ current_user.city}}">
+                                    <option value="" disabled selected>Select a city</option>
+                                </select>
                             </div>
                             <div class="col-md-4 mb-3">
-                                <input type="text" class="form-control" id="postalCode" name="postalcode" placeholder="Postal Code" required disabled>
+                                <input type="text" class="form-control" id="tar_postalCode" name="tar_postalcode" placeholder="Postal Code" required disabled>
                             </div>
                         </div>
                         <div class="row mt-2">
@@ -387,3 +406,5 @@ body{
         }, 5000);  // Hide after 5 seconds
     });
 </script>
+
+<script src="/static/alllocations.js"></script>

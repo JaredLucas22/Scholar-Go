@@ -656,9 +656,9 @@ def sign_up():
             first_name = request.form.get('firstName')
             username = request.form.get("username").lower() if request.form.get("username") else None
             last_name = request.form.get('lastName')
-            city = request.form.get("city").lower() if request.form.get("city") else None
-            province = request.form.get("province").lower() if request.form.get("province") else None
-            postalcode = request.form.get('postalcode')
+            city = request.form.get("tar_city").lower() 
+            province = request.form.get("tar_province").lower() 
+            postalcode = request.form.get('tar_postalcode')
             gender = request.form.get('gender')
             course = request.form.get('course')
             gpa = request.form.get('gpa')
@@ -1026,10 +1026,10 @@ def update_profile():
     email = request.form.get('email')
     phone_number = request.form.get('phone_number')
     suffix = request.form.get('suffix')
-    city = request.form.get('city')
+    city = request.form.get('tar_city')
     province = request.form.get('tar_province')
     gender = request.form.get('gender')
-    postalcode = request.form.get('postalcode')
+    postalcode = request.form.get('tar_postalcode')
     education_level = request.form.get('education_level')
     gpa = request.form.get('gpa')
     course = request.form.get('course')
