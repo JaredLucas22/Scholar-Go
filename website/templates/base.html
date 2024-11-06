@@ -53,23 +53,26 @@
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationsDropdown" id="notificationsList"></ul>
                             </li>
                             <form action="{{ url_for('views.search') }}" method="get" class="d-flex search-form">
-                              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                              <input type="text" class="search-bar" name="q" value="{{ query }}" placeholder="Search sponsorships..." required>
-                          </form>
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <input type="text" class="search-bar" name="q" value="{{ query }}" placeholder="Search sponsorships..." required>
+                            </form>
                         {% elif session['user_type'] == 'Sponsorship' %}
                             <li class="nav-item"><a class="nav-link text-white" id="sponsordashboard" href="/">Sponsor Dashboard</a></li>
                         {% endif %}
                     {% endif %}
                 </ul>
-
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                     {% if current_user.is_authenticated %}
                         <li class="nav-item"><a class="nav-link text-white" id="logout" href="/logout">Log out</a></li>
+                    {% else %}
+                        <!-- These links will be visible if the user is NOT authenticated -->
+                        <li class="nav-item"><a class="nav-link text-white" href="">Contact Us</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="">Help</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="/login">Sign-in</a></li>
                     {% endif %}
                 </ul>
             </div>
-
-        </div>
+            
     </nav>
 
     {% with messages = get_flashed_messages(with_categories=true) %}
@@ -167,7 +170,18 @@
     </footer>
 
     {% block javascript %}
+    <script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
     <script src="{{ url_for('static', filename='notifcations.js') }}"></script>
+    <script>
+        window.addEventListener('DOMContentLoaded', (event) => {
+          const flashMessage = document.querySelector('.flash-message');
+          if (flashMessage) {
+            setTimeout(() => {
+              flashMessage.style.display = 'none';
+            }, 5000);  // 5 seconds delay
+          }
+        });
+      </script>
     {% endblock %}
 </body>
 </html>

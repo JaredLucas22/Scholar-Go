@@ -250,80 +250,78 @@
             }
         });
     
-        // Function to display flash messages
+        // Function to display the flash message
         function displayFlashMessage(message, type = 'success') {
-            const flashMessagesDiv = document.getElementById('flash-messages');
-            flashMessagesDiv.innerHTML = `
-                <div class="alert alert-${type}" role="alert">
-                    ${message}
-                </div>
-            `;
+            const flashMessageElement = document.createElement('div');
+            flashMessageElement.classList.add('flash-message', type);
+            flashMessageElement.textContent = message;
+            
+            // Append the message to a predefined container or the body
+            document.body.appendChild(flashMessageElement);
+
+            // Automatically remove the message after 3 seconds
             setTimeout(() => {
-                flashMessagesDiv.innerHTML = ''; // Remove the message after a few seconds
-            }, 5000);
+                flashMessageElement.remove();
+            }, 3000);
         }
-    
- // Set sponsorship ID to the form when "Add Alarm" button is clicked
- document.querySelectorAll('.add-alarm-button').forEach(button => {
-        button.addEventListener('click', () => {
-            const sponsorshipId = button.getAttribute('data-sponsorship-id');
-            document.querySelector('#sponsorshipId').value = sponsorshipId;
+        // Set sponsorship ID to the form when "Add Alarm" button is clicked
+        document.querySelectorAll('.add-alarm-button').forEach(button => {
+            button.addEventListener('click', () => {
+                const sponsorshipId = button.getAttribute('data-sponsorship-id');
+                document.querySelector('#sponsorshipId').value = sponsorshipId;
+            });
+        });
+
+        // Handle form submission for setting the alarm
+        document.querySelector('#addAlarmForm').addEventListener('submit', event => {
+            event.preventDefault();
+
+            const sponsorshipId = document.querySelector('#sponsorshipId').value;
+            const alarmDate = document.querySelector('#alarmDate').value;  // YYYY-MM-DD
+            const alarmHour = document.querySelector('#alarmHour').value.padStart(2, '0');  // HH
+            const alarmMinute = document.querySelector('#alarmMinute').value.padStart(2, '0');  // MM
+            const alarmPriority = document.querySelector('#alarmPriority').value;
+            const message = document.querySelector('#alarmMessage').value;
+
+            // Format alarm time as "YYYY-MM-DD HH:MM:00"
+            const formattedAlarmTime = `${alarmDate} ${alarmHour}:${alarmMinute}:00`;
+
+            fetch(`/set_alarm/${sponsorshipId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCSRFToken()  // Ensure getCSRFToken() function is defined
+                },
+                body: JSON.stringify({
+                    alarm_time: formattedAlarmTime,
+                    priority: alarmPriority,
+                    message: message
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                displayFlashMessage(data.message);
+
+                // Show and animate the "Alarm Set" badge
+                const badge = document.querySelector('.alarm-badge');
+                badge.classList.add('show'); // Add the show class to trigger animation
+
+                // Hide the badge after a set duration
+                setTimeout(() => {
+                    badge.classList.remove('show');
+                }, 3000);
+
+                // Close the modal after the alarm is set
+                $('#addAlarmModal').modal('hide');
+            })
+            .catch(() => {
+                displayFlashMessage('Replacing exisiting Alarm to: "' + formattedAlarmTime + '"');
+                $('#addAlarmModal').modal('hide'); // Ensure modal closes even on error
+            });
         });
     });
+</script>
 
-    // Handle form submission for setting the alarm
-    document.querySelector('#addAlarmForm').addEventListener('submit', event => {
-        event.preventDefault();
-
-        const sponsorshipId = document.querySelector('#sponsorshipId').value;
-        const alarmDate = document.querySelector('#alarmDate').value;  // YYYY-MM-DD
-        const alarmHour = document.querySelector('#alarmHour').value.padStart(2, '0');  // HH
-        const alarmMinute = document.querySelector('#alarmMinute').value.padStart(2, '0');  // MM
-        const alarmPriority = document.querySelector('#alarmPriority').value;
-        const message = document.querySelector('#alarmMessage').value;
-
-        // Format alarm time as "YYYY-MM-DD HH:MM:00"
-        const formattedAlarmTime = `${alarmDate} ${alarmHour}:${alarmMinute}:00`;
-
-        fetch(`/set_alarm/${sponsorshipId}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCSRFToken()  // Ensure getCSRFToken() function is defined
-            },
-            body: JSON.stringify({
-                alarm_time: formattedAlarmTime,
-                priority: alarmPriority,
-                message: message
-            })
-        })
-        .then(response => {
-            if (!response.ok) {
-                return response.json().then(data => {
-                    console.error("Server response:", data);
-                    throw new Error(data.message || 'Error adding alarm');
-                });
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log("Alarm operation successful:", data);
-            displayFlashMessage(data.message);
-
-            // Show and animate the "Alarm Set" badge
-            const badge = document.querySelector('.alarm-badge');
-            badge.classList.add('show'); // Add the show class to trigger animation
-
-            // Hide the badge after a set duration
-            setTimeout(() => {
-                badge.classList.remove('show');
-            }, 3000);
-
-            $('#addAlarmModal').modal('hide'); // Hide modal after setting alarm
-        })
-    });
-});
-    </script>    
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
@@ -365,10 +363,6 @@ document.addEventListener("DOMContentLoaded", () => {
 function getCSRFToken() {
     return document.querySelector('input[name="csrf_token"]').value;
 }
-    // Function to get the CSRF token
-    function getCSRFToken() {
-        return document.querySelector('input[name="csrf_token"]').value;
-    }
 </script>
     
     

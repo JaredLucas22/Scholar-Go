@@ -1,5 +1,9 @@
 from datetime import datetime, timezone, timedelta
+from .models import User
+from flask import jsonify, Blueprint
 
+
+utils = Blueprint('utils', __name__)
 # Define UTC+8 timezone offset
 utc_plus_8 = timezone(timedelta(hours=8))
 
@@ -43,3 +47,18 @@ def time_since(dt):
     else:
         years = seconds // 31536000
         return f"{int(years)} year{'s' if years != 1 else ''} ago"
+
+@utils.route('/check_username/<username>')
+def check_username(username):
+    user = User.query.filter_by(username=username).first()
+    if user:
+        return jsonify({"exists": True})
+    return jsonify({"exists": False})
+
+# Check if email exists
+@utils.route('/check_email/<email>')
+def check_email(email):
+    user = User.query.filter_by(email=email).first()
+    if user:
+        return jsonify({"exists": True})
+    return jsonify({"exists": False})

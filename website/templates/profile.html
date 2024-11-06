@@ -4,6 +4,7 @@
 {% block content %}
 
 <link rel="stylesheet" href="/static/css/profile.css">
+<div id="flash-messages" class="flash-messages"></div>
 
 <div class="container right-form rounded bg-white mt-5 mb-5" >
     <div class="row">
@@ -22,10 +23,11 @@
                     <i class="fas fa-pencil-alt pencil-icon" onclick="document.getElementById('profilePictureInput').click();"></i>
 
                     <!-- Separate form for profile picture upload -->
-                <form id="uploadProfilePictureForm" method="POST" enctype="multipart/form-data" action="{{ url_for('auth.upload_profile_picture') }}">
-                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                    <input type="file" id="profilePictureInput" name="profile_picture" style="display: none;" onchange="document.getElementById('uploadProfilePictureForm').submit();">
-                </form>
+                    <form id="uploadProfilePictureForm" method="POST" enctype="multipart/form-data" action="{{ url_for('auth.upload_profile_picture') }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <input type="file" id="profilePictureInput" name="profile_picture" style="display: none;" onchange="validateAndSubmit()">
+                        <small id="fileError" class="form-text text-danger" style="display:none;">Only JPG, PNG, and other image formats are allowed.</small>
+                    </form>
                 </div>
                 
                 <!-- Display user's name -->
@@ -80,12 +82,31 @@
                     <!-- City and Province Row -->
                     <div class="row mt-3">
                         <div class="col-md-6">
-                            <label class="labels">City</label>
-                            <input type="text" class="form-control" name="city" value="{{ current_user.city }}">
+                            <label class="labels">Province</label>
+                            <select class="form-control" name="province" id="tar_province" value ="{{ current_user.province }}" onchange="updateCity()">
+                                <option value="" disabled selected>Select a province</option>
+                                <option value="Metro Manila">Metro Manila</option>
+                                <option value="Cebu">Cebu</option>
+                                <option value="Davao del Sur">Davao del Sur</option>
+                                <option value="Benguet">Benguet</option>
+                                <option value="Iloilo">Iloilo</option>
+                                <option value="Misamis Oriental">Misamis Oriental</option>
+                                <option value="South Cotabato">South Cotabato</option>
+                                <option value="Zamboanga del Sur">Zamboanga del Sur</option>
+                                <option value="Pampanga">Pampanga</option>
+                                <option value="Batangas">Batangas</option>
+                                <option value="Laguna">Laguna</option>
+                                <option value="Cavite">Cavite</option>
+                                <option value="Negros Occidental">Negros Occidental</option>
+                                <option value="Palawan">Palawan</option>
+                                <option value="Bohol">Bohol</option>
+                            </select>
                         </div>
                         <div class="col-md-6">
-                            <label class="labels">Province</label>
-                            <input type="text" class="form-control" name="province" value="{{ current_user.province }}">
+                            <label class="labels">City</label>
+                            <select class="form-control" name="city" value ="{{ current_user.city }}" id="tar_city">
+                                <option value="" disabled selected>Select a city</option>
+                            </select>
                         </div>
                     </div>
 
@@ -97,7 +118,6 @@
                                 <option value="" disabled selected>Select</option>
                                 <option value="Male" {% if current_user.gender == 'Male' %}selected{% endif %}>Male</option>
                                 <option value="Female" {% if current_user.gender == 'Female' %}selected{% endif %}>Female</option>
-                                <option value="Other" {% if current_user.gender == 'Other' %}selected{% endif %}>Other</option>
                             </select>
                         </div>
                         <div class="col-md-6">
@@ -199,18 +219,39 @@
         </div>
     </div>
 </div>
-<script>
 
-document.getElementById('profilePictureInput').addEventListener('change', function(event) {
-    const file = event.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            document.querySelector('.profile-image-wrapper img').src = e.target.result; // Update the image source
-        };
-        reader.readAsDataURL(file);
+<form id="uploadProfilePictureForm" method="POST" enctype="multipart/form-data" action="{{ url_for('auth.upload_profile_picture') }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <input type="file" id="profilePictureInput" name="profile_picture" style="display: none;" onchange="validateAndSubmit()">
+    <small id="fileError" class="form-text text-danger" style="display:none;">Only JPG, PNG, and other image formats are allowed.</small>
+</form>
+
+<script>
+    const allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'tiff', 'webp'];
+
+    // Function to validate the selected file before submitting the form
+    function validateAndSubmit() {
+        const fileInput = document.getElementById('profilePictureInput');
+        const file = fileInput.files[0];
+        const fileError = document.getElementById('fileError');
+
+        // Check if a file is selected
+        if (file) {
+            const fileName = file.name;
+            const fileExtension = fileName.split('.').pop().toLowerCase();
+
+            // If the file extension is not allowed, show an error message
+            if (!allowedExtensions.includes(fileExtension)) {
+                fileError.style.display = 'block';  // Show error message
+                fileInput.value = '';  // Clear the file input
+            } else {
+                fileError.style.display = 'none';  // Hide error message
+                document.getElementById('uploadProfilePictureForm').submit();  // Submit the form
+            }
+        }
     }
-});
 </script>
+<script src="/static/alllocations.js"></script>
+
 
 {% endblock %}

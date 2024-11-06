@@ -35,7 +35,21 @@ body {
     border-radius: 50%; /* Keep the image circular */
     transition: transform 0.4s ease-in-out; /* Smooth transition for scaling */
 }
+.flash-message {
+    position: fixed;
+    top: 8%;
+    left: 40%;
+    background-color: #4CAF50;
+    color: white;
+    padding: 30px;
+    border-radius: 5px;
+    z-index: 1000;
+    opacity: 0.9;
+}
 
+.flash-message.error {
+    background-color: #f44336;
+}
 
 /* Pencil icon styles */
 .pencil-icon {

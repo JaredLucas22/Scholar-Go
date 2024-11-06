@@ -7,6 +7,7 @@
         color: black;
     }
 </style>
+<div id="flash-messages" class="flash-messages"></div>
     <div class="container right-form rounded bg-white mt-5 mb-5">
         <div class="row">
             <!-- Profile Section (Left) -->
@@ -24,10 +25,11 @@
                         <i class="fas fa-pencil-alt pencil-icon" onclick="document.getElementById('profilePictureInput').click();"></i>
     
                         <!-- Separate form for profile picture upload -->
-                    <form id="uploadProfilePictureForm" method="POST" enctype="multipart/form-data" action="{{ url_for('auth.upload_profile_picture') }}">
-                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                        <input type="file" id="profilePictureInput" name="profile_picture" style="display: none;" onchange="document.getElementById('uploadProfilePictureForm').submit();">
-                    </form>
+                        <form id="uploadProfilePictureForm" method="POST" enctype="multipart/form-data" action="{{ url_for('auth.upload_profile_picture') }}">
+                          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                          <input type="file" id="profilePictureInput" name="profile_picture" style="display: none;" onchange="validateAndSubmit()">
+                          <small id="fileError" class="form-text text-danger" style="display:none;">Only JPG, PNG, and other image formats are allowed.</small>
+                      </form>
     </div>
         <span class="text-white-name">{{ sponsorship_data.sponsor_name }}</span>
         <span class="text-white-em">{{ sponsorship_data.email}}</span>
@@ -176,6 +178,38 @@
 </div>
 </div>
 </div>
+<form id="uploadProfilePictureForm" method="POST" enctype="multipart/form-data" action="{{ url_for('auth.upload_profile_picture') }}">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <input type="file" id="profilePictureInput" name="profile_picture" style="display: none;" onchange="validateAndSubmit()">
+  <small id="fileError" class="form-text text-danger" style="display:none;">Only JPG, PNG, and other image formats are allowed.</small>
+</form>
+
+<script>
+  const allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'tiff', 'webp'];
+
+  // Function to validate the selected file before submitting the form
+  function validateAndSubmit() {
+      const fileInput = document.getElementById('profilePictureInput');
+      const file = fileInput.files[0];
+      const fileError = document.getElementById('fileError');
+
+      // Check if a file is selected
+      if (file) {
+          const fileName = file.name;
+          const fileExtension = fileName.split('.').pop().toLowerCase();
+
+          // If the file extension is not allowed, show an error message
+          if (!allowedExtensions.includes(fileExtension)) {
+              fileError.style.display = 'block';  // Show error message
+              fileInput.value = '';  // Clear the file input
+          } else {
+              fileError.style.display = 'none';  // Hide error message
+              document.getElementById('uploadProfilePictureForm').submit();  // Submit the form
+          }
+      }
+  }
+</script>
+
 <script>
 document.getElementById('profilePictureInput').addEventListener('change', function(event) {
     const file = event.target.files[0];

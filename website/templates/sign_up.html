@@ -6,6 +6,22 @@
 <!-- Modal Structure -->
  <style>
 
+.flash-message {
+    position: fixed;
+    top: 8%;
+    left: 40%;
+    background-color: #4CAF50;
+    color: white;
+    padding: 30px;
+    border-radius: 5px;
+    z-index: 1000;
+    opacity: 0.9;
+}
+
+.flash-message.error {
+    background-color: #f44336;
+}
+
 .btn-short:hover, .btn-short:focus, .btn-short:active {
     color: white !important; /* Ensure text stays white on hover, focus, or click */
 }
@@ -287,7 +303,87 @@ body{
         </div>
     </div>
 </div>
-
 <script>
-    
+    // Check username availability
+    document.getElementById('username').addEventListener('input', function() {
+        let username = this.value.trim();  // Trim to remove any accidental spaces
+        let errorElement = document.getElementById('username-error');
+
+        if (username.length > 2) {  // Only make request if username has more than 2 characters
+            fetch(`/check_username/${username}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.exists) {
+                        errorElement.textContent = "Username already taken!";
+                        errorElement.style.color = 'red';  // Display error in red
+                    } else {
+                        errorElement.textContent = "Username is available!";
+                        errorElement.style.color = 'green';  // Display success in green
+                    }
+                })
+                .catch(error => {
+                    console.error("Error checking username availability:", error);
+                    errorElement.textContent = "Error checking username.";
+                    errorElement.style.color = 'red';
+                });
+        } else {
+            errorElement.textContent = '';  // Clear the error message if username is too short
+        }
+    });
+
+    // Check email availability
+    document.getElementById('email').addEventListener('input', function() {
+        let email = this.value.trim();  // Trim to remove any accidental spaces
+        let errorElement = document.getElementById('email-error');
+
+        if (email.length > 4) {  // Only make request if email has more than 4 characters
+            fetch(`/check_email/${email}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.exists) {
+                        errorElement.textContent = "Email is already registered!";
+                        errorElement.style.color = 'red';  // Display error in red
+                    } else {
+                        errorElement.textContent = "Email is available!";
+                        errorElement.style.color = 'green';  // Display success in green
+                    }
+                })
+                .catch(error => {
+                    console.error("Error checking email availability:", error);
+                    errorElement.textContent = "Error checking email.";
+                    errorElement.style.color = 'red';
+                });
+        } else {
+            errorElement.textContent = '';  // Clear the error message if email is too short
+        }
+    });
+</script>
+<script type="text/javascript">
+    // Listen for 'flash_message' event
+    socket.on('flash_message', function(data) {
+        // Get the message and category from the emitted data
+        const message = data.message;
+        const category = data.category;
+
+        // Set the message content
+        document.getElementById('flash-content').innerText = message;
+
+        // Set the style based on the category (success/error)
+        const flashMessageDiv = document.getElementById('flash-message');
+        if (category === 'success') {
+            flashMessageDiv.style.backgroundColor = 'green';  // Success style
+            flashMessageDiv.style.color = 'white';
+        } else if (category === 'error') {
+            flashMessageDiv.style.backgroundColor = 'red';  // Error style
+            flashMessageDiv.style.color = 'white';
+        }
+
+        // Show the flash message
+        flashMessageDiv.style.display = 'block';
+
+        // Optionally hide the flash message after a few seconds
+        setTimeout(function() {
+            flashMessageDiv.style.display = 'none';
+        }, 5000);  // Hide after 5 seconds
+    });
 </script>

@@ -538,14 +538,15 @@ def api_notifications():
     # Count unread notifications
     unread_count = Notification.query.filter_by(user_id=current_user.id, is_read=False).count()
     
+    # Include sponsorship_id in the response
     notifications_data = [{
         'id': notification.id,
         'message': notification.message,
-        'is_read': notification.is_read
+        'is_read': notification.is_read,
+        'sponsorship_id': notification.sponsorship_id  # Add sponsorship_id here
     } for notification in user_notifications]
     
     return jsonify({'notifications': notifications_data, 'unread_count': unread_count})
-
 
 
 @auth.route('/reset_password/<token>', methods=['GET', 'POST'])
@@ -649,9 +650,8 @@ def logout():
 @auth.route('/sign-up', methods=['GET', 'POST'])
 def sign_up():
     if request.method == 'POST':
-        email = request.form.get("SignUpEmail").lower() if request.form.get("SignUpEmail") else None # Capture email
-
-        # Capture all form data with logs for validation steps
+        email = request.form.get("SignUpEmail").lower() if request.form.get("SignUpEmail") else None
+        # Capture form data
         try:
             first_name = request.form.get('firstName')
             username = request.form.get("username").lower() if request.form.get("username") else None
@@ -669,15 +669,18 @@ def sign_up():
             educationlevel = request.form.get('educationlevel')
             phone_number = request.form.get('phoneNumber')
 
+            # Log form data (excluding sensitive data like password)
             logger.info(f"Received sign-up data: first_name={first_name}, last_name={last_name}, "
                         f"username={username}, email={email}, city={city}, province={province}, "
                         f"postalcode={postalcode}, gender={gender}, course={course}, "
                         f"gpa={gpa}, phone_number={phone_number}, educationlevel={educationlevel}, "
                         f"extracurricular_activities={extracurricular_activities}, "
                         f"financial_status={financial_status}")
-            
+
+            # Emit log event to front-end
             socketio.emit('log_event', {'message': f"Received sign-up data for {username}"})
 
+            # Birthdate processing
             birthdate_str = request.form.get('dateOfBirth')
             birthdate = None
             if birthdate_str:
@@ -691,35 +694,42 @@ def sign_up():
                     flash('Invalid birthdate format. Please use YYYY-MM-DD.', category='error')
                     return redirect(url_for('auth.sign_up'))
 
-            # Check if user already exists
+            # User existence check
             user = User.query.filter_by(email=email).first()
 
-            if email is None:  # Check if email is None
+            # Validation checks
+            if email is None:
                 logger.warning("Email not provided.")
                 socketio.emit('log_event', {'message': 'Email must be provided.'})
                 flash('Email must be provided.', category='error')
+                return redirect(url_for('auth.login'))  # Redirect to login page when email exists
             elif user:
                 logger.warning(f"Attempted sign-up with existing email: {email}")
                 socketio.emit('log_event', {'message': 'Email already exists.'})
-                flash('Email already exists.', category='error')
+                flash('Email already exists. Please log in.', category='error')
+                return redirect(url_for('auth.login'))  # Redirect to login page when email exists
             elif len(email) < 4:
                 logger.warning("Email length is less than 4 characters.")
                 socketio.emit('log_event', {'message': 'Email must be greater than 3 characters.'})
                 flash('Email must be greater than 3 characters.', category='error')
+                return redirect(url_for('auth.login'))  # Redirect to login page when email exists
             elif len(first_name) < 2:
                 logger.warning("First name length is less than 2 characters.")
                 socketio.emit('log_event', {'message': 'First name must be greater than 1 character.'})
                 flash('First name must be greater than 1 character.', category='error')
+                return redirect(url_for('auth.login'))  # Redirect to login page when email exists
             elif password1 != password2:
                 logger.warning("Passwords do not match.")
                 socketio.emit('log_event', {'message': "Passwords don't match."})
                 flash("Passwords don't match.", category='error')
+                return redirect(url_for('auth.login'))  # Redirect to login page when email exists
             elif len(password1) < 7:
                 logger.warning("Password length is less than 7 characters.")
                 socketio.emit('log_event', {'message': 'Password must be at least 7 characters.'})
                 flash('Password must be at least 7 characters.', category='error')
+                return redirect(url_for('auth.login'))  # Redirect to login page when email exists
             else:
-                # Create new user
+                # Create new user after all checks pass
                 new_user = User(
                     email=email,
                     first_name=first_name,
@@ -744,20 +754,22 @@ def sign_up():
 
                 logger.info(f"New user created: {email} (username: {username})")
 
-            login_user(new_user, remember=True)
-            session['user_type'] = new_user.get_user_type()
-            
-            # Emit a real-time flash message to the client
-            emit('flash_message', {'message': 'Account created!', 'category': 'success'}, broadcast=True, namespace='/notifications')
-            
-            return redirect(url_for('views.home'))
-        
+                # Log in user and assign user type
+                login_user(new_user, remember=True)
+                session['user_type'] = new_user.get_user_type()
+
+                # Emit success message to client
+                emit('flash_message', {'message': 'Account created successfully!', 'category': 'success'}, broadcast=True, namespace='/notifications')
+
+                return redirect(url_for('views.home'))
+
         except Exception as e:
             logger.error(f"Sign-up error: {str(e)}", exc_info=True)
             emit('flash_message', {'message': 'An unexpected error occurred. Please try again.', 'category': 'error'}, broadcast=True, namespace='/notifications')
-            return redirect(url_for('auth.sign_up'))
-    
+            return redirect(url_for('login.html'))
+
     return render_template("login.html", user=current_user)
+
 
 from flask import render_template, flash, redirect, url_for, request, session
 from flask_login import login_user, current_user
@@ -1015,7 +1027,7 @@ def update_profile():
     phone_number = request.form.get('phone_number')
     suffix = request.form.get('suffix')
     city = request.form.get('city')
-    province = request.form.get('province')
+    province = request.form.get('tar_province')
     gender = request.form.get('gender')
     postalcode = request.form.get('postalcode')
     education_level = request.form.get('education_level')
@@ -1069,14 +1081,14 @@ def upload_profile_picture():
                 # Commit the changes
                 db.session.commit()
 
-                flash('Profile picture updated successfully!', category='success')
+                flash('Profile picture updated successfully!', category='success'), 500
                 return redirect(request.referrer)  # Redirect to profile page
 
             except ValueError as e:
                 flash(str(e), category='error')
                 return redirect(request.referrer)  # Redirect on error
 
-    flash('No file uploaded or file is invalid.', category='error')
+    flash('No file uploaded or file is invalid.', category='error'), 500
     return redirect(request.referrer)  # Redirect if no valid picture was uploaded
 
 
