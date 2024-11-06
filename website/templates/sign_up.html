@@ -194,9 +194,9 @@ body{
                                 </select>
                             </div>
                             <div class="col-md-4 mb-3">
-                                <select class="form-control form-select" id="extracurricularActivities" name="extracurricularActivities" required>
+                                <select class="form-control form-select" id="extracurricularActivities" name="extracurricularActivities">
                                     <option value="" disabled selected>Club Activity</option>
-                                    
+                                    <option value="N/A" selected>N/A</option>
                                     <optgroup label="Physical Activities">
                                         <option value="Sports">Sports</option>
                                         <option value="Basketball">Basketball</option>
@@ -322,61 +322,6 @@ body{
         </div>
     </div>
 </div>
-<script>
-    // Check username availability
-    document.getElementById('username').addEventListener('input', function() {
-        let username = this.value.trim();  // Trim to remove any accidental spaces
-        let errorElement = document.getElementById('username-error');
-
-        if (username.length > 2) {  // Only make request if username has more than 2 characters
-            fetch(`/check_username/${username}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.exists) {
-                        errorElement.textContent = "Username already taken!";
-                        errorElement.style.color = 'red';  // Display error in red
-                    } else {
-                        errorElement.textContent = "Username is available!";
-                        errorElement.style.color = 'green';  // Display success in green
-                    }
-                })
-                .catch(error => {
-                    console.error("Error checking username availability:", error);
-                    errorElement.textContent = "Error checking username.";
-                    errorElement.style.color = 'red';
-                });
-        } else {
-            errorElement.textContent = '';  // Clear the error message if username is too short
-        }
-    });
-
-    // Check email availability
-    document.getElementById('email').addEventListener('input', function() {
-        let email = this.value.trim();  // Trim to remove any accidental spaces
-        let errorElement = document.getElementById('email-error');
-
-        if (email.length > 4) {  // Only make request if email has more than 4 characters
-            fetch(`/check_email/${email}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.exists) {
-                        errorElement.textContent = "Email is already registered!";
-                        errorElement.style.color = 'red';  // Display error in red
-                    } else {
-                        errorElement.textContent = "Email is available!";
-                        errorElement.style.color = 'green';  // Display success in green
-                    }
-                })
-                .catch(error => {
-                    console.error("Error checking email availability:", error);
-                    errorElement.textContent = "Error checking email.";
-                    errorElement.style.color = 'red';
-                });
-        } else {
-            errorElement.textContent = '';  // Clear the error message if email is too short
-        }
-    });
-</script>
 <script type="text/javascript">
     // Listen for 'flash_message' event
     socket.on('flash_message', function(data) {

@@ -656,8 +656,8 @@ def sign_up():
             first_name = request.form.get('firstName')
             username = request.form.get("username").lower() if request.form.get("username") else None
             last_name = request.form.get('lastName')
-            city = request.form.get("tar_city").lower() 
-            province = request.form.get("tar_province").lower() 
+            city = request.form.get("tar_city")
+            province = request.form.get("tar_province")
             postalcode = request.form.get('tar_postalcode')
             gender = request.form.get('gender')
             course = request.form.get('course')
@@ -692,7 +692,7 @@ def sign_up():
                     logger.error(f"Invalid birthdate format: {birthdate_str}")
                     socketio.emit('log_event', {'message': 'Invalid birthdate format. Please use YYYY-MM-DD.'})
                     flash('Invalid birthdate format. Please use YYYY-MM-DD.', category='error')
-                    return redirect(url_for('auth.sign_up'))
+                    return redirect(url_for('auth.login'))
 
             # User existence check
             user = User.query.filter_by(email=email).first()
