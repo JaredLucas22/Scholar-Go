@@ -290,8 +290,28 @@
             <option value="doctorate degree">Doctorate Degree</option>
             <option value="graduate student">Graduate Student</option>
             <option value="adult learner">Adult Learner</option>
-            <option value="online degree">Online Degree Programs</option>            
+            <option value="online degree">Online Degree Programs</option>     
+            <script>
+                document.getElementById('course').addEventListener('change', function() {
+                    var courseSelect = document.getElementById('fos');
+                    var enabledCourses = [
+                        'college', 'incoming college', "bachelor degree", 
+                        "associate degree", "doctorate degree", "adult learner", 
+                        "online degree"
+                    ];
+                    
+                    // Enable the fos field if the selected value is in enabledCourses
+                    if (enabledCourses.includes(this.value.toLowerCase())) {
+                        courseSelect.disabled = false;
+                    } else {
+                        courseSelect.disabled = true;
+                        courseSelect.selectedIndex = 0;  // Reset fos selection
+                    }
+                });
+            </script>
         </select>
+        <!-- JavaScript to Enable Course Field Based on Education Level -->
+
             
         </div>
 
@@ -299,7 +319,7 @@
             <label for="course">Course</label>
             <select class="form-control form-select" id="fos" name="fos" required>
             <option value="" disabled selected>Select your course</option>
-            <option value="N/A" disabled selected>N/A</option>
+            <option value="N/A">N/A</option>
                                     <optgroup label="Business and Management">
                                         <option value="business_admin">Bachelor of Science in Business Administration</option>
                                         <option value="accountancy">Bachelor of Science in Accountancy</option>

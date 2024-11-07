@@ -80,7 +80,7 @@ function updateCity() {
     const selectedProvince = provinceSelect.value;
 
     // Clear existing city options
-    citySelect.innerHTML = '<option value="" disabled selected>Select a city</option>';
+    citySelect.innerHTML = '<option value="" disabled>Select a city</option>';
 
     // Get cities for the selected province
     const cities = provincesAndCities[selectedProvince];
@@ -91,6 +91,9 @@ function updateCity() {
             const option = document.createElement("option");
             option.value = city;
             option.textContent = city;
+            if (city === selectedCity) {
+                option.selected = true; // Set the city as selected
+            }
             citySelect.appendChild(option);
         });
     }
@@ -103,7 +106,7 @@ function updatePostalCode() {
     const selectedCity = citySelect.value;
 
     // Clear existing postal code options
-    postalCodeSelect.innerHTML = '<option value="" disabled selected>Select a postal code</option>';
+    postalCodeSelect.innerHTML = '<option value="" disabled>Select a postal code</option>';
 
     // Get the postal code for the selected city
     const postalCode = cityPostalCodes[selectedCity];
@@ -113,6 +116,32 @@ function updatePostalCode() {
         const option = document.createElement("option");
         option.value = postalCode;
         option.textContent = postalCode;
+        if (postalCode === selectedPostalCode) {
+            option.selected = true; // Set the postal code as selected
+        }
         postalCodeSelect.appendChild(option);
     }
 }
+
+// Set the selected province, and update the city dropdown
+function initializeSelections() {
+    const provinceSelect = document.getElementById("tar_province");
+    const citySelect = document.getElementById("tar_city");
+
+    if (selectedProvince) {
+        provinceSelect.value = selectedProvince;
+        updateCity();
+    }
+
+    if (selectedCity) {
+        citySelect.value = selectedCity;
+        updatePostalCode();
+    }
+}
+
+// Event listeners to call update functions when selections change
+document.getElementById("tar_province").addEventListener("change", updateCity);
+document.getElementById("tar_city").addEventListener("change", updatePostalCode);
+
+// Initialize selections on page load
+document.addEventListener("DOMContentLoaded", initializeSelections);
