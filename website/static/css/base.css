@@ -27,7 +27,7 @@ body {
   padding: 3px 8px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); /* Light shadow */
   border: none;
-  z-index: 1; /* Lower z-index to place it below nav items */
+  z-index: 10; /* Lower z-index to place it below nav items */
   /* Removed margin-left */
 }
 
@@ -36,7 +36,7 @@ body {
   z-index: 1; /* Lower z-index to place it below nav items */
   position: absolute; /* Positioning the search form absolutely */
   top: 33%; /* Center vertically */
-  left: 75%; /* Center horizontally */
+  left: 65%; /* Center horizontally */
   transform: translate(-50%, -50%); /* Centering trick */
   /* Add margin or padding to position the form correctly without affecting hover */
   margin-top: 10px; /* Add a margin to separate from the navbar if needed */
@@ -49,54 +49,6 @@ body {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); /* Keep the shadow for focus state */
 }
 
-/* Media query for smaller screens */
-@media (max-width: 992px) {
-  .search-form {
-    position: fixed; /* Positioning the search form absolutely */
-    top: 2.5%; /* Center vertically */
-    left: 70%; /* Center horizontally */
-    transform: translate(-50%, -50%); /* Centering trick */
-    z-index: 10; /* Ensure it sits above other content */
-    width: 20vw; /* Default width for the search bar */
-  }
-
-  .search-bar:placeholder {
-    font-size: 20px;
-  }
-}
-
-@media (max-width: 767px) {
-  .search-form {
-    position: fixed;
-    top: 2.5%;
-    left: 60%;
-    padding: 5px;
-  }
-
-  .search-bar::placeholder {
-    color: rgb(131, 131, 131); /* Change placeholder color for very small screens */
-    font-size: 13px; /* Further adjust font size */
-}
-}
-
-/* Media query for screens smaller than 576px */
-@media (max-width: 575px) {
-  .search-form {
-    position: fixed;
-    top: 2.5%;
-    left: 50%;
-    z-index: 10;
-    padding: 5px;
-  }
-
-  .search-bar::placeholder {
-    color: rgb(131, 131, 131); /* Change placeholder color for very small screens */
-    font-size: 13px; /* Further adjust font size */
-}
-}
-
-
-
 
 .navbar-toggler {
   border: none; /* Remove border */
@@ -106,6 +58,7 @@ body {
 
 .navbar-toggler:not(:disabled):hover {
   background-color: rgba(255, 255, 255, 0.2); /* Darken slightly on hover */
+  transition: ease-in .23s;
 }
 
 .navbar-toggler:focus {
@@ -119,12 +72,6 @@ body {
   box-shadow: none; /* Remove box-shadow if present */
 }
 
-
-
-
-
-
-
 /* Navbar Styles */
 .navbar {
   background: linear-gradient(90deg, #012cb8, #017cff) !important;
@@ -133,6 +80,8 @@ body {
   z-index: 1000 !important;
   padding: 1.5vh 0;
 }
+
+
 
 .nav-logo img {
   width: 200px;
@@ -165,6 +114,52 @@ body {
   margin-right: 1%;
 }
 
+
+/* Media query for smaller screens */
+@media (max-width: 992px) {
+  .search-form {
+    position: fixed; /* Positioning the search form absolutely */
+    top: 2.5%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%); /* Centering trick */
+    z-index: 10; /* Ensure it sits above other content */
+    width: 20vw; /* Default width for the search bar */
+  }
+
+  .search-bar:placeholder {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 767px) {
+  .search-form {
+    position: fixed;
+    top: 2.5%;
+    left: 50%;
+    padding: 5px;
+  }
+
+  .search-bar::placeholder {
+    color: rgb(131, 131, 131); /* Change placeholder color for very small screens */
+    font-size: 13px; /* Further adjust font size */
+}
+}
+
+/* Media query for screens smaller than 576px */
+@media (max-width: 575px) {
+  .search-form {
+    position: fixed;
+    top: 2.5%;
+    left: 50%;
+    z-index: 10;
+    padding: 5px;
+  }
+
+  .search-bar::placeholder {
+    color: rgb(131, 131, 131); /* Change placeholder color for very small screens */
+    font-size: 13px; /* Further adjust font size */
+}
+}
 /* Responsive Design */
 @media (max-width: 1200px) {
   .nav-logo img {
@@ -227,10 +222,6 @@ body {
 }
 
 @media (max-width: 576px) {
-  .nav-logo img {
-    width: 120px;
-  }
-
   .navbar-nav .nav-link {
     font-size: 14px;
     margin: 0 2%;
@@ -245,6 +236,77 @@ body {
     height: 30px;
   }
 
+  /* Adjust for Navbar Collapse to take full screen width on small screens */
+  .navbar-collapse {
+    display: flex;
+    flex-direction: column;  /* Stack navbar items vertically */
+    width: 100vw;  /* Expand to full width of viewport */
+    position: fixed; /* Fix navbar to top */
+    top: 0;
+    left: 0;
+    background: linear-gradient(90deg, #012cb8, #017cff);
+    height: 58vh;  /* Fill the entire screen vertically */
+    overflow-y: auto;  /* Ensure items scroll if necessary */
+    z-index: 999; /* Ensure it's above other elements */
+    opacity: 0;  /* Start with navbar hidden */
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out; /* Smooth transition for expanding */
+    transform: translateY(-100%); /* Initially off-screen */
+  }
+  .navbar-collapse.show {
+    opacity: 1; /* Show the navbar when toggled */
+    transform: translateY(0); /* Move navbar into view */
+  }
 
+  .navbar-collapse .nav-logo img {
+    max-width: 120px; /* Adjust the size */
+    height: 30vh;
+    margin-bottom: 10px;
+  }
+
+  /* Align buttons to the left */
+  .navbar-nav {
+    display: flex;
+    flex-direction: column;  /* Stack the buttons vertically */
+    align-items: flex-start;  /* Align the buttons to the left */
+    width: 100%;  /* Make the buttons take up the full width */
+  }
+
+  .navbar-nav .nav-link {
+    font-size: 18px;  /* Larger font size */
+    padding: 15px 20px;  /* Bigger padding for larger buttons */
+    text-align: left;  /* Align text to the left */
+    width: 100%;  /* Ensure buttons take up full width */
+  }
+
+
+  /* Hamburger button (toggler) aligned to the right */
+  .navbar-toggler {
+    position: absolute;  /* Make it position relative to the navbar */
+    right: 10px;  /* Move hamburger button to the right */
+    top: 50%;  /* Vertically center the button */
+    transform: translateY(-50%);  /* Adjust vertical centering */
+    padding: 15px;  /* Bigger toggler button */
+    font-size: 1.5rem;  /* Bigger icon */
+    z-index: 1000; /* Ensure it's above other elements */
+  }
+
+  /* Ensure navbar has positioning context */
+  .navbar {
+    position: relative; /* Ensure the navbar has positioning context for absolute child elements */
+  }
+
+  .search-form {
+    position: fixed;
+    top: 2.5%;
+    left: 40%;
+    width: 10px;
+  }
+  .nav-logo img {
+    max-width: 120px; /* Ensure resizing */
+  }
+  .nav-logo img .navbar-toggler:active {
+    max-width: 120px; /* Ensure resizing */
+    display: block;
+  }
 }
 }

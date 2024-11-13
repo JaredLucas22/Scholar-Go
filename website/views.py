@@ -1,7 +1,8 @@
-from flask import Blueprint, render_template, request, flash, jsonify, session
+from flask import Blueprint, render_template, request, flash, jsonify, session, send_from_directory, current_app
 from flask_login import login_required, current_user
 from .models import Note, Sponsorship_data, Comment, user_sponsorship_visits, User, user_sponsorship_alarm
 from . import db
+import os
 import json
 from scoring import calculate_compatibility_score, match_students_to_sponsorships
 from flask import render_template
@@ -10,9 +11,27 @@ from datetime import datetime
 from flask_socketio import  emit
 
 
+# Define the views blueprint
 views = Blueprint('views', __name__)
 
+from flask import send_from_directory
+import os
 
+@views.route('/help')
+def react_app():
+    # This serves the base template with the React app injected inside it
+    return render_template('base.html')
+
+
+@views.route('/help/<path:path>')
+def serve_react_assets(path):
+    # If it's not a static file, serve index.html
+    if path != '' and not os.path.exists(os.path.join(views.root_path, 'react-template', 'build', 'static', path)):
+        return send_from_directory(os.path.join(views.root_path, 'react-template', 'build'), 'index.html')
+    return send_from_directory(os.path.join(views.root_path, 'react-template', 'build', 'static'), path)
+
+
+    
 @views.route("/profilesponsor")
 @login_required
 def profile_sponsor():
@@ -27,27 +46,37 @@ def profile_sponsor():
 
 
 @views.route('/sponsor/<int:sponsor_id>', methods=['GET'])
-@login_required
 def view_sponsorship(sponsor_id):
     sponsor = Sponsorship_data.query.get_or_404(sponsor_id)
 
-    # Check if the user has visited this sponsorship
-    visit_record = db.session.query(user_sponsorship_visits).filter_by(
-        user_id=current_user.id,
-        sponsorship_id=sponsor_id
-    ).first()
-    
-    is_visited = visit_record is not None
-    visit_count = db.session.query(user_sponsorship_visits).filter_by(
-        user_id=current_user.id,
-        sponsorship_id=sponsor_id
-    ).count()  # Get the count of visits
+    # Check if the user is authenticated
+    if current_user.is_authenticated:
+        # Check if the user has visited this sponsorship
+        visit_record = db.session.query(user_sponsorship_visits).filter_by(
+            user_id=current_user.id,
+            sponsorship_id=sponsor_id
+        ).first()
+        
+        is_visited = visit_record is not None
+        visit_count = db.session.query(user_sponsorship_visits).filter_by(
+            user_id=current_user.id,
+            sponsorship_id=sponsor_id
+        ).count()  # Get the count of visits
 
-    is_liked = current_user in sponsor.likes
+        # Check if the user likes this sponsorship
+        is_liked = current_user in sponsor.likes
+
+        # Check if the user is following this sponsorship
+        is_following = current_user.is_following(sponsor_id)
+    else:
+        # If the user is not authenticated, set these values to defaults
+        is_visited = False
+        visit_count = 0
+        is_liked = False
+        is_following = False
 
     # Fetch comments for the sponsor
     comments = Comment.query.filter_by(sponsorship_id=sponsor.id).all()
-    is_following = current_user.is_following(sponsor_id)
 
     # Calculate relative time for comments
     for comment in comments:
@@ -65,7 +94,6 @@ def view_sponsorship(sponsor_id):
                            likes_count=likes_count,
                            is_visited=is_visited,  # Pass whether it was visited
                            visit_count=visit_count)  # Pass the visit count
-
 
 @views.route('/sponsorlist', methods=['GET'])
 @login_required
@@ -187,7 +215,6 @@ def follow():
     return render_template("follow.html", sponsorships_with_alarm_status=sponsorships_with_alarm_status, followed_sponsorships=followed_sponsorships, user=current_user)
 
 @views.route('/search', methods=['GET'])
-@login_required
 def search():
     query = request.args.get('q', '').strip().lower()  # Get the search query from URL parameters and convert to lowercase
 

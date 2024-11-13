@@ -13,23 +13,32 @@
                 <form id="like-form" action="{{ url_for('auth.like_sponsorship', sponsor_id=sponsor.id) }}" method="POST" style="display:inline;">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <button type="submit" class="like-button" style="border: none; background-color: transparent;" data-sponsorship-id="{{ sponsor.id }}">
-                        {% if is_liked %}
-                            <i class="fas fa-thumbs-up liked"></i>
+                        {% if current_user.is_authenticated %}
+                            {% if is_liked %}
+                                <i class="fas fa-thumbs-up liked"></i>
+                            {% else %}
+                                <i class="far fa-thumbs-up"></i>
+                            {% endif %}
                         {% else %}
                             <i class="far fa-thumbs-up"></i>
                         {% endif %}
                     </button>
-                </form>                
+                </form>
+                
                 <form id="follow-form" action="{{ url_for('auth.toggle_follow_sponsorship', sponsorship_id=sponsor.id) }}" method="POST" style="display: inline;">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <button type="button" class="follow-button" data-sponsorship-id="{{ sponsor.id }}" data-is-following="{{ is_following }}">
-                        {% if is_following %}
-                            <i class="fas fa-bookmark"></i>
+                        {% if current_user.is_authenticated %}
+                            {% if is_following %}
+                                <i class="fas fa-bookmark"></i> Remove Bookmark
+                            {% else %}
+                                <i class="far fa-bookmark"></i> Add Bookmark
+                            {% endif %}
                         {% else %}
                             <i class="far fa-bookmark"></i>
                         {% endif %}
                     </button>                           
-                </form>
+                </form>                
             </div>
             <div class="verified-check">
                 <i class="fas fa-check-circle" aria-hidden="true"></i>
@@ -48,8 +57,8 @@
                             <span class="sponsor-status inactive">Inactive Program</span>
                         {% endif %}
                     </p>
-                    <p><span class="info-label">Scholarship Program:</span> {{ sponsor.course | title_case }}</p>
-                    <p><span class="info-label">Amount:</span> {{ sponsor.amount_per_semester }}</p>
+                    <p style="font-size: 18.3px;"><span class="info-label">Scholarship Program:</span> {{ sponsor.course | title_case }}</p>
+                    <p style="font-size: 18.3px;"><span class="info-label">Amount:</span> {{ sponsor.amount_per_semester }}</p>
                 </div>
             </div>
         </div>
@@ -78,12 +87,23 @@
         </div>
 
         <div class="d-flex align-items-start mb-3">
-            <img src="{{ url_for('static', filename='uploads/' ~ current_user.picture_path) }}" alt="Profile" class="rounded-circle me-2" style="width: 65px; height: 65px;"> 
+            <!-- Profile picture, visible only if user is authenticated -->
+            {% if current_user.is_authenticated %}
+            <img src="{{ url_for('static', filename='uploads/' ~ current_user.picture_path) }}" alt="Profile" class="rounded-circle me-2" style="width: 65px; height: 65px;">
+            {% else %}
+            <img src="{{ url_for('static', filename='uploads/default-avatar-icon-of-social-media-user-vector.jpg') }}" alt="Profile" class="rounded-circle me-2" style="width: 65px; height: 65px;">
+            {% endif %}
+            <!-- Comment form -->
+            {% if current_user.is_authenticated %}
             <form id="comment-form" action="{{ url_for('auth.add_comment', sponsor_id=sponsor.id) }}" method="POST" class="flex-grow-1 comment-form">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <textarea class="form-control" name="content" required placeholder="Add a comment..."></textarea>
                 <button type="submit" class="btn btn-primary mt-2 comment-submit float-right">Submit</button>
             </form>
+            {% else %}
+            
+            <textarea class="form-control" name="content" disabled placeholder="Login to comment."></textarea>
+            {% endif %}
         </div>
 
         <div id="comments-section">

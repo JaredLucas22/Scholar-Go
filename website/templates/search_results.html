@@ -37,8 +37,8 @@
                                     <span class="badge bg-danger">Inactive Program</span>
                                 {% endif %}
                                 
-                                <p class="mb-0"><strong>Scholarship Program:</strong> {{ sponsorship.course | title_case }}</p>
-                                <p class="mb-0"><strong>Amount:</strong> {{ sponsorship.amount_per_semester }}</p>
+                                <p class="mb-0"style="font-size: 18px;"><strong>Scholarship Program:</strong> {{ sponsorship.course | title_case }}</p>
+                                <p class="mb-0" style="font-size: 18px;"><strong>Amount:</strong> {{ sponsorship.amount_per_semester }}</p>
                             </div>
                         </div>
 
@@ -53,16 +53,23 @@
                                     <li>
                                         <form action="/follow/{{ sponsorship.id }}" method="POST" class="bookmark-form">
                                             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                                            <button type="button" class="dropdown-item bookmark-button" 
+                                            
+                                            <button type="button" 
+                                                    class="dropdown-item bookmark-button" 
                                                     data-sponsorship-id="{{ sponsorship.id }}" 
-                                                    data-is-following="{{ 'true' if current_user.is_following(sponsorship.id) else 'false' }}">
-                                                {% if current_user.is_following(sponsorship.id) %}
-                                                    <i class="fa-solid fa-bookmark"></i> <span>Remove Bookmark</span>
+                                                    data-is-following="{{ 'true' if current_user.is_authenticated and current_user.is_following(sponsorship.id) else 'false' }}"
+                                                    {% if not current_user.is_authenticated %} disabled {% endif %}>
+                                                {% if current_user.is_authenticated %}
+                                                    {% if current_user.is_following(sponsorship.id) %}
+                                                        <i class="fa-solid fa-bookmark"></i> <span>Remove Bookmark</span>
+                                                    {% else %}
+                                                        <i class="fa-regular fa-bookmark"></i> <span>Add Bookmark</span>
+                                                    {% endif %}
                                                 {% else %}
                                                     <i class="fa-regular fa-bookmark"></i> <span>Add Bookmark</span>
                                                 {% endif %}
                                             </button>
-                                        </form>
+                                        </form>                                                                                
                                     </li>                                    
                                     <li>
                                         <a class="dropdown-item" href="#"><i class="fa-solid fa-share"></i> <span>Share</span></a>
