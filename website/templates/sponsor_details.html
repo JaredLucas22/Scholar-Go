@@ -30,9 +30,9 @@
                     <button type="button" class="follow-button" data-sponsorship-id="{{ sponsor.id }}" data-is-following="{{ is_following }}">
                         {% if current_user.is_authenticated %}
                             {% if is_following %}
-                                <i class="fas fa-bookmark"></i> Remove Bookmark
+                                <i class="fas fa-bookmark"></i> 
                             {% else %}
-                                <i class="far fa-bookmark"></i> Add Bookmark
+                                <i class="far fa-bookmark"></i>
                             {% endif %}
                         {% else %}
                             <i class="far fa-bookmark"></i>

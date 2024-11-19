@@ -27,7 +27,7 @@ def react_app():
 def serve_react_assets(path):
     # If it's not a static file, serve index.html
     if path != '' and not os.path.exists(os.path.join(views.root_path, 'react-template', 'build', 'static', path)):
-        return send_from_directory(os.path.join(views.root_path, 'react-template', 'build'), 'index.html')
+        return send_from_directory(os.path.join(views.root_path, 'react-template', 'src'), 'App.js')
     return send_from_directory(os.path.join(views.root_path, 'react-template', 'build', 'static'), path)
 
 
