@@ -30,7 +30,7 @@
   
     <nav class="navbar navbar-expand-lg" style="background-color: #1A32D0;">
         <div class="container-fluid">
-            <div class="nav-logo">
+            <div class="nav-logo" >
                 <img src="/static/images/nav-logo.png" alt="Logo">
             </div>
 
@@ -42,31 +42,95 @@
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     {% if current_user.is_authenticated %}
                         {% if session['user_type'] == 'User' %}
-                            <li class="nav-item"><a class="nav-link text-white" id="home" href="/">Home</a></li>
-                            <li class="nav-item"><a class="nav-link text-white" id="profile" href="/profile">Profile</a></li>
-                            <li class="nav-item"><a class="nav-link text-white" id="logout" href="/sponsorlist">Sponsors</a></li>
-                            <li class="nav-item"><a class="nav-link text-white" id="bookmarks" href="/follow">Bookmarks</a></li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle text-white" id="notificationsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Notifications <span id="unreadCount" class="badge bg-danger"></span>
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationsDropdown" id="notificationsList"></ul>
+                        <!-- Hamburger Button -->
+                        <button class="hamburger-btn" id="toggleSidebar">
+                            ☰
+                        </button>
+                        
+                        <!-- Sidebar -->
+                        <div class="sidebar" id="sidebar">
+                            <!-- Profile Section -->
+                            <div class="profile-section">
+                                <div class="profile-picture">
+                                    <a href="/profile">
+                                        <img src="{{ url_for('static', filename='uploads/' + current_user.picture_path) }}" alt="Profile Picture" class="profile-img">
+                                    </a>                                    
+                                </div>
+                                <div class="profile-info">
+                                    <h5 class="real-name">{{ current_user.first_name +" " + current_user.last_name }}</h5>
+                                    <p class="username">@{{ current_user.username }}</p>
+                                </div>
+                            </div>
+                        
+                            <ul class="nav flex-column">
                                 <li class="nav-item">
-                                <form action="{{ url_for('views.search') }}" method="get" class="d-flex search-form">
-                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                                    <input type="text" class="search-bar" name="q" value="{{ query }}" placeholder="Search sponsorships..." required>
-                                </form>
+                                    <a class="nav-link text-white" id="home" href="/"><i class="fa-solid fa-house"></i> Home</a>
                                 </li>
-                            </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-white" id="profile" href="/profile"><i class="fa-solid fa-user"></i>Profile</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-white" id="sponsors" href="/sponsorlist"><i class="fa-solid fa-graduation-cap"></i> Sponsors</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-white" id="logout" href="/"><i class="fa-solid fa-gear"></i> Settings</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-white" id="logout" href="/logout"><i class="fa-solid fa-circle-info"></i> Help</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-white" id="logout" href="/logout"><i class="fa-solid fa-right-from-bracket"></i> Log out</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </ul>
+            
+                <!-- Right-aligned Navbar Section -->
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <!-- Search Form -->
+                    <li class="nav-item">
+                        <form action="{{ url_for('views.search') }}" method="get" class="d-flex search-form">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <input type="text" class="search-bar" name="q" value="{{ query }}" placeholder="Search sponsorships..." required>
+                        </form>
+                    </li>
+                                        
+                    <!-- Bookmarks -->
+                    <li class="nav-item">
+                        <a class="nav-link text-white" id="bookmarks" href="/follow">
+                            <i class="far fa-bookmark"></i>
+                        </a>
+                    </li>
+
+                    <!-- Notifications -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-white" id="notificationsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa-solid fa-bell"></i> 
+                            <span id="unreadCount" class="badge bg-danger"></span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationsDropdown" id="notificationsList"></ul>
+                    </li>
+
+                    <!-- Profile Picture -->
+                    <li class="nav-item">
+                        <a class="nav-link p-0" id="profilePic" href="/profile">
+                            <img src="{{ url_for('static', filename='uploads/' + current_user.picture_path) }}" alt="Profile Picture" class="nav-profile-img">
+                        </a>
+                    </li>
+
+
+                </ul>
+            </div>
+            
+            
                         {% elif session['user_type'] == 'Sponsorship' %}
                             <li class="nav-item"><a class="nav-link text-white" id="sponsordashboard" href="/">Sponsor Dashboard</a></li>
                             <li class="nav-item"><a class="nav-link text-white" id="profilesponsor" href="/profilesponsor">Profile Settings</a></li>
                         {% endif %}
                     {% endif %}
                 </ul>
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                     {% if current_user.is_authenticated %}
-                        <li class="nav-item"><a class="nav-link text-white" id="logout" href="/logout">Log out</a></li>
                     {% else %}
                     <li class="nav-item">
                         <form action="{{ url_for('views.search') }}" method="get" class="d-flex search-form">
@@ -189,6 +253,39 @@
             }, 5000);  // 5 seconds delay
           }
         });
+      </script>
+
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+    const sidebar = document.getElementById("sidebar");
+    const toggleButton = document.getElementById("toggleSidebar");
+
+// Function to toggle sidebar
+function toggleSidebar() {
+    if (sidebar.style.left === "0px") {
+        // If sidebar is open, close it
+        sidebar.style.left = "-500px"; // Slide sidebar out of view
+        toggleButton.innerText = "☰"; // Change icon to hamburger
+        toggleButton.style.transform = "translateX(0)"; // Move button back to its original position
+        toggleButton.style.opacity = "1"; // Make sure hamburger button is visible
+        toggleButton.style.color = "#f2f4f7";
+        closeButton.style.display = "none"; // Hide close button
+    } else {
+        // If sidebar is closed, open it
+        sidebar.style.left = "0"; // Slide sidebar into view
+        toggleButton.innerHTML = '<i class="fa-solid fa-chevron-left"></i>';
+        toggleButton.style.transform = "translateX(450px)"; // Move button to the right when sidebar opens
+        toggleButton.style.opacity = "1"; // Hide hamburger button while sidebar is open
+        toggleButton.style.color = "#012cb8";
+        closeButton.style.display = "block"; // Show close button
+    }
+}
+
+
+    // Event listener for toggling sidebar
+    toggleButton.addEventListener("click", toggleSidebar);
+});
+
       </script>
     {% endblock %}
 </body>

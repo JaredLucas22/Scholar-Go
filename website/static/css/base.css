@@ -14,39 +14,215 @@ body {
   opacity: 1;
 }
 
+/* Sidebar */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: -500px; /* Sidebar starts hidden off-screen */
+  width: 500px;
+  color: #495057;
+  height: 100%;
+  background-color: #f2f4f7; /* Sidebar background color */
+  transition: left 0.3s ease; /* Smooth transition for sidebar sliding */
+  z-index: 1000;
+}
 
 
 
+/* Hamburger Button */
+.hamburger-btn {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  background-color: transparent; /* No background color */
+  color: #f2f4f7; /* Icon color */
+  border: none;
+  padding: 10px 15px;
+  font-size: 18px; /* Set a base font size for the hamburger */
+  cursor: pointer;
+  z-index: 1100; /* Above the sidebar */
+  border-radius: 5px;
+  transition: opacity 0.3s ease, transform 0.3s ease, font-size 0.3s ease, color 0.3s ease; /* Transition opacity, transform, font-size, and color */
+}
 
+/* Close Button (Arrow inside sidebar when open) */
+#closeSidebar {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: transparent;
+  color: #012cb8;
+  border: none;
+  font-size: 18px; /* Set the same font size for the close icon */
+  cursor: pointer;
+  z-index: 1100;
+  display: none; /* Hide it initially */
+  opacity: 0; /* Start with the close button invisible */
+  transition: opacity 0.3s ease, font-size 0.3s ease, color 0.3s ease; /* Transition opacity, font-size, and color */
+}
+
+/* Profile Section */
+.profile-section {
+  text-align: center;
+  margin-bottom: 20px;
+  padding: 60px;
+}
+
+.profile-picture {
+  margin-bottom: 10px;
+}
+
+.profile-img {
+  width: 186px; /* Adjust as needed */
+  height: 186px;
+  border-radius: 50%; /* Makes it circular */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for scaling and shadow */
+  object-fit: cover; /* Ensures the image fits well */
+}
+
+.profile-img:hover {
+  transform: scale(1.1); /* Slightly larger on hover */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Add a shadow for a smooth hover effect */
+}
+
+.profile-info {
+  color: white;
+}
+
+.real-name {
+  color: #017cff;
+  font-size: 32px;
+  font-weight: bold;
+}
+
+.username {
+  font-size: 24px;
+  color: #012cb8; /* Lighter color for the username */
+}
+
+/* Overlay for clicking outside the sidebar */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1049;
+  display: none; /* Hidden by default */
+}
+
+/* Main Content (adjust for sidebar visibility) */
+.main-content {
+  margin-left: 0; /* Default when sidebar is hidden */
+  transition: all 0.3s ease;
+}
+
+.main-content.shift {
+  margin-left: 250px; /* Shift when sidebar is visible */
+}
+
+/* Links inside Sidebar */
+.sidebar .nav-item {
+  margin-bottom: 10px;
+  
+}
+/* Add consistent spacing between navbar items */
+.nav-item {
+  margin-right: 20px; /* Add spacing between nav items */
+}
+
+/* Ensure spacing for the last item doesn't create extra margin */
+.nav-item:last-child {
+  margin-right: 0;
+}
+
+/* Profile Picture in Navbar */
+.nav-profile-img {
+  width: 49px; /* Set profile picture size */
+  height: 49px;
+  border-radius: 50%; /* Make it circular */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); /* Light shadow */
+  object-fit: cover; /* Ensure image fits nicely */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.nav-profile-img:hover {
+  transform: scale(1.1); /* Slight zoom effect on hover */
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.3); /* Shadow effect on hover */
+}
+
+/* Adjust font size for icons to align with profile picture */
+.nav-item a i {
+  font-size: 1.5rem; /* Icons match the size of the profile picture */
+}
+
+
+/* Profile Picture in Navbar */
+.nav-profile-img {
+  width: 41px; /* Same size as icons */
+  height: 41px;
+  border-radius: 50%; /* Makes it circular */
+  object-fit: cover; /* Ensures the image fits well */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.nav-profile-img:hover {
+  transform: scale(1.1); /* Slight zoom on hover */
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.3); /* Add shadow on hover */
+}
+
+
+.sidebar .nav-link {
+  color: #495057 !important;
+  font-size: 16px;
+  padding: 10px 15px;
+  text-decoration: none;
+  display: block;
+}
+
+.sidebar .nav-link:hover {
+  color: white !important;
+  background-color: #012cb8;
+  border-radius: 5px;
+}
 /* General styles for the search bar */
 .search-bar {
-  width: 28vw;  /* Default width for the search bar */
-  margin-left: 10%;
+  width: 50vw;  /* Set a width for the search bar */
+  max-width: 800px;  /* Maximum width */
+  padding: 10px 15px; /* Padding for spacing */
   border-radius: 20px; /* Rounded corners */
   border: 1px solid #ccc; /* Border styling */
-  padding: 3px 8px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); /* Light shadow */
-  border: none;
-  z-index: 10; /* Lower z-index to place it below nav items */
-  /* Removed margin-left */
+  font-size: 1rem; /* Font size for better visibility */
+  display: block; /* Make it a block element */
+  margin: 0 auto;  /* Center horizontally */
 }
 
-/* Styles for the search form */
+/* Styles for the container that holds the search bar */
 .search-form {
-  z-index: 1; /* Lower z-index to place it below nav items */
-  position: absolute; /* Positioning the search form absolutely */
-  top: 33%; /* Center vertically */
-  left: 65%; /* Center horizontally */
-  transform: translate(-50%, -50%); /* Centering trick */
-  /* Add margin or padding to position the form correctly without affecting hover */
-  margin-top: 10px; /* Add a margin to separate from the navbar if needed */
-  border: none;
+  position: relative; /* Position relative to the parent container */
+  top: 0; /* Align to the very top of the parent container */
+  left: 10%; /* Center horizontally */
+  transform: translateX(-50%); /* Adjust for exact centering */
+  z-index: 10; /* Make sure it's above other elements */
+  width: 100%; /* Full width of the viewport for flexibility */
+  display: flex; /* Flexbox layout */
+  justify-content: center; /* Center content */
+  align-items: center; /* Align items vertically */
 }
 
+/* Focus state for the search bar */
 .search-bar:focus {
   outline: none; /* Remove default outline */
-  border: none; /* Remove the border */
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); /* Keep the shadow for focus state */
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3); /* Add a stronger shadow when focused */
+}
+
+/* Adjustments for smaller screens */
+@media (max-width: 600px) {
+  .search-bar {
+    width: 80vw; /* Make it slightly smaller on small screens */
+  }
 }
 
 
@@ -86,6 +262,8 @@ body {
 .nav-logo img {
   width: 200px;
   height: auto;
+  position: relative;
+  left: 40px;
   margin-right: 15px;
 }
 
@@ -100,7 +278,7 @@ body {
 .nav-link:hover {
   color: #f8f9fa;
   text-shadow: 0 0 8px rgba(64, 189, 238, 0.6);
-  transform: scale(1.1) !important;
+  transform: scale(1.03) !important;
   cursor: pointer;
 }
 
