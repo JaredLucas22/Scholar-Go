@@ -132,15 +132,18 @@
                 </ul>
                     {% if current_user.is_authenticated %}
                     {% else %}
-                    <li class="nav-item">
-                        <form action="{{ url_for('views.search') }}" method="get" class="d-flex search-form">
-                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                        <input type="text" class="search-bar" name="q" value="{{ query }}" placeholder="Search sponsorships..." required>
-                    </form>
-                    </li>
+                    <ul class="navbar-nav" style="list-style-type: none; margin: 0; padding: 0;">
+                        <li class="nav-item">
+                            <form action="{{ url_for('views.search') }}" method="get" class="d-flex search-form">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <input type="text" class="search-bar" name="q" value="{{ query }}" placeholder="Search sponsorships..." required>
+                            </form>
+                        </li>
                         <li class="nav-item"><a class="nav-link text-white" href="">Contact Us</a></li>
                         <li class="nav-item"><a class="nav-link text-white" href="/help">Help</a></li>
                         <li class="nav-item"><a class="nav-link text-white" href="/login">Sign-in</a></li>
+                    </ul>
+                    
                     {% endif %}
                 </ul>
             </div>
